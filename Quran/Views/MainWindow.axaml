@@ -1,0 +1,189 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Quran.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:icon="using:FluentIcons.Avalonia"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="600"
+        MinHeight="600"
+        MinWidth="800"
+        x:Class="Quran.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="Quran">
+
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="250,*" Background="#2e2e33">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <Border Grid.Column="0"
+                Background="#1b1b1b"
+                CornerRadius="12"
+                Margin="5"
+                Padding="10">
+            <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+                <!-- App title -->
+                <TextBlock Grid.Row="0"
+                           Text="Quran"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,5" />
+                <Border Grid.Row="1"
+                        Height="2"
+                        HorizontalAlignment="Stretch"
+                        Margin="5,8"
+                        Background="#2e2e33" />
+                <!-- Navigation -->
+                
+                <StackPanel Grid.Row="2"
+                            Spacing="8">
+
+                    <!-- Home -->
+                    <Button x:Name="NavHomeButton"
+                            CornerRadius="10"
+                            Tag="Home"
+                            Click="NavButton_OnClick"
+                            HorizontalAlignment="Stretch">
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5,0,5"
+                                    Spacing="16">
+
+                            <icon:FluentIcon
+                                Icon="Home"
+                                FontSize="24"
+                                VerticalAlignment="Center" />
+
+                            <TextBlock Text="Home"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                    </Button>
+
+
+                    <!-- Quran -->
+                    <Button x:Name="NavQuranButton"
+                            CornerRadius="10"
+                            Tag="Quran"
+                            Click="NavButton_OnClick"
+                            HorizontalAlignment="Stretch">
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5,0,5"
+                                    Spacing="16">
+
+                            <icon:FluentIcon
+                                Icon="BookOpen"
+                                FontSize="24"
+                                VerticalAlignment="Center" />
+
+                            <TextBlock Text="Quran"
+                                       FontSize="16"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                    </Button>
+
+
+                    <!-- Bookmarks -->
+                    <Button x:Name="NavBookmarksButton"
+                            CornerRadius="10"
+                            Tag="Bookmarks"
+                            Click="NavButton_OnClick"
+                            HorizontalAlignment="Stretch">
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5,0,5"
+                                    Spacing="16">
+
+                            <icon:FluentIcon
+                                Icon="Bookmark"
+                                FontSize="24"
+                                VerticalAlignment="Center" />
+
+                            <TextBlock Text="Bookmarks"
+                                       FontSize="16"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                    </Button>
+
+
+                    <!-- Search -->
+                    <Button x:Name="NavSearchButton"
+                            CornerRadius="10"
+                            Tag="Search"
+                            Click="NavButton_OnClick"
+                            HorizontalAlignment="Stretch">
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5,0,5"
+                                    Spacing="16">
+
+                            <icon:FluentIcon
+                                Icon="Search"
+                                FontSize="24"
+                                VerticalAlignment="Center" />
+
+                            <TextBlock Text="Search"
+                                       FontSize="16"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                    </Button>
+
+                </StackPanel>
+
+                <!-- Settings -->
+                <Button Grid.Row="3"
+                        CornerRadius="10"
+                        x:Name="NavSettingsButton"
+                        Tag="Settings"
+                        Click="NavButton_OnClick"
+                        HorizontalAlignment="Stretch">
+
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,5,0,5"
+                                Spacing="16">
+
+                        <icon:FluentIcon
+                            Icon="Settings"
+                            FontSize="24"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock Text="Settings"
+                                   FontSize="16"
+                                   VerticalAlignment="Center" />
+
+                    </StackPanel>
+
+                </Button>
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- ================= MAIN CONTENT ================= -->
+
+        <Border Grid.Column="1"
+                Background="#1b1b1b"
+                CornerRadius="12"
+                Margin="0,5,5,5"
+                Padding="10">
+            <ContentControl x:Name="MainContent"/>
+
+        </Border>
+
+    </Grid>
+
+</Window>

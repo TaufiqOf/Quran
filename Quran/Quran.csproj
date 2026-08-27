@@ -12,7 +12,9 @@
         <AvaloniaResource Include="Assets\**" />
         <AvaloniaResource Include="Data\*.json" />
     </ItemGroup>
-
+    <PropertyGroup>
+        <ApplicationIcon>Assets\Icons\quran.ico</ApplicationIcon>
+    </PropertyGroup>
     <!-- NuGet packages -->
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="12.1.1" />

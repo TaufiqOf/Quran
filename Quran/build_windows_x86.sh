@@ -11,8 +11,11 @@ set -euo pipefail
 # Result:
 #     dist/windows/Quran.exe
 #
-# This publishes the .NET/Avalonia application as a
-# self-contained, single-file Windows x64 executable.
+# The executable is:
+#   - Windows x64
+#   - Self-contained
+#   - Single file
+#   - Includes the application icon
 # ============================================================
 
 APP_NAME="Quran"
@@ -20,6 +23,9 @@ PROJECT_FILE="Quran.csproj"
 RUNTIME="win-x64"
 CONFIGURATION="Release"
 FRAMEWORK="net10.0"
+
+# Application icon
+ICON_FILE="Assets/Icons/quran.ico"
 
 OUTPUT_DIR="dist/windows"
 PUBLISH_DIR="$OUTPUT_DIR/publish"
@@ -44,6 +50,19 @@ fi
 if [ ! -f "$PROJECT_FILE" ]; then
     echo "ERROR: $PROJECT_FILE was not found."
     echo "Run this script from the Quran project directory."
+    exit 1
+fi
+
+# ------------------------------------------------------------
+# Check icon
+# ------------------------------------------------------------
+
+if [ ! -f "$ICON_FILE" ]; then
+    echo
+    echo "ERROR: Application icon was not found:"
+    echo "  $ICON_FILE"
+    echo
+    echo "Create the icon first."
     exit 1
 fi
 
@@ -74,11 +93,13 @@ dotnet restore "$PROJECT_FILE" \
 echo
 echo "==> Publishing application..."
 echo
+echo "    Application   : $APP_NAME"
 echo "    Configuration : $CONFIGURATION"
 echo "    Runtime       : $RUNTIME"
 echo "    Framework     : $FRAMEWORK"
 echo "    Self-contained: true"
 echo "    Single file   : true"
+echo "    Icon          : $ICON_FILE"
 echo
 
 dotnet publish "$PROJECT_FILE" \
@@ -91,6 +112,7 @@ dotnet publish "$PROJECT_FILE" \
     -p:IncludeNativeLibrariesForSelfExtract=true \
     -p:DebugType=None \
     -p:DebugSymbols=false \
+    -p:ApplicationIcon="$ICON_FILE" \
     -o "$PUBLISH_DIR"
 
 # ------------------------------------------------------------
@@ -127,14 +149,25 @@ echo "============================================================"
 echo " Build completed successfully!"
 echo "============================================================"
 echo
+
 echo "Windows executable:"
 echo "  $EXE_FILE"
+
+echo
+echo "Application icon:"
+echo "  $ICON_FILE"
+
 echo
 
 ls -lh "$EXE_FILE"
 
 echo
-echo "The executable is self-contained and does not require"
+echo "The executable is:"
+echo "  ✓ Self-contained"
+echo "  ✓ Single-file"
+echo "  ✓ Windows x64"
+echo "  ✓ Application icon embedded"
+echo
+echo "The executable does not require"
 echo "the .NET runtime to be installed on Windows."
 echo
-

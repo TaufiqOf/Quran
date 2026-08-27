@@ -20,7 +20,7 @@ public partial class HomeView : AView
         InitializeComponent();
     }
     
-    public override Task Load()
+    public override Task Load(object? parameter)
     {
         _surahs = GetData.GetSurahs();
         _surahOrder = GetData.SurahOrder();
@@ -29,9 +29,15 @@ public partial class HomeView : AView
         {
            var synopsis = _surahSynopsis.FirstOrDefault(q => q.SurahId == surah.Id);
             var card = new CardComponent(surah,synopsis);
+            card.CardClick += Card_CardClick;
             Cards.Add(card);
             ItemsControl.Items.Add(card);
         }
         return Task.CompletedTask;
+    }
+
+    private void Card_CardClick(Surah surah)
+    {
+        RequestGotoPage("Quran", surah);
     }
 }

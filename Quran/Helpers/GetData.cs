@@ -10,6 +10,11 @@ public static class GetData
         var json = JsonReader.ReadJsonFromResource("quran_en.json");
         return JsonReader.ReadJsonList<Surah>(json) ?? new List<Surah>();
     }
+    public static List<Surah> GetSurahTransliterations()
+    {
+        var json = JsonReader.ReadJsonFromResource("quran_transliteration.json");
+        return JsonReader.ReadJsonList<Surah>(json) ?? new List<Surah>();
+    }
     public static Surah GetSurahById(int surahId)
     {
        var json = JsonReader.ReadJsonFromResource("quran_en.json");
@@ -27,4 +32,6 @@ public static class GetData
         var json = JsonReader.ReadJsonFromResource("surah_synopsis.json");
         return JsonReader.ReadJsonList<SurahSynopsis>(json);
     }
+    
+    
 }

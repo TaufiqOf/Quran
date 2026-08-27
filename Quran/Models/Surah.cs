@@ -26,3 +26,5 @@ public class Surah
     public Verse[] Verses { get; set; } = [];
 }
 
+
+

@@ -12,4 +12,8 @@ public class Verse
 
     [JsonPropertyName("translation")]
     public string Translation { get; set; } = string.Empty;
+
+    [JsonPropertyName("transliteration")]
+    public string Transliteration { get; set; } = string.Empty;
+    
 }

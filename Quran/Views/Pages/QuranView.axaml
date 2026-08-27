@@ -1,28 +1,108 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:component="clr-namespace:Quran.Views.Component"
+             xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
              x:Class="Quran.Views.Pages.QuranView">
-    <Grid>
-        <Grid 
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Stretch">
+
+    <Grid
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- =============================== -->
+            <!-- Surah / Verse Selection -->
+            <!-- =============================== -->
 
             <StackPanel
-                HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch"
-                Spacing="12">
+                Grid.Column="0"
+                Orientation="Horizontal"
+                Margin="10">
 
-                <TextBlock
-                    Text="Quran"
-                    FontSize="32"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Center"/>
+                <Label
+                    Content="Surah:"
+                    VerticalContentAlignment="Center"
+                    Margin="10,0" />
 
-                <TextBlock
-                    Text="Welcome to the Quran application."
-                    FontSize="16"
-                    HorizontalAlignment="Center"/>
+                <ComboBox
+                    x:Name="SurahComboBox"
+                    Width="250"
+                    SelectionChanged="SurahComboBox_OnSelectionChanged" />
 
+                <Label
+                    Content="Verse:"
+                    VerticalContentAlignment="Center"
+                    Margin="10,0" />
+
+                <ComboBox
+                    x:Name="VerseComboBox"
+                    Width="120"
+                    SelectionChanged="VerseComboBox_OnSelectionChanged" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10">
+                <Button x:Name="PreviousSurahButton" 
+                        ToolTip.Tip="Previous Surah"
+                        Click="PreviousSurahButton_OnClick">
+                    <avalonia:SymbolIcon
+                        Symbol="ArrowLeft"
+                        FontSize="20" />
+                </Button>
+                
+                <Button x:Name="PreviousButton"
+                        ToolTip.Tip="Previous Verse"
+                        Click="PreviousButton_OnClick">
+                    <avalonia:SymbolIcon
+                        Symbol="ArrowUp"
+                        FontSize="20" />
+                </Button>
+                <Button x:Name="NextButton" 
+                        ToolTip.Tip="Next Verse"
+                        Click="NextButton_OnClick">
+                    <avalonia:SymbolIcon
+                        Symbol="ArrowDown"
+                        FontSize="20" />
+                </Button>
+                <Button x:Name="NextSurahButton" 
+                        ToolTip.Tip="Next Surah"
+                        Click="NextSurahButton_OnClick">
+                    <avalonia:SymbolIcon
+                        Symbol="ArrowRight"
+                        FontSize="20" />
+                </Button>
             </StackPanel>
         </Grid>
+        <!-- =============================== -->
+        <!-- Quran Content -->
+        <!-- =============================== -->
+
+        <ScrollViewer
+            x:Name="QuranScrollViewer"
+            Grid.Row="1"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+
+            <StackPanel>
+
+                <component:CardComponent
+                    x:Name="CardComponent"
+                    IsEnabled="False"
+                    IsVisible="False" />
+
+                <ItemsControl
+                    x:Name="ItemsControl" />
+
+            </StackPanel>
+
+        </ScrollViewer>
+
     </Grid>
+
 </UserControl>

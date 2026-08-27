@@ -1,12 +1,37 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Quran.App"
-             xmlns:local="using:Quran"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
 
     <Application.Styles>
+
         <FluentTheme />
+
+        <!-- Default font -->
+        <Style Selector="TextBlock">
+            <Setter
+                Property="FontFamily"
+                Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+        </Style>
+
+        <Style Selector="Button">
+            <Setter
+                Property="FontFamily"
+                Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+        </Style>
+
+        <Style Selector="Label">
+            <Setter
+                Property="FontFamily"
+                Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+        </Style>
+
+        <Style Selector="ComboBox">
+            <Setter
+                Property="FontFamily"
+                Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+        </Style>
+
     </Application.Styles>
+
 </Application>

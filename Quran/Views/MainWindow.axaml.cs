@@ -6,13 +6,14 @@ namespace Quran.Views;
 
 public partial class MainWindow : Window
 {
+    private AView? CurrentPage { get; set; }
+
     public MainWindow()
     {
         InitializeComponent();
 
         ShowPage("Home");
-
-        NavHomeButton.IsEnabled = false;
+        EnableNavButtons("Home");
     }
 
     private void NavButton_OnClick(object? sender, RoutedEventArgs e)
@@ -27,14 +28,16 @@ public partial class MainWindow : Window
 
         ShowPage(pageName);
 
-        EnableNavButtons();
 
-        button.IsEnabled = false;
     }
 
-    private void ShowPage(string pageName)
+    private void ShowPage(string pageName, object? parameter = null)
     {
-        AView page = pageName switch
+        if(CurrentPage != null)
+        {
+            CurrentPage.GotoPageRequested -= ShowPage;
+        }
+        CurrentPage = pageName switch
         {
             "Home" => new HomeView(),
             "Quran" => new QuranView(),
@@ -44,16 +47,31 @@ public partial class MainWindow : Window
 
             _ => new HomeView()
         };
-        page.Load();
-        MainContent.Content = page;
+        
+        CurrentPage.Load(parameter);
+        MainContent.Content = CurrentPage;
+        CurrentPage.GotoPageRequested += ShowPage;
+        EnableNavButtons(pageName);
     }
 
-    private void EnableNavButtons()
+    private void EnableNavButtons(string pageName = "")
     {
+        var currentButton = pageName switch
+        {
+            "Home" => NavHomeButton,
+            "Quran" => NavQuranButton,
+            "Bookmarks" => NavBookmarksButton,
+            "Search" => NavSearchButton,
+            "Settings" => NavSettingsButton,
+
+            _ => NavHomeButton
+        };
+        
         NavHomeButton.IsEnabled = true;
         NavQuranButton.IsEnabled = true;
         NavBookmarksButton.IsEnabled = true;
         NavSearchButton.IsEnabled = true;
         NavSettingsButton.IsEnabled = true;
+        currentButton.IsEnabled = false;
     }
 }

@@ -1,0 +1,1374 @@
+[
+  {
+    "surah_id": 1,
+    "synopsis": "The opening prayer of the Quran, asking Allah for praise, worship, guidance, and the straight path. It establishes the believer’s relationship with Allah and the dependence of humanity upon His guidance.",
+    "themes": [
+      "Praise of Allah",
+      "Worship",
+      "Guidance",
+      "The straight path",
+      "Prayer"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 2,
+    "synopsis": "This surah presents guidance for faith and righteous living, addressing worship, law, community, family, commerce, and relations with others. It recounts the Children of Israel and other earlier communities and emphasizes obedience, patience, trust, and responsibility.",
+    "themes": [
+      "Guidance",
+      "Faith",
+      "Worship",
+      "Law",
+      "Patience",
+      "Community"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 3,
+    "synopsis": "This surah strengthens believers in faith and steadfastness, discusses the People of the Book, and recounts the family of Imran, Maryam, and Isa. It also discusses the believers' experience of hardship and defeat and calls them to unity, obedience, and perseverance.",
+    "themes": [
+      "Faith",
+      "Maryam",
+      "Isa",
+      "Unity",
+      "Perseverance",
+      "Uhud"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 4,
+    "synopsis": "An-Nisa establishes principles for a just and responsible society, with extensive guidance concerning family, inheritance, marriage, orphans, women, and social rights. It repeatedly calls believers to justice, trust, and obedience to Allah and His Messenger.",
+    "themes": [
+      "Justice",
+      "Family",
+      "Women",
+      "Inheritance",
+      "Orphans",
+      "Social responsibility"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 5,
+    "synopsis": "The surah emphasizes fulfillment of covenants, lawful and unlawful matters, justice, and religious responsibility. It discusses the People of the Book, the disciples of Isa, and the importance of remaining faithful to Allah’s commands.",
+    "themes": [
+      "Covenants",
+      "Lawful and unlawful",
+      "Justice",
+      "Faithfulness",
+      "People of the Book"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 6,
+    "synopsis": "Al-An'am argues for the oneness of Allah and challenges idolatry and false religious customs. It points to creation and revelation as signs of divine power and calls people to sincere worship and obedience.",
+    "themes": [
+      "Tawhid",
+      "Creation",
+      "Idolatry",
+      "Revelation",
+      "Worship"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 7,
+    "synopsis": "The surah recounts the stories of several prophets and their peoples, highlighting the consequences of rejecting divine guidance. The account of Adam and Iblis frames recurring themes of temptation, repentance, arrogance, and accountability.",
+    "themes": [
+      "Prophets",
+      "Temptation",
+      "Repentance",
+      "Accountability",
+      "Divine guidance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 8,
+    "synopsis": "Al-Anfal discusses faith, discipline, conflict, spoils, and reliance upon Allah. It teaches believers to obey Allah and His Messenger, maintain unity, and remain steadfast when facing conflict.",
+    "themes": [
+      "Badr",
+      "Obedience",
+      "Unity",
+      "Reliance on Allah",
+      "Conflict",
+      "Spoils"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 9,
+    "synopsis": "At-Tawbah addresses treaties, conflict, hypocrisy, sincere repentance, and the responsibilities of the Muslim community. It strongly distinguishes sincere believers from those who undermine the community and emphasizes repentance and devotion to Allah.",
+    "themes": [
+      "Repentance",
+      "Hypocrisy",
+      "Covenants",
+      "Community",
+      "Sincerity"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 10,
+    "synopsis": "Yunus calls people to recognize Allah’s signs, believe in revelation, and trust His wisdom. It recounts examples including the people of Yunus and emphasizes that worldly life is temporary while Allah’s promise is certain.",
+    "themes": [
+      "Faith",
+      "Revelation",
+      "Signs",
+      "Repentance",
+      "Divine wisdom"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 11,
+    "synopsis": "The surah recounts the struggles of Hud and other prophets and the destruction that followed persistent rejection. It urges the Prophet and believers to remain steadfast, upright, patient, and confident in Allah’s promise.",
+    "themes": [
+      "Prophets",
+      "Steadfastness",
+      "Patience",
+      "Judgment",
+      "Divine promise"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 12,
+    "synopsis": "Yusuf presents the life of Prophet Yusuf from his childhood dream through betrayal, hardship, imprisonment, leadership, and reconciliation with his family. It highlights patience, trust in Allah, forgiveness, and the unfolding of divine wisdom through trials.",
+    "themes": [
+      "Patience",
+      "Trust in Allah",
+      "Forgiveness",
+      "Divine wisdom",
+      "Trials"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 13,
+    "synopsis": "Ar-Ra'd points to signs of Allah’s power in creation and contrasts truth with falsehood. It teaches that hearts find true tranquility through remembrance of Allah and that divine guidance ultimately belongs to Him.",
+    "themes": [
+      "Tawhid",
+      "Creation",
+      "Remembrance",
+      "Guidance",
+      "Truth and falsehood"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 14,
+    "synopsis": "Ibrahim contrasts gratitude and disbelief and recounts the prayers and example of Prophet Ibrahim. It emphasizes revelation as a means of bringing people from darkness to light and warns against rejecting Allah’s blessings.",
+    "themes": [
+      "Gratitude",
+      "Ibrahim",
+      "Revelation",
+      "Guidance",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 15,
+    "synopsis": "Al-Hijr reassures the Prophet that Allah protects His revelation and recounts the creation of Adam and the refusal of Iblis. It also recalls earlier peoples who rejected their messengers and encourages patience in the face of opposition.",
+    "themes": [
+      "Revelation",
+      "Adam",
+      "Iblis",
+      "Prophets",
+      "Patience"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 16,
+    "synopsis": "An-Nahl invites reflection on Allah’s countless blessings in creation and human life. It calls for gratitude, justice, good conduct, and steadfastness while warning against associating partners with Allah.",
+    "themes": [
+      "Blessings",
+      "Gratitude",
+      "Tawhid",
+      "Justice",
+      "Patience"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 17,
+    "synopsis": "Al-Isra begins with the Prophet’s Night Journey and develops themes of revelation, worship, moral conduct, family duties, justice, and accountability. It also recalls the history of the Children of Israel and emphasizes the Quran as guidance.",
+    "themes": [
+      "Night Journey",
+      "Revelation",
+      "Worship",
+      "Morality",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 18,
+    "synopsis": "Al-Kahf presents several powerful accounts: the Companions of the Cave, the two gardens, Musa and Khidr, and Dhul-Qarnayn. Together they explore trials of faith, wealth, knowledge, and power and teach reliance on Allah.",
+    "themes": [
+      "Faith",
+      "Trials",
+      "Knowledge",
+      "Wealth",
+      "Power",
+      "Reliance on Allah"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 19,
+    "synopsis": "Maryam recounts the stories of Zakariyya, Yahya, Maryam, and Isa, along with other prophets. It emphasizes Allah’s mercy, miraculous creation, sincere worship, and the certainty of resurrection.",
+    "themes": [
+      "Mercy",
+      "Maryam",
+      "Isa",
+      "Prophets",
+      "Resurrection"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 20,
+    "synopsis": "Ta-Ha comforts the Prophet and presents the story of Musa in detail, including his mission to Pharaoh and the trial of the Children of Israel. It emphasizes remembrance, prayer, revelation, and trust in Allah.",
+    "themes": [
+      "Musa",
+      "Revelation",
+      "Prayer",
+      "Remembrance",
+      "Trust"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 21,
+    "synopsis": "Al-Anbiya reminds humanity that judgment is approaching and recounts examples from the lives of many prophets. Their stories demonstrate perseverance, sincere worship, and Allah’s response to those who call upon Him.",
+    "themes": [
+      "Prophets",
+      "Resurrection",
+      "Prayer",
+      "Perseverance",
+      "Mercy"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 22,
+    "synopsis": "Al-Hajj combines reminders of resurrection with guidance concerning pilgrimage, sacrifice, worship, and struggle in Allah’s cause. It emphasizes reverence for Allah and the sacred rites and reminds people of their ultimate return to Him.",
+    "themes": [
+      "Hajj",
+      "Resurrection",
+      "Worship",
+      "Sacrifice",
+      "Reverence"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 23,
+    "synopsis": "The surah describes the qualities of successful believers, including humility in prayer, avoidance of vain conduct, chastity, trustworthiness, and careful observance of worship. It then points to creation and the histories of prophets as evidence of Allah’s truth.",
+    "themes": [
+      "Believers",
+      "Prayer",
+      "Purity",
+      "Trustworthiness",
+      "Creation"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 24,
+    "synopsis": "An-Nur establishes guidance for personal and communal morality, including chastity, accusations, modesty, privacy, and family conduct. The famous Light Verse presents a profound image of Allah’s guidance and light.",
+    "themes": [
+      "Purity",
+      "Modesty",
+      "Family",
+      "Privacy",
+      "Divine light"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 25,
+    "synopsis": "Al-Furqan distinguishes truth from falsehood and answers objections raised against the Prophet and the Quran. It concludes by describing the humble and devoted servants of the Most Merciful.",
+    "themes": [
+      "Quran",
+      "Truth",
+      "Falsehood",
+      "Prophethood",
+      "Servants of the Merciful"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 26,
+    "synopsis": "The surah recounts the missions of several prophets and the repeated pattern of rejection followed by divine judgment. It also defends the Quran against accusations and emphasizes the distinction between genuine revelation and false poetry.",
+    "themes": [
+      "Prophets",
+      "Revelation",
+      "Rejection",
+      "Judgment",
+      "Quran"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 27,
+    "synopsis": "An-Naml presents signs of Allah through creation and stories involving Musa, Sulayman, the Queen of Sheba, Salih, and Lut. It emphasizes wisdom, gratitude, the limits of worldly power, and recognition of Allah’s sovereignty.",
+    "themes": [
+      "Sulayman",
+      "Queen of Sheba",
+      "Wisdom",
+      "Gratitude",
+      "Tawhid"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 28,
+    "synopsis": "Al-Qasas recounts the early life and mission of Musa, including his escape from Egypt, return, and confrontation with Pharaoh. The story is paired with the account of Qarun to contrast divine support and humility with wealth and arrogance.",
+    "themes": [
+      "Musa",
+      "Pharaoh",
+      "Divine plan",
+      "Wealth",
+      "Arrogance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 29,
+    "synopsis": "Al-Ankabut teaches that believers will be tested and that true faith requires perseverance. Stories of earlier prophets show the weakness of false reliance, while the surah calls believers to sincere worship and trust in Allah.",
+    "themes": [
+      "Trials",
+      "Faith",
+      "Perseverance",
+      "Tawhid",
+      "Reliance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 30,
+    "synopsis": "Ar-Rum points to historical events and signs throughout creation as evidence of Allah’s power. It reflects on human nature, marriage, diversity, resurrection, and the rise and fall of nations.",
+    "themes": [
+      "Creation",
+      "Resurrection",
+      "Human nature",
+      "Marriage",
+      "Divine power"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 31,
+    "synopsis": "Luqman’s advice to his son forms the heart of the surah, emphasizing monotheism, gratitude, prayer, humility, and moral responsibility. It also calls people to reflect on Allah’s signs and avoid arrogance.",
+    "themes": [
+      "Luqman",
+      "Wisdom",
+      "Tawhid",
+      "Gratitude",
+      "Humility"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 32,
+    "synopsis": "As-Sajdah affirms the truth of revelation, creation, resurrection, and judgment. It contrasts sincere believers, who respond with humility and prayer, with those who reject Allah’s signs.",
+    "themes": [
+      "Revelation",
+      "Creation",
+      "Resurrection",
+      "Prayer",
+      "Humility"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 33,
+    "synopsis": "Al-Ahzab addresses the believers during a time of conflict and provides guidance concerning the Prophet’s household, social conduct, marriage, and obedience. It emphasizes trust in Allah, proper community conduct, and obedience to the Messenger.",
+    "themes": [
+      "Ahzab",
+      "Prophet",
+      "Community",
+      "Family",
+      "Obedience"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 34,
+    "synopsis": "Saba recounts the blessings granted to Dawud and Sulayman and the prosperity of the people of Saba, followed by the consequences of ingratitude. It emphasizes that wealth and power are blessings carrying responsibility.",
+    "themes": [
+      "Gratitude",
+      "Dawud",
+      "Sulayman",
+      "Wealth",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 35,
+    "synopsis": "Fatir invites reflection on the Creator’s signs, the order of creation, and human dependence upon Allah. It contrasts believers and rejecters and emphasizes that knowledge of Allah should produce humility and righteous action.",
+    "themes": [
+      "Creation",
+      "Tawhid",
+      "Knowledge",
+      "Humility",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 36,
+    "synopsis": "Ya-Sin affirms the Prophet’s mission, the truth of revelation, resurrection, and Allah’s creative power. It presents signs in nature and the story of a people who rejected messengers, calling humanity to recognize its Creator.",
+    "themes": [
+      "Revelation",
+      "Resurrection",
+      "Creation",
+      "Prophethood",
+      "Signs"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 37,
+    "synopsis": "As-Saffat emphasizes Allah’s absolute sovereignty and rejects idolatrous claims. It recounts the stories of several prophets, especially Ibrahim, highlighting obedience, sacrifice, faith, and divine deliverance.",
+    "themes": [
+      "Tawhid",
+      "Ibrahim",
+      "Sacrifice",
+      "Prophets",
+      "Divine deliverance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 38,
+    "synopsis": "Sad recounts the stories of Dawud, Sulayman, Ayyub, and other figures while addressing the arrogance of those who reject revelation. It emphasizes repentance, patience, wisdom, and the danger of pride.",
+    "themes": [
+      "Dawud",
+      "Sulayman",
+      "Ayyub",
+      "Repentance",
+      "Patience"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 39,
+    "synopsis": "Az-Zumar calls for sincere worship of Allah alone and warns against associating partners with Him. It emphasizes repentance, the temporary nature of worldly life, resurrection, and the final gathering of humanity.",
+    "themes": [
+      "Sincerity",
+      "Tawhid",
+      "Repentance",
+      "Resurrection",
+      "Judgment"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 40,
+    "synopsis": "Ghafir emphasizes Allah’s forgiveness, power, and justice while recounting the believing man from Pharaoh’s family who defended Musa. It encourages perseverance and warns against arrogance and disputing divine revelation.",
+    "themes": [
+      "Forgiveness",
+      "Musa",
+      "Pharaoh",
+      "Faith",
+      "Perseverance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 41,
+    "synopsis": "Fussilat presents the Quran as a clear revelation and points to signs in the heavens, earth, and human selves. It calls for patience, good conduct, and answering evil with what is better.",
+    "themes": [
+      "Quran",
+      "Creation",
+      "Signs",
+      "Patience",
+      "Good conduct"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 42,
+    "synopsis": "Ash-Shura emphasizes revelation, consultation, unity, forgiveness, and Allah’s sovereignty. It teaches believers to respond to wrongdoing with justice while valuing patience, forgiveness, and reliance on Allah.",
+    "themes": [
+      "Revelation",
+      "Consultation",
+      "Unity",
+      "Forgiveness",
+      "Justice"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 43,
+    "synopsis": "Az-Zukhruf challenges attachment to worldly luxury and rejects claims that wealth or status determine truth. It recounts examples involving Ibrahim, Musa, and Isa and emphasizes sincere devotion to Allah.",
+    "themes": [
+      "Worldly luxury",
+      "Tawhid",
+      "Ibrahim",
+      "Musa",
+      "Isa"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 44,
+    "synopsis": "Ad-Dukhan warns of divine punishment and recounts the deliverance of the Children of Israel from Pharaoh. It calls people to take heed, recognize Allah’s power, and prepare for the Day of Judgment.",
+    "themes": [
+      "Warning",
+      "Pharaoh",
+      "Deliverance",
+      "Judgment",
+      "Revelation"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 45,
+    "synopsis": "Al-Jathiyah calls people to reflect on Allah’s signs in creation and warns against following desire instead of truth. It describes the Day when every community will kneel before the record of its deeds.",
+    "themes": [
+      "Signs",
+      "Desire",
+      "Revelation",
+      "Judgment",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 46,
+    "synopsis": "Al-Ahqaf addresses the rejection of revelation and recounts the destruction of the people of 'Ad. It also highlights dutifulness to parents and the faith of the jinn who listened to the Quran.",
+    "themes": [
+      "'Ad",
+      "Quran",
+      "Parents",
+      "Jinn",
+      "Judgment"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 47,
+    "synopsis": "Muhammad discusses faith, conflict, obedience, hypocrisy, and steadfastness. It contrasts those who sincerely support truth with those who reject it and calls believers to remain committed to Allah.",
+    "themes": [
+      "Faith",
+      "Obedience",
+      "Hypocrisy",
+      "Steadfastness",
+      "Struggle"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 48,
+    "synopsis": "Al-Fath presents the Treaty of Hudaybiyyah as a clear victory and reassures the Prophet and believers of Allah’s support. It emphasizes faith, loyalty, patience, and the promise of future success.",
+    "themes": [
+      "Hudaybiyyah",
+      "Victory",
+      "Faith",
+      "Loyalty",
+      "Divine support"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 49,
+    "synopsis": "Al-Hujurat provides foundational guidance for Muslim social ethics, including respect for the Prophet, verifying reports, reconciliation, avoiding mockery and suspicion, and rejecting backbiting. It teaches that true honor comes from righteousness, not lineage or status.",
+    "themes": [
+      "Social ethics",
+      "Brotherhood",
+      "Respect",
+      "Justice",
+      "Righteousness"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 50,
+    "synopsis": "Qaf emphasizes resurrection and Allah’s complete knowledge of human beings. It points to creation, death, and the records of deeds as reminders that every person will return to Allah.",
+    "themes": [
+      "Resurrection",
+      "Creation",
+      "Accountability",
+      "Death",
+      "Divine knowledge"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 51,
+    "synopsis": "Adh-Dhariyat presents signs of Allah’s power and the purpose of human creation: worship. It recounts examples of Ibrahim and earlier peoples and warns that divine judgment is certain.",
+    "themes": [
+      "Worship",
+      "Creation",
+      "Ibrahim",
+      "Judgment",
+      "Tawhid"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 52,
+    "synopsis": "At-Tur warns those who deny resurrection and revelation and contrasts their fate with the blessings promised to the righteous. It comforts the Prophet and calls him to continue proclaiming the message.",
+    "themes": [
+      "Resurrection",
+      "Revelation",
+      "Paradise",
+      "Prophethood",
+      "Perseverance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 53,
+    "synopsis": "An-Najm affirms the truth of the Prophet’s revelation and rejects pagan claims about false deities. It also recalls the Prophet’s extraordinary encounter with the signs of his Lord and emphasizes Allah’s absolute authority.",
+    "themes": [
+      "Revelation",
+      "Prophethood",
+      "Tawhid",
+      "Divine signs",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 54,
+    "synopsis": "Al-Qamar repeatedly recalls earlier peoples who rejected their messengers, including the people of Nuh, 'Ad, Thamud, Lut, and Pharaoh. The refrain emphasizes that the Quran has been made accessible for remembrance and that denial has consequences.",
+    "themes": [
+      "Prophets",
+      "Warning",
+      "Judgment",
+      "Quran",
+      "Remembrance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 55,
+    "synopsis": "Ar-Rahman repeatedly enumerates Allah’s blessings in creation, revelation, human life, and the Hereafter. It contrasts the rewards of the righteous with punishment and repeatedly asks which of Allah’s favors can be denied.",
+    "themes": [
+      "Mercy",
+      "Blessings",
+      "Creation",
+      "Paradise",
+      "Gratitude"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 56,
+    "synopsis": "Al-Waqi'ah describes the inevitable Day of Resurrection and divides humanity into distinct groups according to their deeds. It presents vivid descriptions of reward and punishment and calls people to recognize Allah’s creative power.",
+    "themes": [
+      "Resurrection",
+      "Paradise",
+      "Hell",
+      "Accountability",
+      "Creation"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 57,
+    "synopsis": "Al-Hadid calls believers to faith, generosity, humility, and spending in Allah’s cause. It contrasts the temporary nature of worldly life with the lasting reality of the Hereafter and warns against hardness of heart.",
+    "themes": [
+      "Faith",
+      "Charity",
+      "Humility",
+      "Worldly life",
+      "Hereafter"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 58,
+    "synopsis": "Al-Mujadilah addresses a woman’s complaint and establishes principles of justice and proper family conduct. It also discusses private conversations, social loyalty, and the distinction between sincere believers and those who oppose Allah’s guidance.",
+    "themes": [
+      "Justice",
+      "Family",
+      "Social conduct",
+      "Loyalty",
+      "Faith"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 59,
+    "synopsis": "Al-Hashr discusses the expulsion of the Banu Nadir and lessons concerning communal responsibility, wealth, and loyalty. It concludes with powerful descriptions of Allah’s names and attributes, encouraging reverence and reflection.",
+    "themes": [
+      "Community",
+      "Wealth",
+      "Loyalty",
+      "Allah’s names",
+      "Reverence"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 60,
+    "synopsis": "Al-Mumtahanah provides guidance on relations with hostile and peaceful non-Muslims and discusses the pledge of believing women. It balances loyalty to faith with justice and kindness toward those who do not fight believers.",
+    "themes": [
+      "Loyalty",
+      "Justice",
+      "Treaties",
+      "Family",
+      "Interfaith relations"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 61,
+    "synopsis": "As-Saff calls believers to sincerity and consistency between their words and actions. It praises those who strive together for truth and recalls Musa and Isa and the promise of a coming messenger.",
+    "themes": [
+      "Sincerity",
+      "Unity",
+      "Action",
+      "Musa",
+      "Isa"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 62,
+    "synopsis": "Al-Jumu'ah highlights the Prophet’s mission and the importance of Friday prayer. It contrasts beneficial knowledge and remembrance with those who possess scripture but fail to live by it.",
+    "themes": [
+      "Friday prayer",
+      "Revelation",
+      "Knowledge",
+      "Remembrance",
+      "Worship"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 63,
+    "synopsis": "Al-Munafiqun exposes the attitudes and behavior of hypocrites who outwardly profess faith while undermining the community. It warns believers not to let wealth and children distract them from remembrance and obedience.",
+    "themes": [
+      "Hypocrisy",
+      "Sincerity",
+      "Wealth",
+      "Remembrance",
+      "Community"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 64,
+    "synopsis": "At-Taghabun teaches that all creation belongs to Allah and that the Day of Ultimate Gain and Loss will reveal the true consequences of deeds. It encourages faith, charity, patience, and awareness that family and wealth can be tests.",
+    "themes": [
+      "Faith",
+      "Accountability",
+      "Charity",
+      "Family",
+      "Trials"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 65,
+    "synopsis": "At-Talaq gives detailed guidance concerning divorce, waiting periods, housing, maintenance, and fairness. It repeatedly emphasizes taqwa and assures believers that Allah provides a way out for those who trust and obey Him.",
+    "themes": [
+      "Divorce",
+      "Family",
+      "Taqwa",
+      "Provision",
+      "Trust"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 66,
+    "synopsis": "At-Tahrim addresses events involving the Prophet’s household and teaches believers to protect themselves and their families through obedience. It gives examples of righteous and unrighteous spouses to emphasize individual accountability.",
+    "themes": [
+      "Family",
+      "Repentance",
+      "Accountability",
+      "Obedience",
+      "Faith"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 67,
+    "synopsis": "Al-Mulk emphasizes Allah’s absolute sovereignty and points to the perfection of creation as evidence of His power. It reminds humanity of death, accountability, and the limits of worldly security.",
+    "themes": [
+      "Sovereignty",
+      "Creation",
+      "Accountability",
+      "Death",
+      "Divine power"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 68,
+    "synopsis": "Al-Qalam defends the Prophet’s character and warns against arrogance, greed, and rejection of truth. The story of the owners of the garden illustrates how wealth can be lost through ingratitude and selfishness.",
+    "themes": [
+      "Character",
+      "Patience",
+      "Arrogance",
+      "Wealth",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 69,
+    "synopsis": "Al-Haqqah describes the certainty of the Day of Judgment and recalls the destruction of earlier peoples who rejected their messengers. It presents the contrasting destinies of those who receive their records in the right hand and those who receive them in the left.",
+    "themes": [
+      "Judgment",
+      "Resurrection",
+      "Accountability",
+      "Prophets",
+      "Records of deeds"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 70,
+    "synopsis": "Al-Ma'arij portrays the Day of Judgment and describes the character of people who are steadfast in prayer, charitable, trustworthy, and mindful of accountability. It contrasts these qualities with human impatience and anxiety.",
+    "themes": [
+      "Judgment",
+      "Prayer",
+      "Charity",
+      "Patience",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 71,
+    "synopsis": "Nuh recounts Prophet Nuh’s persistent call to his people over a long period and their repeated rejection. His prayer and the eventual flood demonstrate the consequences of stubborn disbelief and the importance of seeking forgiveness.",
+    "themes": [
+      "Nuh",
+      "Repentance",
+      "Forgiveness",
+      "Persistence",
+      "Judgment"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 72,
+    "synopsis": "Al-Jinn describes a group of jinn listening to the Quran and recognizing its guidance. It affirms Allah’s oneness, the limits of created knowledge, and the Prophet’s role in conveying revelation.",
+    "themes": [
+      "Jinn",
+      "Quran",
+      "Tawhid",
+      "Revelation",
+      "Unseen"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 73,
+    "synopsis": "Al-Muzzammil instructs the Prophet to engage in night prayer, recite the Quran with care, and remain patient with opposition. It combines spiritual preparation with the responsibility of carrying the revelation.",
+    "themes": [
+      "Night prayer",
+      "Quran",
+      "Patience",
+      "Worship",
+      "Revelation"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 74,
+    "synopsis": "Al-Muddaththir calls the Prophet to rise and warn, magnify Allah, purify himself, and remain patient. It warns of the consequences of rejecting revelation and describes the seriousness of accountability.",
+    "themes": [
+      "Prophethood",
+      "Warning",
+      "Purification",
+      "Patience",
+      "Judgment"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 75,
+    "synopsis": "Al-Qiyamah centers on resurrection and the certainty that humanity will be raised and judged. It describes the human tendency to deny accountability and reassures that Allah has complete power to recreate people.",
+    "themes": [
+      "Resurrection",
+      "Judgment",
+      "Human nature",
+      "Accountability",
+      "Divine power"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 76,
+    "synopsis": "Al-Insan reflects on human creation and describes the qualities and rewards of righteous people who feed others for Allah’s sake and remain patient. It contrasts their eternal reward with the consequences of disbelief.",
+    "themes": [
+      "Creation",
+      "Charity",
+      "Patience",
+      "Paradise",
+      "Righteousness"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 77,
+    "synopsis": "Al-Mursalat repeatedly warns of the coming judgment and recounts signs of Allah’s power and examples of destroyed peoples. Its repeated warning emphasizes that denial of truth will ultimately lead to ruin.",
+    "themes": [
+      "Judgment",
+      "Warning",
+      "Creation",
+      "Accountability",
+      "Prophets"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 78,
+    "synopsis": "An-Naba asks about the great news of resurrection and judgment. It points to the ordered creation of the heavens and earth as evidence of Allah’s power and describes the contrasting destinies of the righteous and rebellious.",
+    "themes": [
+      "Resurrection",
+      "Creation",
+      "Judgment",
+      "Paradise",
+      "Hell"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 79,
+    "synopsis": "An-Nazi'at emphasizes resurrection and recalls the story of Musa and Pharaoh as a warning against arrogance. It contrasts the fate of those who fear Allah with those who prefer worldly life.",
+    "themes": [
+      "Resurrection",
+      "Musa",
+      "Pharaoh",
+      "Fear of Allah",
+      "Hereafter"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 80,
+    "synopsis": "Abasa teaches that the message of revelation is for sincere seekers regardless of status or social position. It reminds humanity of its creation, provision, death, and eventual resurrection.",
+    "themes": [
+      "Revelation",
+      "Equality",
+      "Guidance",
+      "Creation",
+      "Resurrection"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 81,
+    "synopsis": "At-Takwir vividly portrays the cosmic upheaval of the Day of Judgment and then affirms the truthfulness of the revelation. It calls people to recognize the Quran as a serious reminder for those who choose the straight path.",
+    "themes": [
+      "Judgment",
+      "Revelation",
+      "Quran",
+      "Accountability",
+      "Guidance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 82,
+    "synopsis": "Al-Infitar describes the breaking apart of the heavens and the exposure of human deeds on the Day of Judgment. It reminds people that noble recording angels know their actions and that their choices have consequences.",
+    "themes": [
+      "Judgment",
+      "Angels",
+      "Accountability",
+      "Creation",
+      "Deeds"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 83,
+    "synopsis": "Al-Mutaffifin condemns cheating in weights and measures and exposes the corruption of those who deny accountability. It contrasts the records and final destinations of the wicked and righteous.",
+    "themes": [
+      "Honesty",
+      "Commerce",
+      "Accountability",
+      "Records",
+      "Judgment"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 84,
+    "synopsis": "Al-Inshiqaq portrays the earth and heavens responding to Allah’s command on the Day of Judgment. It describes people receiving their records and emphasizes that every person is moving toward a final meeting with Allah.",
+    "themes": [
+      "Judgment",
+      "Records",
+      "Resurrection",
+      "Accountability",
+      "Divine command"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 85,
+    "synopsis": "Al-Buruj recalls believers who were persecuted for their faith and emphasizes Allah’s justice and power. It warns persecutors and assures believers that their sacrifice is known and rewarded.",
+    "themes": [
+      "Persecution",
+      "Faith",
+      "Patience",
+      "Divine justice",
+      "Reward"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 86,
+    "synopsis": "At-Tariq points to the origins and vulnerability of human beings and reminds them that Allah has power to resurrect them. It also affirms the Quran’s truth and warns that divine plans ultimately prevail.",
+    "themes": [
+      "Creation",
+      "Resurrection",
+      "Revelation",
+      "Divine power",
+      "Judgment"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 87,
+    "synopsis": "Al-A'la glorifies Allah as the Creator and reminds people of His guidance and provision. It encourages purification, remembrance, prayer, and preference for the everlasting Hereafter over temporary worldly life.",
+    "themes": [
+      "Glorification",
+      "Creation",
+      "Remembrance",
+      "Purification",
+      "Hereafter"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 88,
+    "synopsis": "Al-Ghashiyah describes the overwhelming Day of Judgment and contrasts the faces of the miserable and the joyful. It then invites reflection on camels, sky, mountains, and earth as signs of Allah’s creative power.",
+    "themes": [
+      "Judgment",
+      "Creation",
+      "Paradise",
+      "Hell",
+      "Reflection"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 89,
+    "synopsis": "Al-Fajr recalls destroyed civilizations and warns against arrogance and love of wealth. It contrasts the restless soul with the peaceful soul welcomed by Allah.",
+    "themes": [
+      "Accountability",
+      "Wealth",
+      "Arrogance",
+      "Judgment",
+      "Peaceful soul"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 90,
+    "synopsis": "Al-Balad describes human life as a struggle and identifies the difficult path as freeing people, feeding the needy, and believing with patience and mercy. It contrasts the people of the right with those who reject truth.",
+    "themes": [
+      "Charity",
+      "Compassion",
+      "Faith",
+      "Patience",
+      "Moral struggle"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 91,
+    "synopsis": "Ash-Shams emphasizes the purification of the soul and the consequences of corrupting it. The story of Thamud illustrates how rebellion and rejection can lead to destruction.",
+    "themes": [
+      "Purification",
+      "Soul",
+      "Thamud",
+      "Righteousness",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 92,
+    "synopsis": "Al-Layl contrasts people who give, fear Allah, and affirm goodness with those who are miserly and deny truth. It teaches that sincere generosity and righteousness lead toward ease and ultimate success.",
+    "themes": [
+      "Charity",
+      "Righteousness",
+      "Generosity",
+      "Faith",
+      "Consequences"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 93,
+    "synopsis": "Ad-Duha reassures the Prophet that Allah has not abandoned him and reminds him of past divine care. It then commands kindness toward orphans, the needy, and those who seek help.",
+    "themes": [
+      "Divine care",
+      "Hope",
+      "Gratitude",
+      "Orphans",
+      "Compassion"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 94,
+    "synopsis": "Ash-Sharh comforts the Prophet by recalling Allah’s relief and support. It teaches that hardship is accompanied by ease and encourages continued effort, worship, and turning toward Allah.",
+    "themes": [
+      "Relief",
+      "Patience",
+      "Hope",
+      "Worship",
+      "Perseverance"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 95,
+    "synopsis": "At-Tin reflects on the noble creation of humanity and warns that people can fall to the lowest state through rejection and corruption. It affirms faith and righteous deeds as the path to lasting reward.",
+    "themes": [
+      "Human dignity",
+      "Faith",
+      "Righteous deeds",
+      "Judgment",
+      "Creation"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 96,
+    "synopsis": "Al-'Alaq begins with the command to read in the name of the Creator and emphasizes human creation, knowledge, and Allah’s generosity. It also depicts arrogance and resistance to worship and calls the servant to draw near to Allah.",
+    "themes": [
+      "Revelation",
+      "Knowledge",
+      "Creation",
+      "Worship",
+      "Humility"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 97,
+    "synopsis": "Al-Qadr describes the immense significance of the Night of Decree, when the Quran was sent down. It highlights the descent of angels and the peace of the night until dawn.",
+    "themes": [
+      "Laylat al-Qadr",
+      "Quran",
+      "Revelation",
+      "Angels",
+      "Peace"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 98,
+    "synopsis": "Al-Bayyinah explains the arrival of clear evidence through the Messenger and revelation. It contrasts those who reject truth with sincere believers who worship Allah, pray, and give charity.",
+    "themes": [
+      "Clear evidence",
+      "Faith",
+      "Worship",
+      "Charity",
+      "Judgment"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 99,
+    "synopsis": "Az-Zalzalah depicts the earth shaking and revealing its burdens on the Day of Judgment. It emphasizes that even the smallest good or evil deed will be seen and accounted for.",
+    "themes": [
+      "Judgment",
+      "Deeds",
+      "Accountability",
+      "Resurrection",
+      "Earth"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 100,
+    "synopsis": "Al-Adiyat evokes powerful imagery of charging horses before turning to the ingratitude and greed of human beings. It reminds people that Allah knows what is hidden in hearts and that the graves will reveal their contents.",
+    "themes": [
+      "Ingratitude",
+      "Greed",
+      "Accountability",
+      "Resurrection",
+      "Human nature"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 101,
+    "synopsis": "Al-Qari'ah describes the striking calamity of the Day of Judgment and the weighing of deeds. The fate of each person depends upon the weight of their good deeds.",
+    "themes": [
+      "Judgment",
+      "Deeds",
+      "Resurrection",
+      "Accountability",
+      "Weighing"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 102,
+    "synopsis": "At-Takathur warns that competition for greater wealth and worldly abundance distracts people from their ultimate purpose. It reminds humanity that they will eventually see the consequences and be questioned about blessings.",
+    "themes": [
+      "Worldly competition",
+      "Wealth",
+      "Accountability",
+      "Blessings",
+      "Hereafter"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 103,
+    "synopsis": "Al-Asr declares humanity to be in loss except those who believe, do righteous deeds, encourage truth, and encourage patience. It summarizes a concise framework for spiritual and moral success.",
+    "themes": [
+      "Faith",
+      "Righteous deeds",
+      "Truth",
+      "Patience",
+      "Time"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 104,
+    "synopsis": "Al-Humazah condemns mockery, slander, and obsessive accumulation of wealth. It warns that arrogance and reliance on possessions cannot protect a person from divine judgment.",
+    "themes": [
+      "Slander",
+      "Wealth",
+      "Arrogance",
+      "Judgment",
+      "Accountability"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 105,
+    "synopsis": "Al-Fil recalls Allah’s protection of the Ka'bah from the army of the elephant. It demonstrates divine power and reminds people that worldly force cannot overcome Allah’s will.",
+    "themes": [
+      "Ka'bah",
+      "Divine protection",
+      "Power",
+      "History",
+      "Judgment"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 106,
+    "synopsis": "Quraysh reminds the Quraysh of the security and provision Allah granted them through their journeys and the sanctuary. It calls them to worship the Lord of the Ka'bah who provided food and safety.",
+    "themes": [
+      "Provision",
+      "Security",
+      "Ka'bah",
+      "Worship",
+      "Gratitude"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 107,
+    "synopsis": "Al-Ma'un condemns those who deny the moral reality of religion by mistreating orphans, neglecting the needy, and performing worship without sincerity. It emphasizes that genuine worship must produce compassion and care for others.",
+    "themes": [
+      "Compassion",
+      "Prayer",
+      "Sincerity",
+      "Orphans",
+      "Charity"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 108,
+    "synopsis": "Al-Kawthar reassures the Prophet with Allah’s abundant favor and commands sincere prayer and sacrifice. It assures him that his opponents and their hostility will ultimately have no lasting consequence.",
+    "themes": [
+      "Divine favor",
+      "Prayer",
+      "Sacrifice",
+      "Prophethood",
+      "Hope"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 109,
+    "synopsis": "Al-Kafirun establishes a clear distinction between Islamic worship and the worship of false gods. It teaches the Prophet to remain firm in exclusive devotion to Allah rather than compromise matters of faith.",
+    "themes": [
+      "Tawhid",
+      "Worship",
+      "Religious distinction",
+      "Sincerity",
+      "Faith"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 110,
+    "synopsis": "An-Nasr announces divine help and victory and instructs the Prophet to glorify Allah and seek His forgiveness. It describes people entering Allah’s religion in groups.",
+    "themes": [
+      "Victory",
+      "Praise",
+      "Forgiveness",
+      "Mission",
+      "Gratitude"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 111,
+    "synopsis": "Al-Masad condemns the hostility of Abu Lahab and his wife toward the Prophet and the message. It illustrates that wealth, status, and family ties cannot protect a person from the consequences of persistent opposition to truth.",
+    "themes": [
+      "Opposition",
+      "Arrogance",
+      "Wealth",
+      "Judgment",
+      "Prophethood"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 112,
+    "synopsis": "Al-Ikhlas gives a concise declaration of Allah’s absolute oneness, uniqueness, independence, and incomparability. It rejects any attribution of offspring, ancestry, or equal partners to Allah.",
+    "themes": [
+      "Tawhid",
+      "Allah’s uniqueness",
+      "Worship",
+      "Divine attributes"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 113,
+    "synopsis": "Al-Falaq teaches the believer to seek refuge in Allah from external forms of harm, including darkness, harmful practices, and envy. It affirms Allah as the ultimate protector.",
+    "themes": [
+      "Protection",
+      "Refuge",
+      "Envy",
+      "Evil",
+      "Trust in Allah"
+    ],
+    "source": "quran_en.json only"
+  },
+  {
+    "surah_id": 114,
+    "synopsis": "An-Nas teaches the believer to seek refuge in the Lord, King, and God of humanity from the whispering of evil. It emphasizes Allah’s protection from hidden influences that affect the heart and mind.",
+    "themes": [
+      "Protection",
+      "Refuge",
+      "Temptation",
+      "Whispering",
+      "Tawhid"
+    ],
+    "source": "quran_en.json only"
+  }
+]

@@ -34,7 +34,7 @@ public partial class MainWindow : Window
 
     private void ShowPage(string pageName)
     {
-        MainContent.Content = pageName switch
+        AView page = pageName switch
         {
             "Home" => new HomeView(),
             "Quran" => new QuranView(),
@@ -44,6 +44,8 @@ public partial class MainWindow : Window
 
             _ => new HomeView()
         };
+        page.Load();
+        MainContent.Content = page;
     }
 
     private void EnableNavButtons()

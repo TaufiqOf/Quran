@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
@@ -6,41 +7,51 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
     </PropertyGroup>
 
+    <!-- Application resources -->
     <ItemGroup>
-        <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Data\*.json" />
     </ItemGroup>
 
+    <!-- NuGet packages -->
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="12.1.1" />
         <PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1" />
+
         <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
+
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="FluentIcons.Avalonia" Version="2.1.337" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     </ItemGroup>
 
+    <!-- Avalonia pages -->
     <ItemGroup>
-      <AdditionalFiles Include="Views\Pages\HomeView.axaml" />
-      <AdditionalFiles Include="Views\Pages\QuranView.axaml" />
+        <AdditionalFiles Include="Views\Pages\HomeView.axaml" />
+        <AdditionalFiles Include="Views\Pages\QuranView.axaml" />
     </ItemGroup>
 
+    <!-- Code-behind -->
     <ItemGroup>
-      <Compile Update="Views\Pages\BookmarksView.axaml.cs">
-        <DependentUpon>BookmarksView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Pages\SearchView.axaml.cs">
-        <DependentUpon>SearchView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\Pages\SettingsView.axaml.cs">
-        <DependentUpon>SettingsView.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+        <Compile Update="Views\Pages\BookmarksView.axaml.cs">
+            <DependentUpon>BookmarksView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+
+        <Compile Update="Views\Pages\SearchView.axaml.cs">
+            <DependentUpon>SearchView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+
+        <Compile Update="Views\Pages\SettingsView.axaml.cs">
+            <DependentUpon>SettingsView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
+
 </Project>

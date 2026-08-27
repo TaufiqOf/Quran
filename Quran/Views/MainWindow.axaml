@@ -1,6 +1,5 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Quran.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:icon="using:FluentIcons.Avalonia"
@@ -10,12 +9,8 @@
         MinHeight="600"
         MinWidth="800"
         x:Class="Quran.Views.MainWindow"
-        x:DataType="vm:MainViewModel"
         Title="Quran">
 
-    <Design.DataContext>
-        <vm:MainViewModel />
-    </Design.DataContext>
 
     <Grid ColumnDefinitions="250,*" Background="#2e2e33">
 

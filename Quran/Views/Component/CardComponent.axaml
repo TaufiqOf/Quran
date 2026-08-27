@@ -1,0 +1,161 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Quran.Views.Component.CardComponent"
+             Margin="10">
+
+    <UserControl.Styles>
+
+        <!-- Main card -->
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="#2A2A2A"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+
+        <!-- Main title -->
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#F2F2F2"/>
+        </Style>
+
+        <!-- Arabic title -->
+        <Style Selector="TextBlock.arabicTitle">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#F2F2F2"/>
+        </Style>
+
+        <!-- Subtitle -->
+        <Style Selector="TextBlock.subtitle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#BDBDBD"/>
+        </Style>
+
+        <!-- Metadata -->
+        <Style Selector="TextBlock.metadata">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#BDBDBD"/>
+        </Style>
+
+        <!-- Tags -->
+        <Style Selector="TextBlock.tags">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#BDBDBD"/>
+        </Style>
+
+        <!-- Description -->
+        <Style Selector="TextBlock.description">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="LineHeight" Value="28"/>
+            <Setter Property="Foreground" Value="#D0D0D0"/>
+        </Style>
+
+    </UserControl.Styles>
+
+    <Grid
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+
+        <Border
+            Classes="card"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- ========================= -->
+                <!-- Title row -->
+                <!-- ========================= -->
+
+                <Grid Grid.Row="0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- English title -->
+                    <TextBlock
+                        x:Name="TextBlockTitle"
+                        Grid.Column="0"
+                        Classes="title"
+                        VerticalAlignment="Center"/>
+
+                    <!-- Arabic title -->
+                    <TextBlock
+                        x:Name="TextBlockArabicTitle"
+                        Grid.Column="1"
+                        Classes="arabicTitle"
+                        Text="الفاتحة"
+                        FlowDirection="RightToLeft"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"/>
+
+                </Grid>
+
+
+                <!-- ========================= -->
+                <!-- English subtitle -->
+                <!-- ========================= -->
+
+                <TextBlock
+                    x:Name="TextBlockSubtitle"
+                    Grid.Row="1"
+                    Classes="subtitle"
+                    Text="The Opener"
+                    Margin="0,10,0,0"/>
+
+
+                <!-- ========================= -->
+                <!-- Metadata -->
+                <!-- ========================= -->
+
+                <TextBlock
+                    x:Name="TextBlockMetadata"
+                    Grid.Row="2"
+                    Classes="metadata"
+                    Text="Meccan • 7 verses"
+                    Margin="0,8,0,0"/>
+
+
+                <!-- ========================= -->
+                <!-- Tags -->
+                <!-- ========================= -->
+
+                <TextBlock
+                    x:Name="TextBlockTags"
+                    Grid.Row="3"
+                    Classes="tags"
+                    Text="• Praise of Allah • Worship • Guidance • The straight path • Prayer"
+                    TextWrapping="Wrap"
+                    Margin="0,18,0,0"/>
+
+
+                <!-- ========================= -->
+                <!-- Description -->
+                <!-- ========================= -->
+
+                <TextBlock
+                    x:Name="TextBlockDescription"
+                    Grid.Row="4"
+                    Classes="description"
+                    Text="The opening prayer of the Quran, asking Allah for praise, worship, guidance, and the straight path. It establishes the believer’s relationship with Allah and the dependence of humanity upon His guidance."
+                    TextWrapping="Wrap"
+                    Margin="0,18,0,0"/>
+
+            </Grid>
+
+        </Border>
+
+    </Grid>
+
+</UserControl>

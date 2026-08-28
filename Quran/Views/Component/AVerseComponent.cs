@@ -67,6 +67,33 @@ public abstract class AVerseComponent : UserControl, IDisposable
             Padding = new Thickness(4),
             FlowDirection = FlowDirection.LeftToRight
         };
+        var copyVerseItem = new MenuItem
+        {
+            Header = "Copy Verse",
+            Icon = new SymbolIcon
+            {
+                Symbol = Symbol.Copy,
+                FontSize = 18
+            }
+        };
+        var copyTranslationItem = new MenuItem
+        {
+            Header = "Copy Translation",
+            Icon = new SymbolIcon
+            {
+                Symbol = Symbol.Copy,
+                FontSize = 18
+            }
+        };
+        var copyTransliterationItem = new MenuItem
+        {
+            Header = "Copy Transliteration",
+            Icon = new SymbolIcon
+            {
+                Symbol = Symbol.Copy,
+                FontSize = 18
+            }
+        };
 
         var copyItem = new MenuItem
         {
@@ -75,7 +102,8 @@ public abstract class AVerseComponent : UserControl, IDisposable
             {
                 Symbol = Symbol.Copy,
                 FontSize = 18
-            }
+            },
+            Items = { copyVerseItem, copyTranslationItem, copyTransliterationItem }
         };
 
         var bookmarkItem = new MenuItem
@@ -98,9 +126,17 @@ public abstract class AVerseComponent : UserControl, IDisposable
             }
         };
 
-        copyItem.Click += (_, _) =>
+        copyVerseItem.Click += (_, _) =>
         {
             if (Verse != null) CopyVerseRequested?.Invoke(Verse);
+        };
+        copyTranslationItem.Click += (_, _) =>
+        {
+            if (Verse != null) CopyTranslationRequested?.Invoke(Verse);
+        };
+        copyTransliterationItem.Click += (_, _) =>
+        {
+            if (Verse != null) CopyTransliterationRequested?.Invoke(Verse);
         };
 
         bookmarkItem.Click += (_, _) =>
@@ -142,7 +178,8 @@ public abstract class AVerseComponent : UserControl, IDisposable
     public event Action<Verse>? BookmarkVerseRequested;
 
     public event Action<Verse>? CopyVerseRequested;
-
+    public event Action<Verse>? CopyTranslationRequested;
+    public event Action<Verse>? CopyTransliterationRequested;
 
     public virtual void Dispose()
     {
@@ -157,6 +194,8 @@ public abstract class AVerseComponent : UserControl, IDisposable
         PlayVerseRequested = null;
         BookmarkVerseRequested = null;
         CopyVerseRequested = null;
+        CopyTranslationRequested = null;
+        CopyTransliterationRequested = null;
 
         Verse = null;
     }

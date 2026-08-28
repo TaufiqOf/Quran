@@ -12,15 +12,15 @@
         <!-- ========================================= -->
 
         <Style Selector="Border.verse">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Padding" Value="8,5"/>
-            <Setter Property="Margin" Value="4,2"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="8,5" />
+            <Setter Property="Margin" Value="4,2" />
         </Style>
 
         <!-- Selected verse -->
         <Style Selector="Border.verse.selected">
-            <Setter Property="Background" Value="#303A52"/>
+            <Setter Property="Background" Value="#303A52" />
         </Style>
 
 
@@ -29,12 +29,12 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.translation">
-            <Setter Property="FontSize" Value="17"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="TextAlignment" Value="Left"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="LineHeight" Value="27"/>
-            <Setter Property="Margin" Value="20,8,20,0"/>
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="LineHeight" Value="27" />
+            <Setter Property="Margin" Value="20,8,20,0" />
         </Style>
 
         <!-- ========================================= -->
@@ -44,11 +44,11 @@
         <Style Selector="TextBlock.verseNumber">
             <Setter
                 Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri"/>
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
 
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Foreground" Value="#8EA7D8"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Foreground" Value="#8EA7D8" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
     </UserControl.Styles>
@@ -67,8 +67,8 @@
         <Grid>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
 
@@ -81,7 +81,7 @@
                 Grid.Column="0"
                 Classes="verseNumber"
                 Text="۝١"
-                Margin="4,0,8,0"/>
+                Margin="4,0,8,0" />
 
 
             <!-- ================================= -->
@@ -91,7 +91,7 @@
             <TextBlock
                 x:Name="TextBlockTranslation"
                 Grid.Column="1"
-                Classes="translation"/>
+                Classes="translation" />
 
         </Grid>
 

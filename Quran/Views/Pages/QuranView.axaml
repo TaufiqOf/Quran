@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:component="clr-namespace:Quran.Views.Component"
-             xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
              x:Class="Quran.Views.Pages.QuranView">
 
     <Grid
@@ -18,13 +17,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Row="0">
-                <ComboBox 
-                    x:Name="ModeComboBox" 
-                    SelectionChanged="SelectingItemsControl_OnSelectionChanged">
-  
-                </ComboBox>
+                <ComboBox
+                    x:Name="ModeComboBox"
+                    SelectionChanged="SelectingItemsControl_OnSelectionChanged" />
             </Grid>
-           <component:GotoComponent
+            <component:GotoComponent
                 SurahSelected="GotoComponent_OnSurahSelected"
                 VerseSelected="GotoComponent_OnVerseSelected"
                 x:Name="GotoComponent"
@@ -34,14 +31,14 @@
         <!-- Quran Content -->
         <!-- =============================== -->
 
-    <component:ReaderComponent 
-        x:Name="ReaderComponent" 
-        Focusable="True"
-        IsTabStop="True"
-        KeyDown="ReaderComponent_OnKeyDown"
-        VerseSelected="ReaderComponent_OnVerseSelected"
-        VersesLoaded="ReaderComponent_OnVersesLoaded"
-        Grid.Row="1" />
+        <component:ReaderComponent
+            x:Name="ReaderComponent"
+            Focusable="True"
+            IsTabStop="True"
+            KeyDown="ReaderComponent_OnKeyDown"
+            VerseSelected="ReaderComponent_OnVerseSelected"
+            VersesLoaded="ReaderComponent_OnVersesLoaded"
+            Grid.Row="1" />
     </Grid>
 
 </UserControl>

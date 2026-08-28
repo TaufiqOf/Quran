@@ -1,116 +1,458 @@
 [
-  {"surah": 96, "order": 1},
-  {"surah": 68, "order": 2},
-  {"surah": 73, "order": 3},
-  {"surah": 74, "order": 4},
-  {"surah": 1, "order": 5},
-  {"surah": 111, "order": 6},
-  {"surah": 81, "order": 7},
-  {"surah": 87, "order": 8},
-  {"surah": 92, "order": 9},
-  {"surah": 89, "order": 10},
-  {"surah": 93, "order": 11},
-  {"surah": 94, "order": 12},
-  {"surah": 103, "order": 13},
-  {"surah": 100, "order": 14},
-  {"surah": 108, "order": 15},
-  {"surah": 102, "order": 16},
-  {"surah": 107, "order": 17},
-  {"surah": 109, "order": 18},
-  {"surah": 105, "order": 19},
-  {"surah": 113, "order": 20},
-  {"surah": 114, "order": 21},
-  {"surah": 112, "order": 22},
-  {"surah": 53, "order": 23},
-  {"surah": 80, "order": 24},
-  {"surah": 97, "order": 25},
-  {"surah": 91, "order": 26},
-  {"surah": 85, "order": 27},
-  {"surah": 95, "order": 28},
-  {"surah": 106, "order": 29},
-  {"surah": 101, "order": 30},
-  {"surah": 75, "order": 31},
-  {"surah": 104, "order": 32},
-  {"surah": 77, "order": 33},
-  {"surah": 50, "order": 34},
-  {"surah": 90, "order": 35},
-  {"surah": 86, "order": 36},
-  {"surah": 54, "order": 37},
-  {"surah": 38, "order": 38},
-  {"surah": 7, "order": 39},
-  {"surah": 72, "order": 40},
-  {"surah": 36, "order": 41},
-  {"surah": 25, "order": 42},
-  {"surah": 35, "order": 43},
-  {"surah": 19, "order": 44},
-  {"surah": 20, "order": 45},
-  {"surah": 56, "order": 46},
-  {"surah": 26, "order": 47},
-  {"surah": 27, "order": 48},
-  {"surah": 28, "order": 49},
-  {"surah": 17, "order": 50},
-  {"surah": 10, "order": 51},
-  {"surah": 11, "order": 52},
-  {"surah": 12, "order": 53},
-  {"surah": 15, "order": 54},
-  {"surah": 6, "order": 55},
-  {"surah": 37, "order": 56},
-  {"surah": 31, "order": 57},
-  {"surah": 34, "order": 58},
-  {"surah": 39, "order": 59},
-  {"surah": 40, "order": 60},
-  {"surah": 41, "order": 61},
-  {"surah": 42, "order": 62},
-  {"surah": 43, "order": 63},
-  {"surah": 44, "order": 64},
-  {"surah": 45, "order": 65},
-  {"surah": 46, "order": 66},
-  {"surah": 51, "order": 67},
-  {"surah": 88, "order": 68},
-  {"surah": 18, "order": 69},
-  {"surah": 16, "order": 70},
-  {"surah": 71, "order": 71},
-  {"surah": 14, "order": 72},
-  {"surah": 21, "order": 73},
-  {"surah": 23, "order": 74},
-  {"surah": 32, "order": 75},
-  {"surah": 52, "order": 76},
-  {"surah": 67, "order": 77},
-  {"surah": 69, "order": 78},
-  {"surah": 70, "order": 79},
-  {"surah": 78, "order": 80},
-  {"surah": 79, "order": 81},
-  {"surah": 82, "order": 82},
-  {"surah": 84, "order": 83},
-  {"surah": 30, "order": 84},
-  {"surah": 29, "order": 85},
-  {"surah": 83, "order": 86},
-  {"surah": 2, "order": 87},
-  {"surah": 8, "order": 88},
-  {"surah": 3, "order": 89},
-  {"surah": 33, "order": 90},
-  {"surah": 60, "order": 91},
-  {"surah": 4, "order": 92},
-  {"surah": 99, "order": 93},
-  {"surah": 57, "order": 94},
-  {"surah": 47, "order": 95},
-  {"surah": 13, "order": 96},
-  {"surah": 55, "order": 97},
-  {"surah": 76, "order": 98},
-  {"surah": 65, "order": 99},
-  {"surah": 98, "order": 100},
-  {"surah": 59, "order": 101},
-  {"surah": 24, "order": 102},
-  {"surah": 22, "order": 103},
-  {"surah": 63, "order": 104},
-  {"surah": 58, "order": 105},
-  {"surah": 49, "order": 106},
-  {"surah": 66, "order": 107},
-  {"surah": 64, "order": 108},
-  {"surah": 61, "order": 109},
-  {"surah": 62, "order": 110},
-  {"surah": 48, "order": 111},
-  {"surah": 5, "order": 112},
-  {"surah": 9, "order": 113},
-  {"surah": 110, "order": 114}
+  {
+    "surah": 96,
+    "order": 1
+  },
+  {
+    "surah": 68,
+    "order": 2
+  },
+  {
+    "surah": 73,
+    "order": 3
+  },
+  {
+    "surah": 74,
+    "order": 4
+  },
+  {
+    "surah": 1,
+    "order": 5
+  },
+  {
+    "surah": 111,
+    "order": 6
+  },
+  {
+    "surah": 81,
+    "order": 7
+  },
+  {
+    "surah": 87,
+    "order": 8
+  },
+  {
+    "surah": 92,
+    "order": 9
+  },
+  {
+    "surah": 89,
+    "order": 10
+  },
+  {
+    "surah": 93,
+    "order": 11
+  },
+  {
+    "surah": 94,
+    "order": 12
+  },
+  {
+    "surah": 103,
+    "order": 13
+  },
+  {
+    "surah": 100,
+    "order": 14
+  },
+  {
+    "surah": 108,
+    "order": 15
+  },
+  {
+    "surah": 102,
+    "order": 16
+  },
+  {
+    "surah": 107,
+    "order": 17
+  },
+  {
+    "surah": 109,
+    "order": 18
+  },
+  {
+    "surah": 105,
+    "order": 19
+  },
+  {
+    "surah": 113,
+    "order": 20
+  },
+  {
+    "surah": 114,
+    "order": 21
+  },
+  {
+    "surah": 112,
+    "order": 22
+  },
+  {
+    "surah": 53,
+    "order": 23
+  },
+  {
+    "surah": 80,
+    "order": 24
+  },
+  {
+    "surah": 97,
+    "order": 25
+  },
+  {
+    "surah": 91,
+    "order": 26
+  },
+  {
+    "surah": 85,
+    "order": 27
+  },
+  {
+    "surah": 95,
+    "order": 28
+  },
+  {
+    "surah": 106,
+    "order": 29
+  },
+  {
+    "surah": 101,
+    "order": 30
+  },
+  {
+    "surah": 75,
+    "order": 31
+  },
+  {
+    "surah": 104,
+    "order": 32
+  },
+  {
+    "surah": 77,
+    "order": 33
+  },
+  {
+    "surah": 50,
+    "order": 34
+  },
+  {
+    "surah": 90,
+    "order": 35
+  },
+  {
+    "surah": 86,
+    "order": 36
+  },
+  {
+    "surah": 54,
+    "order": 37
+  },
+  {
+    "surah": 38,
+    "order": 38
+  },
+  {
+    "surah": 7,
+    "order": 39
+  },
+  {
+    "surah": 72,
+    "order": 40
+  },
+  {
+    "surah": 36,
+    "order": 41
+  },
+  {
+    "surah": 25,
+    "order": 42
+  },
+  {
+    "surah": 35,
+    "order": 43
+  },
+  {
+    "surah": 19,
+    "order": 44
+  },
+  {
+    "surah": 20,
+    "order": 45
+  },
+  {
+    "surah": 56,
+    "order": 46
+  },
+  {
+    "surah": 26,
+    "order": 47
+  },
+  {
+    "surah": 27,
+    "order": 48
+  },
+  {
+    "surah": 28,
+    "order": 49
+  },
+  {
+    "surah": 17,
+    "order": 50
+  },
+  {
+    "surah": 10,
+    "order": 51
+  },
+  {
+    "surah": 11,
+    "order": 52
+  },
+  {
+    "surah": 12,
+    "order": 53
+  },
+  {
+    "surah": 15,
+    "order": 54
+  },
+  {
+    "surah": 6,
+    "order": 55
+  },
+  {
+    "surah": 37,
+    "order": 56
+  },
+  {
+    "surah": 31,
+    "order": 57
+  },
+  {
+    "surah": 34,
+    "order": 58
+  },
+  {
+    "surah": 39,
+    "order": 59
+  },
+  {
+    "surah": 40,
+    "order": 60
+  },
+  {
+    "surah": 41,
+    "order": 61
+  },
+  {
+    "surah": 42,
+    "order": 62
+  },
+  {
+    "surah": 43,
+    "order": 63
+  },
+  {
+    "surah": 44,
+    "order": 64
+  },
+  {
+    "surah": 45,
+    "order": 65
+  },
+  {
+    "surah": 46,
+    "order": 66
+  },
+  {
+    "surah": 51,
+    "order": 67
+  },
+  {
+    "surah": 88,
+    "order": 68
+  },
+  {
+    "surah": 18,
+    "order": 69
+  },
+  {
+    "surah": 16,
+    "order": 70
+  },
+  {
+    "surah": 71,
+    "order": 71
+  },
+  {
+    "surah": 14,
+    "order": 72
+  },
+  {
+    "surah": 21,
+    "order": 73
+  },
+  {
+    "surah": 23,
+    "order": 74
+  },
+  {
+    "surah": 32,
+    "order": 75
+  },
+  {
+    "surah": 52,
+    "order": 76
+  },
+  {
+    "surah": 67,
+    "order": 77
+  },
+  {
+    "surah": 69,
+    "order": 78
+  },
+  {
+    "surah": 70,
+    "order": 79
+  },
+  {
+    "surah": 78,
+    "order": 80
+  },
+  {
+    "surah": 79,
+    "order": 81
+  },
+  {
+    "surah": 82,
+    "order": 82
+  },
+  {
+    "surah": 84,
+    "order": 83
+  },
+  {
+    "surah": 30,
+    "order": 84
+  },
+  {
+    "surah": 29,
+    "order": 85
+  },
+  {
+    "surah": 83,
+    "order": 86
+  },
+  {
+    "surah": 2,
+    "order": 87
+  },
+  {
+    "surah": 8,
+    "order": 88
+  },
+  {
+    "surah": 3,
+    "order": 89
+  },
+  {
+    "surah": 33,
+    "order": 90
+  },
+  {
+    "surah": 60,
+    "order": 91
+  },
+  {
+    "surah": 4,
+    "order": 92
+  },
+  {
+    "surah": 99,
+    "order": 93
+  },
+  {
+    "surah": 57,
+    "order": 94
+  },
+  {
+    "surah": 47,
+    "order": 95
+  },
+  {
+    "surah": 13,
+    "order": 96
+  },
+  {
+    "surah": 55,
+    "order": 97
+  },
+  {
+    "surah": 76,
+    "order": 98
+  },
+  {
+    "surah": 65,
+    "order": 99
+  },
+  {
+    "surah": 98,
+    "order": 100
+  },
+  {
+    "surah": 59,
+    "order": 101
+  },
+  {
+    "surah": 24,
+    "order": 102
+  },
+  {
+    "surah": 22,
+    "order": 103
+  },
+  {
+    "surah": 63,
+    "order": 104
+  },
+  {
+    "surah": 58,
+    "order": 105
+  },
+  {
+    "surah": 49,
+    "order": 106
+  },
+  {
+    "surah": 66,
+    "order": 107
+  },
+  {
+    "surah": 64,
+    "order": 108
+  },
+  {
+    "surah": 61,
+    "order": 109
+  },
+  {
+    "surah": 62,
+    "order": 110
+  },
+  {
+    "surah": 48,
+    "order": 111
+  },
+  {
+    "surah": 5,
+    "order": 112
+  },
+  {
+    "surah": 9,
+    "order": 113
+  },
+  {
+    "surah": 110,
+    "order": 114
+  }
 ]

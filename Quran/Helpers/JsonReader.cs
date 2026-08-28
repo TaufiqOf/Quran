@@ -16,10 +16,8 @@ public static class JsonReader
             .Name;
 
         if (string.IsNullOrWhiteSpace(assemblyName))
-        {
             throw new InvalidOperationException(
                 "Could not determine assembly name.");
-        }
 
         var uri = new Uri(
             $"avares://{assemblyName}/Data/{resourceName}");

@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Quran.Helpers;
 using Quran.Models;
 
 namespace Quran.Views.Component;
@@ -19,9 +17,6 @@ public partial class GotoComponent : UserControl
     public event VerseSelectedHandler? VerseSelected;
 
     private IEnumerable<Surah> _surahs = [];
-    private IEnumerable<SurahOrder> _surahOrder = [];
-    private IEnumerable<SurahSynopsis> _surahSynopsis = [];
-    private bool _showOnlySurah;
 
 
     public GotoComponent()
@@ -38,14 +33,14 @@ public partial class GotoComponent : UserControl
 
     public bool ShowOnlySurah
     {
-        get => _showOnlySurah;
+        get;
         set
         {
             VerseLabel.IsVisible = !value;
             PreviousButton.IsVisible = !value;
             NextButton.IsVisible = !value;
             VerseComboBox.IsVisible = !value;
-            _showOnlySurah = value;
+            field = value;
         }
     }
 
@@ -59,15 +54,11 @@ public partial class GotoComponent : UserControl
         IEnumerable<SurahSynopsis> surahSynopsis)
     {
         _surahs = surahs;
-        _surahOrder = surahOrder;
-        _surahSynopsis = surahSynopsis;
-
 
         // Populate Surah ComboBox.
         SurahComboBox.Items.Clear();
 
         foreach (var surah in _surahs)
-        {
             SurahComboBox.Items.Add(
                 new ComboBoxItem
                 {
@@ -75,7 +66,6 @@ public partial class GotoComponent : UserControl
                         $"{surah.Id}. {surah.Transliteration} ({surah.TotalVerses}) - {surah.Name}",
                     Tag = surah
                 });
-        }
 
 
         return Task.CompletedTask;
@@ -98,38 +88,24 @@ public partial class GotoComponent : UserControl
         VerseComboBox.Items.Clear();
 
         foreach (var verse in surah.Verses)
-        {
             VerseComboBox.Items.Add(
                 new ComboBoxItem
                 {
                     Content = $"Verse {verse.Id}",
                     Tag = verse.Id
                 });
-        }
 
 
         PreviousButton.IsEnabled = false;
         NextButton.IsEnabled = true;
         PreviousSurahButton.IsEnabled = SurahComboBox.SelectedIndex > 0;
-        if (SurahComboBox.SelectedIndex > 0)
-        {
-            NextSurahButton.IsEnabled = true;
-        }
+        if (SurahComboBox.SelectedIndex > 0) NextSurahButton.IsEnabled = true;
 
-        if (SurahComboBox.SelectedIndex == 0)
-        {
-            PreviousSurahButton.IsEnabled = false;
-        }
+        if (SurahComboBox.SelectedIndex == 0) PreviousSurahButton.IsEnabled = false;
 
-        if (SurahComboBox.SelectedIndex < SurahComboBox.Items.Count - 1)
-        {
-            PreviousSurahButton.IsEnabled = true;
-        }
+        if (SurahComboBox.SelectedIndex < SurahComboBox.Items.Count - 1) PreviousSurahButton.IsEnabled = true;
 
-        if (SurahComboBox.SelectedIndex == SurahComboBox.Items.Count - 1)
-        {
-            NextSurahButton.IsEnabled = false;
-        }
+        if (SurahComboBox.SelectedIndex == SurahComboBox.Items.Count - 1) NextSurahButton.IsEnabled = false;
 
         PreviousButton.IsEnabled = false;
         SurahSelected?.Invoke(surah);
@@ -144,25 +120,13 @@ public partial class GotoComponent : UserControl
 
         var selectedIndex =
             VerseComboBox.SelectedIndex;
-        if (VerseComboBox.SelectedIndex > 0)
-        {
-            PreviousButton.IsEnabled = true;
-        }
+        if (VerseComboBox.SelectedIndex > 0) PreviousButton.IsEnabled = true;
 
-        if (VerseComboBox.SelectedIndex == 0)
-        {
-            PreviousButton.IsEnabled = false;
-        }
+        if (VerseComboBox.SelectedIndex == 0) PreviousButton.IsEnabled = false;
 
-        if (VerseComboBox.SelectedIndex < VerseComboBox.Items.Count - 1)
-        {
-            NextButton.IsEnabled = true;
-        }
+        if (VerseComboBox.SelectedIndex < VerseComboBox.Items.Count - 1) NextButton.IsEnabled = true;
 
-        if (VerseComboBox.SelectedIndex == VerseComboBox.Items.Count - 1)
-        {
-            NextButton.IsEnabled = false;
-        }
+        if (VerseComboBox.SelectedIndex == VerseComboBox.Items.Count - 1) NextButton.IsEnabled = false;
 
         VerseSelected?.Invoke(selectedIndex + 1);
     }
@@ -175,10 +139,7 @@ public partial class GotoComponent : UserControl
             NextButton.IsEnabled = true;
         }
 
-        if (VerseComboBox.SelectedIndex == 0)
-        {
-            PreviousButton.IsEnabled = false;
-        }
+        if (VerseComboBox.SelectedIndex == 0) PreviousButton.IsEnabled = false;
     }
 
     private void NextButton_OnClick(object? sender, RoutedEventArgs e)
@@ -189,10 +150,7 @@ public partial class GotoComponent : UserControl
             PreviousButton.IsEnabled = true;
         }
 
-        if (VerseComboBox.SelectedIndex == VerseComboBox.Items.Count - 1)
-        {
-            NextButton.IsEnabled = false;
-        }
+        if (VerseComboBox.SelectedIndex == VerseComboBox.Items.Count - 1) NextButton.IsEnabled = false;
     }
 
     private void PreviousSurahButton_OnClick(object? sender, RoutedEventArgs e)
@@ -203,10 +161,7 @@ public partial class GotoComponent : UserControl
             NextSurahButton.IsEnabled = true;
         }
 
-        if (SurahComboBox.SelectedIndex == 0)
-        {
-            PreviousSurahButton.IsEnabled = false;
-        }
+        if (SurahComboBox.SelectedIndex == 0) PreviousSurahButton.IsEnabled = false;
 
         PreviousButton.IsEnabled = false;
     }
@@ -219,10 +174,7 @@ public partial class GotoComponent : UserControl
             PreviousSurahButton.IsEnabled = true;
         }
 
-        if (SurahComboBox.SelectedIndex == SurahComboBox.Items.Count - 1)
-        {
-            NextSurahButton.IsEnabled = false;
-        }
+        if (SurahComboBox.SelectedIndex == SurahComboBox.Items.Count - 1) NextSurahButton.IsEnabled = false;
 
         PreviousButton.IsEnabled = false;
     }

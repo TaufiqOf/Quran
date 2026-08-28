@@ -3,7 +3,7 @@ using Avalonia.Controls;
 
 namespace Quran.Views.Pages;
 
-public partial class BookmarksView : AView  
+public partial class BookmarksView : AView
 {
     public BookmarksView()
     {

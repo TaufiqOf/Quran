@@ -3,105 +3,53 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="Quran.Views.Component.VerseQuranicComponent"
     x:Name="Root"
-    HorizontalAlignment="Stretch">
+    FlowDirection="RightToLeft"
+    HorizontalAlignment="Left"
+    VerticalAlignment="Top">
 
     <UserControl.Styles>
 
-        <!-- ========================================= -->
-        <!-- Verse -->
-        <!-- ========================================= -->
-
         <Style Selector="Border.verse">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="CornerRadius" Value="4"/>
-            <Setter Property="Padding" Value="8,5"/>
-            <Setter Property="Margin" Value="4,2"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="2,0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="CornerRadius" Value="4" />
         </Style>
 
-        <!-- Selected verse -->
-        <Style Selector="Border.verse.selected">
-            <Setter Property="Background" Value="#303A52"/>
-        </Style>
-
-
-        <!-- ========================================= -->
-        <!-- Arabic Quran text -->
-        <!-- ========================================= -->
+        <!-- <Style Selector="Border.verse.selected"> -->
+        <!--     <Setter Property="Background" Value="#303A52"/> -->
+        <!-- </Style> -->
 
         <Style Selector="TextBlock.arabic">
             <Setter
                 Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri"/>
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
 
-            <Setter Property="FontSize" Value="30"/>
-            <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="Foreground" Value="#F5F5F5"/>
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="Foreground" Value="#F5F5F5" />
 
-            <Setter Property="FlowDirection" Value="RightToLeft"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-
-            <Setter Property="LineHeight" Value="48"/>
+            <Setter Property="FlowDirection" Value="RightToLeft" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="LineHeight" Value="48" />
         </Style>
-
-
-        <!-- ========================================= -->
-        <!-- Verse number -->
-        <!-- ========================================= -->
-
-        <Style Selector="TextBlock.verseNumber">
-            <Setter
-                Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri"/>
-
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Foreground" Value="#8EA7D8"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
+        <Style Selector="TextBlock.arabic.selected">
+            <Setter Property="Foreground" Value="#3678D4" />
         </Style>
-
     </UserControl.Styles>
-
-
-    <!-- ========================================= -->
-    <!-- Verse -->
-    <!-- ========================================= -->
 
     <Border
         x:Name="VerseCard"
         Classes="verse"
-        HorizontalAlignment="Stretch"
+        HorizontalAlignment="Left"
         PointerPressed="VerseCard_OnPointerPressed">
 
-        <Grid>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-
-            <!-- ================================= -->
-            <!-- Verse marker -->
-            <!-- ================================= -->
-
-            <TextBlock
-                x:Name="TextBlockVerseNumber"
-                Grid.Column="0"
-                Classes="verseNumber"
-                Text="۝١"
-                Margin="4,0,8,0"/>
-
-
-            <!-- ================================= -->
-            <!-- Arabic -->
-            <!-- ================================= -->
-
-            <TextBlock
-                x:Name="TextBlockArabic"
-                Grid.Column="1"
-                Classes="arabic"/>
-
-        </Grid>
+        <TextBlock
+            x:Name="TextBlockArabic"
+            Classes="arabic"
+            TextWrapping="Wrap"
+            TextAlignment="Center"
+            HorizontalAlignment="Stretch" />
 
     </Border>
 

@@ -19,27 +19,22 @@ public static class DataManager
         Surahs = GetSurahs();
         SurahOrders = SurahOrder();
         SurahSynopses = SurahSynopsis();
-        
+
         // Add transliterations to verses.
         foreach (var surahTransliteration in GetSurahTransliterations())
         {
-            var surah = Surahs.FirstOrDefault(
-                q => q.Id == surahTransliteration.Id);
+            var surah = Surahs.FirstOrDefault(q => q.Id == surahTransliteration.Id);
 
             if (surah != null)
-            {
                 foreach (var transliterationVerse in surahTransliteration.Verses)
                 {
                     var verse = surah.Verses
                         .FirstOrDefault(v => v.Id == transliterationVerse.Id);
 
                     if (verse != null)
-                    {
                         verse.Transliteration =
                             transliterationVerse.Transliteration;
-                    }
                 }
-            }
         }
     }
 

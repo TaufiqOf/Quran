@@ -1,52 +1,54 @@
-using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class VerseQuranicComponent : AVerseComponent , IDisposable
+public partial class VerseQuranicComponent : AVerseComponent
 {
     public VerseQuranicComponent(Verse verse)
     {
         Verse = verse;
+
         InitializeComponent();
 
-        TextBlockArabic.Text = verse.Text;
-        TextBlockVerseNumber.Text = $"Verse {verse.Id}";
+        TextBlockArabic.Text =
+            $"{verse.Text} ۝{ToArabicDigits(verse.Id)}";
+    }
+
+    private static string ToArabicDigits(int number)
+    {
+        return number.ToString()
+            .Replace('0', '٠')
+            .Replace('1', '١')
+            .Replace('2', '٢')
+            .Replace('3', '٣')
+            .Replace('4', '٤')
+            .Replace('5', '٥')
+            .Replace('6', '٦')
+            .Replace('7', '٧')
+            .Replace('8', '٨')
+            .Replace('9', '٩');
     }
 
     public override void UpdateSelectedState()
     {
-        if (IsSelected)
-        {
-            VerseCard.Classes.Add("selected");
-        }
-        else
-        {
-            VerseCard.Classes.Remove("selected");
-        }
+        VerseCard.Classes.Set(
+            "selected",
+            IsSelected);
+        TextBlockArabic.Classes.Set(
+            "selected",
+            IsSelected);
     }
 
-    private void ButtonBookmark_OnClick(
+
+    private void VerseCard_OnPointerPressed(
         object? sender,
-        RoutedEventArgs e)
-    {
-    }
-
-    private void ButtonPlay_OnClick(
-        object? sender,
-        RoutedEventArgs e)
-    {
-    }
-
-    private void VerseCard_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        PointerPressedEventArgs e)
     {
         OnVerseSelected(Verse);
     }
+
 
     public override void Dispose()
     {

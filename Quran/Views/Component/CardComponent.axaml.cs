@@ -20,13 +20,9 @@ public partial class CardComponent : UserControl, IDisposable
         set
         {
             if (value)
-            {
                 CardBorder.Classes.Add("selected");
-            }
             else
-            {
                 CardBorder.Classes.Remove("selected");
-            }
         }
     }
 
@@ -54,10 +50,7 @@ public partial class CardComponent : UserControl, IDisposable
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Surah != null)
-        {
-            CardClick?.Invoke(Surah);
-        }
+        if (Surah != null) CardClick?.Invoke(Surah);
     }
 
     public void Dispose()

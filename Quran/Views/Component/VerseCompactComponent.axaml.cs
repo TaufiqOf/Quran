@@ -8,7 +8,7 @@ using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class VerseCompactComponent : AVerseComponent , IDisposable
+public partial class VerseCompactComponent : AVerseComponent, IDisposable
 {
     public VerseCompactComponent(Verse verse)
     {
@@ -24,13 +24,9 @@ public partial class VerseCompactComponent : AVerseComponent , IDisposable
     public override void UpdateSelectedState()
     {
         if (IsSelected)
-        {
             VerseCard.Classes.Add("selected");
-        }
         else
-        {
             VerseCard.Classes.Remove("selected");
-        }
     }
 
     private void ButtonBookmark_OnClick(

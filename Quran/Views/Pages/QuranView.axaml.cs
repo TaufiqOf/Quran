@@ -22,10 +22,7 @@ public partial class QuranView : AView
     public QuranView()
     {
         InitializeComponent();
-        foreach (var value in Enum.GetValues(typeof(ReaderMode)))
-        {
-            ModeComboBox.Items.Add(value.ToString());
-        }
+        foreach (var value in Enum.GetValues(typeof(ReaderMode))) ModeComboBox.Items.Add(value.ToString());
         ModeComboBox.SelectedIndex = 0;
         AttachedToVisualTree += (_, _) =>
         {
@@ -52,10 +49,7 @@ public partial class QuranView : AView
             if (DataManager.CurrentSurah is not null)
             {
                 var index = _surahs.ToList().FindIndex(q => q.Id == DataManager.CurrentSurah.Id);
-                if (index >= 0)
-                {
-                    GotoComponent.SurahSelectedIndex = index;
-                }
+                if (index >= 0) GotoComponent.SurahSelectedIndex = index;
             }
             else
             {
@@ -63,22 +57,15 @@ public partial class QuranView : AView
             }
 
             if (DataManager.CurrentVerseIndex is not null)
-            {
                 GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex.Value;
-            }
         }
         else if (parameter[0] is Surah surahParam)
         {
             var index = _surahs.ToList().FindIndex(q => q.Id == surahParam.Id);
-            if (index >= 0)
-            {
-                GotoComponent.SurahSelectedIndex = index;
-            }
+            if (index >= 0) GotoComponent.SurahSelectedIndex = index;
 
             if (parameter.Length > 1 && parameter[1] is int verseIndexParam)
-            {
                 GotoComponent.VerseSelectedIndex = verseIndexParam;
-            }
         }
 
         return Task.CompletedTask;
@@ -86,15 +73,9 @@ public partial class QuranView : AView
 
     private void GotoComponent_OnSurahSelected(Surah surah)
     {
-        if (_currentSurahIndex == surah.Id)
-        {
-            return;
-        }
+        if (_currentSurahIndex == surah.Id) return;
 
-        if (DataManager.CurrentSurah?.Id != surah.Id)
-        {
-            DataManager.CurrentVerseIndex = 1;
-        }
+        if (DataManager.CurrentSurah?.Id != surah.Id) DataManager.CurrentVerseIndex = 1;
 
         DataManager.CurrentSurah = surah;
 

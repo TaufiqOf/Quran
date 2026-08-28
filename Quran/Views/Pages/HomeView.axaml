@@ -6,7 +6,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            
+
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -21,8 +21,8 @@
                 Grid.Column="1" />
         </Grid>
         <ScrollViewer x:Name="ScrollViewer" Grid.Row="1"
-            HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Auto">
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
             <ItemsControl x:Name="ItemsControl">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

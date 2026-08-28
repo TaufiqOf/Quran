@@ -32,6 +32,19 @@
                 Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
         </Style>
 
+        <Style Selector="Button.verseMenuButton">
+            <Setter Property="Background" Value="#353535" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+
+        <Style Selector="Button.verseMenuButton:pointerover">
+            <Setter Property="Background" Value="#444444" />
+        </Style>
+
+        <Style Selector="Button.verseMenuButton:pressed">
+            <Setter Property="Background" Value="#505050" />
+        </Style>
+
     </Application.Styles>
 
 </Application>

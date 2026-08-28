@@ -27,10 +27,7 @@ public partial class ReaderComponent : UserControl, IDisposable
         get => _mode;
         set
         {
-            if (_mode == value)
-            {
-                return;
-            }
+            if (_mode == value) return;
 
             _mode = value;
             UpdateMode(_mode);
@@ -44,20 +41,36 @@ public partial class ReaderComponent : UserControl, IDisposable
             Dispatcher.UIThread.Post(() =>
             {
                 ClearVerses();
-                foreach (var verse in _verses)
+                if (mode == ReaderMode.Quranic)
                 {
-                    AVerseComponent verseComponent = mode switch
+                    LinerScrollViewer.IsVisible = false;
+                    QuranicScrollViewer.IsVisible = true;
+                    foreach (var verse in _verses)
                     {
-                        ReaderMode.Linear => new VerseComponent(verse),
-                        ReaderMode.Compact => new VerseCompactComponent(verse),
-                        ReaderMode.Quranic => new VerseQuranicComponent(verse),
-                        ReaderMode.Translation => new VerseTranslationComponent(verse),
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
+                        var verseComponent = new VerseQuranicComponent(verse);
+                        _verseComponents.Add(verseComponent);
+                        verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
+                        QuranicItemsControl.Items.Add(verseComponent);
+                    }
+                }
+                else
+                {
+                    LinerScrollViewer.IsVisible = true;
+                    QuranicScrollViewer.IsVisible = false;
+                    foreach (var verse in _verses)
+                    {
+                        AVerseComponent verseComponent = mode switch
+                        {
+                            ReaderMode.Linear => new VerseComponent(verse),
+                            ReaderMode.Compact => new VerseCompactComponent(verse),
+                            ReaderMode.Translation => new VerseTranslationComponent(verse),
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
 
-                    _verseComponents.Add(verseComponent);
-                    verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
-                    LinerItemsControl.Items.Add(verseComponent);
+                        _verseComponents.Add(verseComponent);
+                        verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
+                        LinerItemsControl.Items.Add(verseComponent);
+                    }
                 }
 
                 VersesLoaded?.Invoke();
@@ -86,6 +99,7 @@ public partial class ReaderComponent : UserControl, IDisposable
 
         _verseComponents.Clear();
         LinerItemsControl.Items.Clear();
+        QuranicItemsControl.Items.Clear();
     }
 
     public void AddVerses(IEnumerable<Verse> verses)
@@ -103,23 +117,17 @@ public partial class ReaderComponent : UserControl, IDisposable
     {
         var index = verseIndex - 1;
 
-        if (index < 0 || index >= _verseComponents.Count)
-        {
-            return;
-        }
+        if (index < 0 || index >= _verseComponents.Count) return;
 
-        Dispatcher.UIThread.Post(() =>
-        {
-            LinerItemsControl.ScrollIntoView(index);
-        }, DispatcherPriority.Loaded);
+        if (Mode != ReaderMode.Quranic)
+            Dispatcher.UIThread.Post(() => { LinerItemsControl.ScrollIntoView(index); }, DispatcherPriority.Loaded);
+        else
+            Dispatcher.UIThread.Post(() => { QuranicItemsControl.ScrollIntoView(index); }, DispatcherPriority.Loaded);
     }
 
     public void UpdateSelectedVerse(int verseIndex)
     {
-        for (int i = 0; i < _verseComponents.Count; i++)
-        {
-            _verseComponents[i].IsSelected = i == verseIndex - 1;
-        }
+        for (var i = 0; i < _verseComponents.Count; i++) _verseComponents[i].IsSelected = i == verseIndex - 1;
     }
 
 

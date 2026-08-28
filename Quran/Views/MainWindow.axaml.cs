@@ -8,7 +8,7 @@ namespace Quran.Views;
 public partial class MainWindow : Window
 {
     private AView? CurrentPage { get; set; }
-    private Dictionary<string, AView> Pages { get; set; } = new Dictionary<string, AView>();
+    private Dictionary<string, AView> Pages { get; set; } = new();
 
     public MainWindow()
     {
@@ -33,19 +33,16 @@ public partial class MainWindow : Window
 
     private void ShowPage(string pageName, object? parameter = null)
     {
-        if (this.CurrentPage != null)
-        {
-            this.CurrentPage.GotoPageRequested -= ShowPage;
-        }
+        if (CurrentPage != null) CurrentPage.GotoPageRequested -= ShowPage;
 
-        this.Pages.TryGetValue(pageName, out var currentPage);
+        Pages.TryGetValue(pageName, out var currentPage);
         if (currentPage != null)
         {
-            this.CurrentPage = currentPage;
+            CurrentPage = currentPage;
         }
         else
         {
-            this.CurrentPage = pageName switch
+            CurrentPage = pageName switch
             {
                 "Home" => new HomeView(),
                 "Quran" => new QuranView(),
@@ -55,12 +52,12 @@ public partial class MainWindow : Window
 
                 _ => new HomeView()
             };
-            this.Pages.Add(pageName, this.CurrentPage);
+            Pages.Add(pageName, CurrentPage);
         }
 
-        this.CurrentPage.Load(parameter);
-        MainContent.Content = this.CurrentPage;
-        this.CurrentPage.GotoPageRequested += ShowPage;
+        CurrentPage.Load(parameter);
+        MainContent.Content = CurrentPage;
+        CurrentPage.GotoPageRequested += ShowPage;
         EnableNavButtons(pageName);
     }
 

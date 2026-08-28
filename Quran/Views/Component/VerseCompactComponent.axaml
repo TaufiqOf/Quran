@@ -11,16 +11,16 @@
         <!-- =============================== -->
 
         <Style Selector="Border.verse">
-            <Setter Property="Background" Value="#2a2a2a"/>
-            <Setter Property="CornerRadius" Value="6,6,6,6"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Padding" Value="5,5"/>
-            <Setter Property="Margin" Value="2,2"/>
+            <Setter Property="Background" Value="#2a2a2a" />
+            <Setter Property="CornerRadius" Value="6,6,6,6" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Padding" Value="5,5" />
+            <Setter Property="Margin" Value="2,2" />
         </Style>
 
         <!-- Selected verse -->
         <Style Selector="Border.verse.selected">
-            <Setter Property="BorderBrush" Value="#717171"/>
+            <Setter Property="BorderBrush" Value="#3678D4" />
         </Style>
 
 
@@ -31,13 +31,13 @@
         <Style Selector="TextBlock.arabic">
             <Setter
                 Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri"/>
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
 
-            <Setter Property="FontSize" Value="32"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="FlowDirection" Value="RightToLeft"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FlowDirection" Value="RightToLeft" />
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
 
@@ -46,12 +46,12 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.translation">
-            <Setter Property="FontSize" Value="17"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="LineHeight" Value="27"/>
-            <Setter Property="Margin" Value="20,8,20,0"/>
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="LineHeight" Value="27" />
+            <Setter Property="Margin" Value="20,8,20,0" />
         </Style>
 
 
@@ -60,12 +60,12 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.transliteration">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontStyle" Value="Italic"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="Margin" Value="20,4,20,0"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="20,4,20,0" />
         </Style>
 
 
@@ -74,15 +74,15 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.verseNumber">
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="Foreground" Value="#777777"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="#777777" />
+            <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
 
         <!-- Selected verse number -->
         <Style Selector="Border.verse.selected TextBlock.verseNumber">
-            <Setter Property="Foreground" Value="#3678D4"/>
+            <Setter Property="Foreground" Value="#3678D4" />
         </Style>
 
 
@@ -91,19 +91,19 @@
         <!-- =============================== -->
 
         <Style Selector="Button.iconButton">
-            <Setter Property="Width" Value="36"/>
-            <Setter Property="Height" Value="36"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Width" Value="36" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
         </Style>
 
         <Style Selector="Button.iconButton:pointerover">
-            <Setter Property="Background" Value="#EEEEEE"/>
+            <Setter Property="Background" Value="#EEEEEE" />
         </Style>
 
         <Style Selector="Button.iconButton:pressed">
-            <Setter Property="Background" Value="#DDDDDD"/>
+            <Setter Property="Background" Value="#DDDDDD" />
         </Style>
 
     </UserControl.Styles>
@@ -121,10 +121,10 @@
         <Grid>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
 
@@ -135,7 +135,7 @@
             <TextBlock
                 x:Name="TextBlockArabic"
                 Grid.Row="0"
-                Classes="arabic"/>
+                Classes="arabic" />
 
             <!-- =========================== -->
             <!-- Translation -->
@@ -144,7 +144,7 @@
             <TextBlock
                 x:Name="TextBlockTranslation"
                 Grid.Row="1"
-                Classes="translation"/>
+                Classes="translation" />
 
 
             <!-- =========================== -->
@@ -154,15 +154,15 @@
             <TextBlock
                 x:Name="TextBlockTransliteration"
                 Grid.Row="2"
-                Classes="transliteration"/>
-            
+                Classes="transliteration" />
+
             <TextBlock
                 x:Name="TextBlockVerseNumber"
                 Grid.Row="3"
                 Classes="verseNumber"
                 Text="Verse 1"
                 HorizontalAlignment="Right"
-                Margin="0,0,0,0"/>
+                Margin="0,0,0,0" />
 
         </Grid>
 

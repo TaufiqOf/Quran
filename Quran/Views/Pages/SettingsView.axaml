@@ -4,12 +4,12 @@
 
     <Grid>
 
-        <Grid 
-            HorizontalAlignment="Stretch" 
+        <Grid
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
 
             <StackPanel
-                HorizontalAlignment="Stretch" 
+                HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Spacing="12">
 
@@ -17,12 +17,12 @@
                     Text="Settings"
                     FontSize="32"
                     FontWeight="Bold"
-                    HorizontalAlignment="Center"/>
+                    HorizontalAlignment="Center" />
 
                 <TextBlock
                     Text="Welcome to the Quran application."
                     FontSize="16"
-                    HorizontalAlignment="Center"/>
+                    HorizontalAlignment="Center" />
 
             </StackPanel>
 

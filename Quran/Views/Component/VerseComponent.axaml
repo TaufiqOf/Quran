@@ -12,11 +12,11 @@
         <!-- ========================================= -->
 
         <Style Selector="Border.card">
-            <Setter Property="Background" Value="#2A2A2A"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="CornerRadius" Value="14"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Background" Value="#2A2A2A" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="10" />
         </Style>
 
 
@@ -25,7 +25,7 @@
         <!-- ========================================= -->
 
         <Style Selector="Border.card.selected">
-            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderBrush" Value="#3678D4" />
         </Style>
 
 
@@ -34,13 +34,13 @@
         <!-- ========================================= -->
 
         <Style Selector="TextBlock.verseNumber">
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#8F8F8F"/>
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#8F8F8F" />
         </Style>
 
         <Style Selector="Border.card.selected TextBlock.verseNumber">
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="#3678D4" />
         </Style>
 
 
@@ -51,13 +51,13 @@
         <Style Selector="TextBlock.arabic">
             <Setter
                 Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri"/>
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
 
-            <Setter Property="FontSize" Value="32"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#F2F2F2"/>
-            <Setter Property="TextAlignment" Value="Right"/>
-            <Setter Property="FlowDirection" Value="RightToLeft"/>
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#F2F2F2" />
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="FlowDirection" Value="RightToLeft" />
         </Style>
 
 
@@ -66,10 +66,10 @@
         <!-- ========================================= -->
 
         <Style Selector="TextBlock.transliteration">
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="FontStyle" Value="Italic"/>
-            <Setter Property="Foreground" Value="#BDBDBD"/>
-            <Setter Property="LineHeight" Value="24"/>
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="Foreground" Value="#BDBDBD" />
+            <Setter Property="LineHeight" Value="24" />
         </Style>
 
 
@@ -78,9 +78,9 @@
         <!-- ========================================= -->
 
         <Style Selector="TextBlock.translation">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Foreground" Value="#D8D8D8"/>
-            <Setter Property="LineHeight" Value="26"/>
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="#D8D8D8" />
+            <Setter Property="LineHeight" Value="26" />
         </Style>
 
 
@@ -89,20 +89,20 @@
         <!-- ========================================= -->
 
         <Style Selector="Button.iconButton">
-            <Setter Property="Width" Value="42"/>
-            <Setter Property="Height" Value="42"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="Background" Value="#353535"/>
-            <Setter Property="Foreground" Value="#D8D8D8"/>
+            <Setter Property="Width" Value="42" />
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Background" Value="#353535" />
+            <Setter Property="Foreground" Value="#D8D8D8" />
         </Style>
 
         <Style Selector="Button.iconButton:pointerover">
-            <Setter Property="Background" Value="#444444"/>
+            <Setter Property="Background" Value="#444444" />
         </Style>
 
         <Style Selector="Button.iconButton:pressed">
-            <Setter Property="Background" Value="#505050"/>
+            <Setter Property="Background" Value="#505050" />
         </Style>
 
 
@@ -110,7 +110,7 @@
         <!-- Selected Play/Bookmark Buttons -->
         <!-- ========================================= -->
         <Style Selector="Border.card.selected Button.iconButton">
-            <Setter Property="Background" Value="#404040"/>
+            <Setter Property="Background" Value="#404040" />
         </Style>
     </UserControl.Styles>
 
@@ -129,18 +129,17 @@
         <Grid x:Name="VerseGrid">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
 
             <!-- ===================================== -->
             <!-- Verse Number -->
             <!-- ===================================== -->
-
 
 
             <!-- ===================================== -->
@@ -153,7 +152,7 @@
                 Classes="arabic"
                 TextWrapping="Wrap"
                 HorizontalAlignment="Stretch"
-                Margin="0,0,0,18"/>
+                Margin="0,0,0,18" />
 
 
             <!-- ===================================== -->
@@ -166,7 +165,7 @@
                 Classes="transliteration"
                 TextWrapping="Wrap"
                 HorizontalAlignment="Right"
-                Margin="0,0,0,12"/>
+                Margin="0,0,0,12" />
 
 
             <!-- ===================================== -->
@@ -179,7 +178,7 @@
                 Classes="translation"
                 TextWrapping="Wrap"
                 HorizontalAlignment="Stretch"
-                Margin="0,0,0,18"/>
+                Margin="0,0,0,18" />
 
 
             <!-- ===================================== -->
@@ -193,7 +192,7 @@
                 Text="Verse 1"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Margin="0,0,0,0"/>
+                Margin="0,0,0,0" />
             <StackPanel
                 x:Name="ButtonPanel"
                 Grid.Row="4"
@@ -210,7 +209,7 @@
                     <icons:SymbolIcon
                         x:Name="IconPlay"
                         Symbol="Play"
-                        FontSize="20"/>
+                        FontSize="20" />
 
                 </Button>
 
@@ -224,7 +223,7 @@
                     <icons:SymbolIcon
                         x:Name="IconBookmark"
                         Symbol="Bookmark"
-                        FontSize="20"/>
+                        FontSize="20" />
 
                 </Button>
 

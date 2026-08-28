@@ -11,7 +11,7 @@ namespace Quran.Views.Pages;
 
 public partial class HomeView : AView
 {
-    public List<CardComponent> Cards { get; set; } = new List<CardComponent>();
+    public List<CardComponent> Cards { get; set; } = new();
     private IEnumerable<Surah> _surahs = new List<Surah>();
     private List<SurahOrder> _surahOrder;
     private List<SurahSynopsis> _surahSynopsis;
@@ -38,6 +38,7 @@ public partial class HomeView : AView
                 Cards.Add(card);
                 ItemsControl.Items.Add(card);
             }
+
             _isLoaded = true;
         }
 
@@ -45,10 +46,7 @@ public partial class HomeView : AView
         if (DataManager.CurrentSurah is not null)
         {
             var index = _surahs.ToList().FindIndex(q => q.Id == DataManager.CurrentSurah.Id);
-            if (index >= 0)
-            {
-                GotoComponent.SurahSelectedIndex = index;
-            }
+            if (index >= 0) GotoComponent.SurahSelectedIndex = index;
         }
         else
         {
@@ -56,9 +54,7 @@ public partial class HomeView : AView
         }
 
         if (DataManager.CurrentVerseIndex is not null)
-        {
             GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex.Value;
-        }
 
         return Task.CompletedTask;
     }
@@ -91,9 +87,6 @@ public partial class HomeView : AView
 
     private void SelectCard(CardComponent card)
     {
-        foreach (var c in Cards)
-        {
-            c.IsSelected = c.Surah?.Id == card.Surah?.Id;
-        }
+        foreach (var c in Cards) c.IsSelected = c.Surah?.Id == card.Surah?.Id;
     }
 }

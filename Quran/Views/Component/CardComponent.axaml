@@ -11,8 +11,8 @@
         <!-- =============================== -->
 
         <Style Selector="Border.card">
-            <Setter Property="Background" Value="#2A2A2A"/>
-            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="#2A2A2A" />
+            <Setter Property="CornerRadius" Value="10" />
         </Style>
 
 
@@ -21,32 +21,32 @@
         <!-- =============================== -->
 
         <Style Selector="Button.cardButton">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="12,10"/>
-            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="Margin" Value="0" />
 
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
         </Style>
 
         <Style Selector="Button.cardButton:pointerover">
-            <Setter Property="Background" Value="#303030"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="#303030" />
+            <Setter Property="BorderBrush" Value="Transparent" />
         </Style>
 
         <Style Selector="Button.cardButton:pressed">
-            <Setter Property="Background" Value="#353535"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="#353535" />
+            <Setter Property="BorderBrush" Value="Transparent" />
         </Style>
 
         <Style Selector="Button.cardButton:focus">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
         </Style>
 
 
@@ -55,8 +55,8 @@
         <!-- =============================== -->
 
         <Style Selector="Border.card.selected">
-            <Setter Property="BorderBrush" Value="#FFFFFF"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
         </Style>
 
 
@@ -65,9 +65,9 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.title">
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="#F2F2F2"/>
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#F2F2F2" />
         </Style>
 
 
@@ -78,10 +78,10 @@
         <Style Selector="TextBlock.arabicTitle">
             <Setter
                 Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri"/>
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
 
-            <Setter Property="FontSize" Value="28"/>
-            <Setter Property="Foreground" Value="#F2F2F2"/>
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="Foreground" Value="#F2F2F2" />
         </Style>
 
 
@@ -90,8 +90,8 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.subtitle">
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="#BDBDBD"/>
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#BDBDBD" />
         </Style>
 
 
@@ -100,8 +100,8 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.metadata">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="#9E9E9E"/>
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#9E9E9E" />
         </Style>
 
 
@@ -110,8 +110,8 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.tags">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="#AFAFAF"/>
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#AFAFAF" />
         </Style>
 
 
@@ -120,9 +120,9 @@
         <!-- =============================== -->
 
         <Style Selector="TextBlock.description">
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="LineHeight" Value="20"/>
-            <Setter Property="Foreground" Value="#D0D0D0"/>
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="LineHeight" Value="20" />
+            <Setter Property="Foreground" Value="#D0D0D0" />
         </Style>
 
     </UserControl.Styles>
@@ -145,9 +145,9 @@
             <Grid>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
 
@@ -158,15 +158,15 @@
                 <Grid Grid.Row="0">
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBlock
                         x:Name="TextBlockTitle"
                         Grid.Column="0"
                         Classes="title"
-                        VerticalAlignment="Center"/>
+                        VerticalAlignment="Center" />
 
                     <TextBlock
                         x:Name="TextBlockArabicTitle"
@@ -175,7 +175,7 @@
                         Text="الفاتحة"
                         FlowDirection="RightToLeft"
                         VerticalAlignment="Center"
-                        Margin="12,0,0,0"/>
+                        Margin="12,0,0,0" />
 
                 </Grid>
 
@@ -193,16 +193,16 @@
                     <TextBlock
                         x:Name="TextBlockSubtitle"
                         Classes="subtitle"
-                        Text="The Opener"/>
+                        Text="The Opener" />
 
                     <TextBlock
                         Text="•"
-                        Classes="metadata"/>
+                        Classes="metadata" />
 
                     <TextBlock
                         x:Name="TextBlockMetadata"
                         Classes="metadata"
-                        Text="Meccan • 7 verses"/>
+                        Text="Meccan • 7 verses" />
 
                 </StackPanel>
 
@@ -216,8 +216,8 @@
                     Margin="0,2,0,0">
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!-- Tags -->
@@ -227,7 +227,7 @@
                         Grid.Row="0"
                         Classes="tags"
                         Text="• Praise of Allah • Worship • Guidance • The straight path • Prayer"
-                        TextWrapping="Wrap"/>
+                        TextWrapping="Wrap" />
 
                     <!-- Description -->
 
@@ -237,7 +237,7 @@
                         Classes="description"
                         Text="The opening prayer of the Quran, asking Allah for praise, worship, guidance, and the straight path. It establishes the believer’s relationship with Allah and the dependence of humanity upon His guidance."
                         TextWrapping="Wrap"
-                        Margin="0,5,0,0"/>
+                        Margin="0,5,0,0" />
 
                 </Grid>
 

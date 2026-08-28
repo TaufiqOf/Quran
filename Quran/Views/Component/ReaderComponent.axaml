@@ -42,25 +42,27 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
-        <!-- <ScrollViewer -->
-        <!--     x:Name="QuranicScrollViewer" -->
-        <!--     IsVisible="False" -->
-        <!--     Grid.Row="1" -->
-        <!--     HorizontalScrollBarVisibility="Disabled" -->
-        <!--     VerticalScrollBarVisibility="Auto"> -->
-        <!--     <ItemsControl -->
-        <!--         x:Name="QuranicItemsControl"> -->
-        <!-- -->
-        <!--         <ItemsControl.ItemsPanel> -->
-        <!--             <ItemsPanelTemplate> -->
-        <!--                 <WrapPanel -->
-        <!--                     Orientation="Horizontal" -->
-        <!--                     HorizontalAlignment="Stretch"/> -->
-        <!--             </ItemsPanelTemplate> -->
-        <!--         </ItemsControl.ItemsPanel> -->
-        <!-- -->
-        <!--     </ItemsControl> -->
-        <!-- -->
-        <!-- </ScrollViewer> -->
+        <ScrollViewer
+            x:Name="QuranicScrollViewer"
+            Grid.Row="1"
+            IsVisible="False"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto"
+            FlowDirection="RightToLeft">
+            <ItemsControl
+                x:Name="QuranicItemsControl"
+                FlowDirection="RightToLeft"
+                HorizontalAlignment="Stretch">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <component:QuranFlowPanel
+                            HorizontalAlignment="Stretch" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+            </ItemsControl>
+
+        </ScrollViewer>
     </Grid>
 </UserControl>

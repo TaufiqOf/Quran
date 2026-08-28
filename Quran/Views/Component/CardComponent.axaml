@@ -20,7 +20,7 @@
 
         <!-- Arabic title -->
         <Style Selector="TextBlock.arabicTitle">
-            <Setter Property="FontFamily" Value="avares://Quran/Assets/Fonts/AmiriQuran-Regular.ttf#Amiri Quran" />
+            <Setter Property="FontFamily" Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
             <Setter Property="FontSize" Value="34" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="#F2F2F2" />

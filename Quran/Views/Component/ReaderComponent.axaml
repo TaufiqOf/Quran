@@ -1,27 +1,49 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:icons="using:FluentIcons.Avalonia"
-             xmlns:component="clr-namespace:Quran.Views.Component"
-             x:Class="Quran.Views.Component.ReaderComponent"
-             x:Name="Root"
-             Margin="10">
-    <ScrollViewer
-        x:Name="QuranScrollViewer"
-        Grid.Row="1"
-        HorizontalScrollBarVisibility="Disabled"
-        VerticalScrollBarVisibility="Auto">
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:component="clr-namespace:Quran.Views.Component"
+    x:Class="Quran.Views.Component.ReaderComponent"
+    x:Name="Root"
+    Margin="10">
 
-        <StackPanel>
+    <Grid RowDefinitions="Auto,*">
 
-            <component:CardComponent
-                x:Name="CardComponent"
-                IsEnabled="False"
-                IsVisible="False" />
+        <!-- ========================================= -->
+        <!-- Surah / Header Card -->
+        <!-- ========================================= -->
+
+        <component:CardComponent
+            x:Name="CardComponent"
+            Grid.Row="0"
+            IsEnabled="False"
+            IsVisible="False" />
+
+
+        <!-- ========================================= -->
+        <!-- Virtualized Quran Verses -->
+        <!-- ========================================= -->
+
+        <ScrollViewer
+            x:Name="QuranScrollViewer"
+            Grid.Row="1"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
 
             <ItemsControl
-                x:Name="ItemsControl" />
+                x:Name="ItemsControl">
 
-        </StackPanel>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel
+                            Orientation="Vertical"
+                            CacheLength="1" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
 
-    </ScrollViewer>
+            </ItemsControl>
+
+        </ScrollViewer>
+
+    </Grid>
+
 </UserControl>

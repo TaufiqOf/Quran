@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Quran.Helpers;
 using Quran.Models;
+using Quran.Views.Component;
 
 namespace Quran.Views.Pages;
 
@@ -17,6 +19,7 @@ public partial class QuranView : AView
     public QuranView()
     {
         InitializeComponent();
+        ModeComboBox.SelectedIndex = 0;
     }
 
     public override Task Load(params object?[] parameter)
@@ -81,9 +84,9 @@ public partial class QuranView : AView
  
         var synopsis =
             _surahSynopsis.FirstOrDefault(q => q.SurahId == surah.Id);
-        ReaderLineComponent.LoadCard(surah, synopsis);
-        ReaderLineComponent.ClearVerses();
-        ReaderLineComponent.AddVerses(surah.Verses);
+        ReaderComponent.LoadCard(surah, synopsis);
+        ReaderComponent.ClearVerses();
+        ReaderComponent.AddVerses(surah.Verses);
     }
 
 
@@ -98,20 +101,20 @@ public partial class QuranView : AView
 
     private void ScrollToVerse(int verseIndex)
     {
-        ReaderLineComponent.BringVerseIntoView(verseIndex);
+        ReaderComponent.BringVerseIntoView(verseIndex);
     }
 
     private void UpdateSelectedVerse(int verseIndex)
     {
-        ReaderLineComponent.UpdateSelectedVerse(verseIndex);
+        ReaderComponent.UpdateSelectedVerse(verseIndex);
 
     }
 
-    private void ReaderLineComponent_OnVerseSelected(Verse verse)
+    private void ReaderComponent_OnVerseSelected(Verse verse)
     {
         GotoComponent.VerseSelectedIndex = verse.Id;
     }
-    private void ReaderLineComponent_OnVersesLoaded()
+    private void ReaderComponent_OnVersesLoaded()
     {
         GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex is null
             ? 1
@@ -122,4 +125,13 @@ public partial class QuranView : AView
         UpdateSelectedVerse(GotoComponent.VerseSelectedIndex);
     }
 
+    private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        ReaderComponent.Mode = ModeComboBox.SelectionBoxItem.ToString() switch
+        {
+            "Linear" => ReaderMode.Linear,
+            "Compact" => ReaderMode.Compact,
+            _ => ReaderMode.Compact
+        };
+    }
 }

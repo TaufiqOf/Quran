@@ -1,10 +1,11 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public abstract class AVerseComponent : UserControl
+public abstract class AVerseComponent : UserControl, IDisposable
 {
     public static readonly StyledProperty<bool> IsSelectedProperty =
         AvaloniaProperty.Register<VerseComponent, bool>(
@@ -39,4 +40,6 @@ public abstract class AVerseComponent : UserControl
         if(verse == null) return;
         this.VerseSelected?.Invoke(verse);
     }
+
+    public abstract void Dispose();
 }

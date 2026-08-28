@@ -17,7 +17,14 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-
+            <Grid Grid.Row="0">
+                <ComboBox 
+                    x:Name="ModeComboBox" 
+                    SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                    <ComboBoxItem Content="Linear"></ComboBoxItem>
+                    <ComboBoxItem Content="Compact"></ComboBoxItem>
+                </ComboBox>
+            </Grid>
            <component:GotoComponent
                 SurahSelected="GotoComponent_OnSurahSelected"
                 VerseSelected="GotoComponent_OnVerseSelected"
@@ -29,9 +36,9 @@
         <!-- =============================== -->
 
     <component:ReaderComponent 
-        x:Name="ReaderLineComponent" 
-        VerseSelected="ReaderLineComponent_OnVerseSelected"
-        VersesLoaded="ReaderLineComponent_OnVersesLoaded"
+        x:Name="ReaderComponent" 
+        VerseSelected="ReaderComponent_OnVerseSelected"
+        VersesLoaded="ReaderComponent_OnVersesLoaded"
         Grid.Row="1" />
     </Grid>
 

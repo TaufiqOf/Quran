@@ -1,0 +1,171 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="Quran.Views.Component.VerseCompactComponent"
+    x:Name="Root">
+
+    <UserControl.Styles>
+
+        <!-- =============================== -->
+        <!-- Verse -->
+        <!-- =============================== -->
+
+        <Style Selector="Border.verse">
+            <Setter Property="Background" Value="#2a2a2a"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="Margin" Value="8,4"/>
+        </Style>
+
+        <!-- Selected verse -->
+        <Style Selector="Border.verse.selected">
+            <Setter Property="BorderBrush" Value="#717171"/>
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Arabic -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.arabic">
+            <Setter
+                Property="FontFamily"
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri"/>
+
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="FlowDirection" Value="RightToLeft"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Translation -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.translation">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="27"/>
+            <Setter Property="Margin" Value="20,8,20,0"/>
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Transliteration -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.transliteration">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="20,4,20,0"/>
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Verse Number -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.verseNumber">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="#777777"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+
+        <!-- Selected verse number -->
+        <Style Selector="Border.verse.selected TextBlock.verseNumber">
+            <Setter Property="Foreground" Value="#3678D4"/>
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Action Buttons -->
+        <!-- =============================== -->
+
+        <Style Selector="Button.iconButton">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="Button.iconButton:pointerover">
+            <Setter Property="Background" Value="#EEEEEE"/>
+        </Style>
+
+        <Style Selector="Button.iconButton:pressed">
+            <Setter Property="Background" Value="#DDDDDD"/>
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <!-- =============================== -->
+    <!-- Main Verse -->
+    <!-- =============================== -->
+
+    <Border
+        x:Name="VerseCard"
+        Classes="verse"
+        PointerPressed="VerseCard_OnPointerPressed">
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+
+            <!-- =========================== -->
+            <!-- Arabic -->
+            <!-- =========================== -->
+
+            <TextBlock
+                x:Name="TextBlockArabic"
+                Grid.Row="0"
+                Classes="arabic"/>
+
+            <!-- =========================== -->
+            <!-- Translation -->
+            <!-- =========================== -->
+
+            <TextBlock
+                x:Name="TextBlockTranslation"
+                Grid.Row="1"
+                Classes="translation"/>
+
+
+            <!-- =========================== -->
+            <!-- Transliteration -->
+            <!-- =========================== -->
+
+            <TextBlock
+                x:Name="TextBlockTransliteration"
+                Grid.Row="2"
+                Classes="transliteration"/>
+            
+            <TextBlock
+                x:Name="TextBlockVerseNumber"
+                Grid.Row="3"
+                Classes="verseNumber"
+                Text="Verse 1"
+                HorizontalAlignment="Right"
+                Margin="0,0,0,0"/>
+
+        </Grid>
+
+    </Border>
+
+</UserControl>

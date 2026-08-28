@@ -1,21 +1,68 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class ReaderComponent : UserControl,IAsyncDisposable
+public partial class ReaderComponent : UserControl, IDisposable
 {
     public delegate void VerseSelectedEventHandler(Verse verse);
+
     public event VerseSelectedEventHandler? VerseSelected;
-    
+
     public delegate void VersesLoadedEventHandler();
+
     public event VersesLoadedEventHandler? VersesLoaded;
-    
-    private readonly List<VerseComponent> _verseComponents = new();
+
+    private readonly List<AVerseComponent> _verseComponents = new();
+    private IEnumerable<Verse> _verses = Array.Empty<Verse>();
+    private ReaderMode _mode;
+
+
+    public ReaderMode Mode
+    {
+        get => _mode;
+        set
+        {
+            if (_mode == value)
+            {
+                return;
+            }
+
+            _mode = value;
+            UpdateMode(_mode);
+        }
+    }
+
+    private void UpdateMode(ReaderMode mode)
+    {
+        Task.Factory.StartNew(() =>
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                ClearVerses();
+                foreach (var verse in _verses)
+                {
+                    AVerseComponent verseComponent = mode switch
+                    {
+                        ReaderMode.Linear => new VerseComponent(verse),
+                        ReaderMode.Compact => new VerseCompactComponent(verse),
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+
+                    _verseComponents.Add(verseComponent);
+                    verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
+                    ItemsControl.Items.Add(verseComponent);
+                }
+
+                VersesLoaded?.Invoke();
+            });
+        });
+    }
 
     public ReaderComponent()
     {
@@ -42,23 +89,8 @@ public partial class ReaderComponent : UserControl,IAsyncDisposable
 
     public void AddVerses(IEnumerable<Verse> verses)
     {
-        Task.Factory.StartNew(() =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                foreach (var verse in verses)
-                {
-                    var verseComponent =
-                        new VerseComponent(verse);
-
-                    _verseComponents.Add(verseComponent);
-                    verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
-                    ItemsControl.Items.Add(verseComponent);
-                    
-                }
-                VersesLoaded?.Invoke();
-            });
-        });
+        _verses = verses;
+        UpdateMode(Mode);
     }
 
     private void VerseComponent_OnVerseSelected(Verse verse)
@@ -92,14 +124,14 @@ public partial class ReaderComponent : UserControl,IAsyncDisposable
     }
 
 
-
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
         foreach (var verseComponent in _verseComponents)
         {
             verseComponent.VerseSelected -= VerseComponent_OnVerseSelected;
             verseComponent.Dispose();
         }
+
         CardComponent.Dispose();
     }
 }

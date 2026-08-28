@@ -8,9 +8,9 @@ using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class VerseComponent : AVerseComponent , IDisposable
+public partial class VerseCompactComponent : AVerseComponent , IDisposable
 {
-    public VerseComponent(Verse verse)
+    public VerseCompactComponent(Verse verse)
     {
         Verse = verse;
         InitializeComponent();

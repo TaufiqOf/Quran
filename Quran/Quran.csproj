@@ -58,6 +58,11 @@
         <Compile Update="Views\Component\VerseCompactComponent.axaml.cs">
           <DependentUpon>VerseCompactComponent.axaml</DependentUpon>
         </Compile>
+
+        <Compile Update="Views\Component\VerseTranslationComponent.axaml.cs">
+          <DependentUpon>VerseTranslationComponent.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
 </Project>

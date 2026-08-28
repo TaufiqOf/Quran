@@ -3,7 +3,7 @@
              xmlns:icons="using:FluentIcons.Avalonia"
              x:Class="Quran.Views.Component.VerseComponent"
              x:Name="Root"
-             Margin="10">
+             Margin="5">
 
     <UserControl.Styles>
 
@@ -16,7 +16,7 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="CornerRadius" Value="14"/>
-            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Padding" Value="10"/>
         </Style>
 
 

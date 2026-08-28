@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
 using Quran.Views.Component;
@@ -19,7 +22,17 @@ public partial class QuranView : AView
     public QuranView()
     {
         InitializeComponent();
+        foreach (var value in Enum.GetValues(typeof(ReaderMode)))
+        {
+            ModeComboBox.Items.Add(value.ToString());
+        }
         ModeComboBox.SelectedIndex = 0;
+        AttachedToVisualTree += (_, _) =>
+        {
+            Dispatcher.UIThread.Post(
+                () => ReaderComponent.Focus(),
+                DispatcherPriority.Loaded);
+        };
     }
 
     public override Task Load(params object?[] parameter)
@@ -61,7 +74,8 @@ public partial class QuranView : AView
             {
                 GotoComponent.SurahSelectedIndex = index;
             }
-            if(parameter.Length > 1 && parameter[1] is int verseIndexParam)
+
+            if (parameter.Length > 1 && parameter[1] is int verseIndexParam)
             {
                 GotoComponent.VerseSelectedIndex = verseIndexParam;
             }
@@ -76,12 +90,14 @@ public partial class QuranView : AView
         {
             return;
         }
-        if(DataManager.CurrentSurah?.Id != surah.Id)
+
+        if (DataManager.CurrentSurah?.Id != surah.Id)
         {
             DataManager.CurrentVerseIndex = 1;
         }
+
         DataManager.CurrentSurah = surah;
- 
+
         var synopsis =
             _surahSynopsis.FirstOrDefault(q => q.SurahId == surah.Id);
         ReaderComponent.LoadCard(surah, synopsis);
@@ -98,7 +114,6 @@ public partial class QuranView : AView
     }
 
 
-
     private void ScrollToVerse(int verseIndex)
     {
         ReaderComponent.BringVerseIntoView(verseIndex);
@@ -107,13 +122,13 @@ public partial class QuranView : AView
     private void UpdateSelectedVerse(int verseIndex)
     {
         ReaderComponent.UpdateSelectedVerse(verseIndex);
-
     }
 
     private void ReaderComponent_OnVerseSelected(Verse verse)
     {
         GotoComponent.VerseSelectedIndex = verse.Id;
     }
+
     private void ReaderComponent_OnVersesLoaded()
     {
         GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex is null
@@ -127,11 +142,12 @@ public partial class QuranView : AView
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        ReaderComponent.Mode = ModeComboBox.SelectionBoxItem.ToString() switch
-        {
-            "Linear" => ReaderMode.Linear,
-            "Compact" => ReaderMode.Compact,
-            _ => ReaderMode.Compact
-        };
+        ReaderComponent.Mode = Enum.Parse<ReaderMode>(ModeComboBox.SelectionBoxItem.ToString());
+    }
+
+
+    private void ReaderComponent_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        GotoComponent.SetFocusOnVerse();
     }
 }

@@ -1,0 +1,100 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="Quran.Views.Component.VerseTranslationComponent"
+    x:Name="Root"
+    HorizontalAlignment="Stretch">
+
+    <UserControl.Styles>
+
+        <!-- ========================================= -->
+        <!-- Verse -->
+        <!-- ========================================= -->
+
+        <Style Selector="Border.verse">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Margin" Value="4,2"/>
+        </Style>
+
+        <!-- Selected verse -->
+        <Style Selector="Border.verse.selected">
+            <Setter Property="Background" Value="#303A52"/>
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Translation -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.translation">
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="27"/>
+            <Setter Property="Margin" Value="20,8,20,0"/>
+        </Style>
+
+        <!-- ========================================= -->
+        <!-- Verse number -->
+        <!-- ========================================= -->
+
+        <Style Selector="TextBlock.verseNumber">
+            <Setter
+                Property="FontFamily"
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri"/>
+
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Foreground" Value="#8EA7D8"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <!-- ========================================= -->
+    <!-- Verse -->
+    <!-- ========================================= -->
+
+    <Border
+        x:Name="VerseCard"
+        Classes="verse"
+        HorizontalAlignment="Stretch"
+        PointerPressed="VerseCard_OnPointerPressed">
+
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <!-- ================================= -->
+            <!-- Verse marker -->
+            <!-- ================================= -->
+
+            <TextBlock
+                x:Name="TextBlockVerseNumber"
+                Grid.Column="0"
+                Classes="verseNumber"
+                Text="۝١"
+                Margin="4,0,8,0"/>
+
+
+            <!-- ================================= -->
+            <!-- Translation -->
+            <!-- ================================= -->
+
+            <TextBlock
+                x:Name="TextBlockTranslation"
+                Grid.Column="1"
+                Classes="translation"/>
+
+        </Grid>
+
+    </Border>
+
+</UserControl>

@@ -1,0 +1,55 @@
+using System;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.VisualTree;
+using Quran.Models;
+
+namespace Quran.Views.Component;
+
+public partial class VerseQuranicComponent : AVerseComponent , IDisposable
+{
+    public VerseQuranicComponent(Verse verse)
+    {
+        Verse = verse;
+        InitializeComponent();
+
+        TextBlockArabic.Text = verse.Text;
+        TextBlockVerseNumber.Text = $"Verse {verse.Id}";
+    }
+
+    public override void UpdateSelectedState()
+    {
+        if (IsSelected)
+        {
+            VerseCard.Classes.Add("selected");
+        }
+        else
+        {
+            VerseCard.Classes.Remove("selected");
+        }
+    }
+
+    private void ButtonBookmark_OnClick(
+        object? sender,
+        RoutedEventArgs e)
+    {
+    }
+
+    private void ButtonPlay_OnClick(
+        object? sender,
+        RoutedEventArgs e)
+    {
+    }
+
+    private void VerseCard_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        OnVerseSelected(Verse);
+    }
+
+    public override void Dispose()
+    {
+        Verse = null;
+    }
+}

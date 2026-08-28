@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Quran.Models;
@@ -51,12 +50,14 @@ public partial class ReaderComponent : UserControl, IDisposable
                     {
                         ReaderMode.Linear => new VerseComponent(verse),
                         ReaderMode.Compact => new VerseCompactComponent(verse),
+                        ReaderMode.Quranic => new VerseQuranicComponent(verse),
+                        ReaderMode.Translation => new VerseTranslationComponent(verse),
                         _ => throw new ArgumentOutOfRangeException()
                     };
 
                     _verseComponents.Add(verseComponent);
                     verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
-                    ItemsControl.Items.Add(verseComponent);
+                    LinerItemsControl.Items.Add(verseComponent);
                 }
 
                 VersesLoaded?.Invoke();
@@ -84,7 +85,7 @@ public partial class ReaderComponent : UserControl, IDisposable
         }
 
         _verseComponents.Clear();
-        ItemsControl.Items.Clear();
+        LinerItemsControl.Items.Clear();
     }
 
     public void AddVerses(IEnumerable<Verse> verses)
@@ -100,19 +101,17 @@ public partial class ReaderComponent : UserControl, IDisposable
 
     public void BringVerseIntoView(int verseIndex)
     {
-        if (verseIndex < 0 ||
-            verseIndex > _verseComponents.Count)
+        var index = verseIndex - 1;
+
+        if (index < 0 || index >= _verseComponents.Count)
         {
             return;
         }
 
-        var verseComponent =
-            _verseComponents[verseIndex - 1];
-        // Wait until Avalonia has completed layout
-        // before attempting to scroll.
-        Dispatcher.UIThread.Post(
-            () => { verseComponent.BringIntoView(); },
-            DispatcherPriority.Loaded);
+        Dispatcher.UIThread.Post(() =>
+        {
+            LinerItemsControl.ScrollIntoView(index);
+        }, DispatcherPriority.Loaded);
     }
 
     public void UpdateSelectedVerse(int verseIndex)

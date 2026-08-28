@@ -21,8 +21,7 @@
                 <ComboBox 
                     x:Name="ModeComboBox" 
                     SelectionChanged="SelectingItemsControl_OnSelectionChanged">
-                    <ComboBoxItem Content="Linear"></ComboBoxItem>
-                    <ComboBoxItem Content="Compact"></ComboBoxItem>
+  
                 </ComboBox>
             </Grid>
            <component:GotoComponent
@@ -37,6 +36,9 @@
 
     <component:ReaderComponent 
         x:Name="ReaderComponent" 
+        Focusable="True"
+        IsTabStop="True"
+        KeyDown="ReaderComponent_OnKeyDown"
         VerseSelected="ReaderComponent_OnVerseSelected"
         VersesLoaded="ReaderComponent_OnVersesLoaded"
         Grid.Row="1" />

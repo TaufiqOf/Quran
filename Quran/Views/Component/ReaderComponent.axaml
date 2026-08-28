@@ -4,6 +4,8 @@
     xmlns:component="clr-namespace:Quran.Views.Component"
     x:Class="Quran.Views.Component.ReaderComponent"
     x:Name="Root"
+    Focusable="True"
+    IsTabStop="True"
     Margin="10">
 
     <Grid RowDefinitions="Auto,*">
@@ -24,14 +26,13 @@
         <!-- ========================================= -->
 
         <ScrollViewer
-            x:Name="QuranScrollViewer"
+            x:Name="LinerScrollViewer"
+            IsVisible="True"
             Grid.Row="1"
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
-
             <ItemsControl
-                x:Name="ItemsControl">
-
+                x:Name="LinerItemsControl">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel
@@ -39,11 +40,27 @@
                             CacheLength="1" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-
             </ItemsControl>
-
         </ScrollViewer>
-
+        <!-- <ScrollViewer -->
+        <!--     x:Name="QuranicScrollViewer" -->
+        <!--     IsVisible="False" -->
+        <!--     Grid.Row="1" -->
+        <!--     HorizontalScrollBarVisibility="Disabled" -->
+        <!--     VerticalScrollBarVisibility="Auto"> -->
+        <!--     <ItemsControl -->
+        <!--         x:Name="QuranicItemsControl"> -->
+        <!-- -->
+        <!--         <ItemsControl.ItemsPanel> -->
+        <!--             <ItemsPanelTemplate> -->
+        <!--                 <WrapPanel -->
+        <!--                     Orientation="Horizontal" -->
+        <!--                     HorizontalAlignment="Stretch"/> -->
+        <!--             </ItemsPanelTemplate> -->
+        <!--         </ItemsControl.ItemsPanel> -->
+        <!-- -->
+        <!--     </ItemsControl> -->
+        <!-- -->
+        <!-- </ScrollViewer> -->
     </Grid>
-
 </UserControl>

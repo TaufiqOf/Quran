@@ -226,4 +226,9 @@ public partial class GotoComponent : UserControl
 
         PreviousButton.IsEnabled = false;
     }
+
+    public void SetFocusOnVerse()
+    {
+        VerseComboBox.Focus();
+    }
 }

@@ -12,10 +12,10 @@
 
         <Style Selector="Border.verse">
             <Setter Property="Background" Value="#2a2a2a"/>
-            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="CornerRadius" Value="6,6,6,6"/>
             <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Padding" Value="16,12"/>
-            <Setter Property="Margin" Value="8,4"/>
+            <Setter Property="Padding" Value="5,5"/>
+            <Setter Property="Margin" Value="2,2"/>
         </Style>
 
         <!-- Selected verse -->

@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -7,28 +8,8 @@ using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class VerseComponent : UserControl
+public partial class VerseComponent : AVerseComponent , IDisposable
 {
-    public Verse Verse { get; }
-
-    public delegate void VerseSelectedEventHandler(Verse verse);
-    public event VerseSelectedEventHandler? VerseSelected;
-    public static readonly StyledProperty<bool> IsSelectedProperty =
-        AvaloniaProperty.Register<VerseComponent, bool>(
-            nameof(IsSelected),
-            false);
-
-    public bool IsSelected
-    {
-        get => GetValue(IsSelectedProperty);
-        set => SetValue(IsSelectedProperty, value);
-    }
-
-    public VerseComponent(Surah surah, SurahSynopsis? synopsis)
-    {
-        InitializeComponent();
-    }
-
     public VerseComponent(Verse verse)
     {
         Verse = verse;
@@ -40,18 +21,7 @@ public partial class VerseComponent : UserControl
         TextBlockVerseNumber.Text = $"Verse {verse.Id}";
     }
 
-    protected override void OnPropertyChanged(
-        AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-
-        if (change.Property == IsSelectedProperty)
-        {
-            UpdateSelectedState();
-        }
-    }
-
-    private void UpdateSelectedState()
+    public override void UpdateSelectedState()
     {
         if (IsSelected)
         {
@@ -80,8 +50,8 @@ public partial class VerseComponent : UserControl
         OnVerseSelected(Verse);
     }
 
-    protected virtual void OnVerseSelected(Verse verse)
+    public void Dispose()
     {
-        VerseSelected?.Invoke(verse);
+        Verse = null;
     }
 }

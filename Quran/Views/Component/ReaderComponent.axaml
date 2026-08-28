@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:icons="using:FluentIcons.Avalonia"
+             xmlns:component="clr-namespace:Quran.Views.Component"
+             x:Class="Quran.Views.Component.ReaderComponent"
+             x:Name="Root"
+             Margin="10">
+    <ScrollViewer
+        x:Name="QuranScrollViewer"
+        Grid.Row="1"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+
+        <StackPanel>
+
+            <component:CardComponent
+                x:Name="CardComponent"
+                IsEnabled="False"
+                IsVisible="False" />
+
+            <ItemsControl
+                x:Name="ItemsControl" />
+
+        </StackPanel>
+
+    </ScrollViewer>
+</UserControl>

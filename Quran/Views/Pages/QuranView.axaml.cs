@@ -1,12 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Interactivity;
-using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
-using Quran.Views.Component;
 
 namespace Quran.Views.Pages;
 
@@ -15,261 +11,115 @@ public partial class QuranView : AView
     private IEnumerable<Surah> _surahs = [];
     private IEnumerable<SurahOrder> _surahOrder = [];
     private IEnumerable<SurahSynopsis> _surahSynopsis = [];
-
-    // Keep references to the VerseComponent controls.
-    private readonly List<VerseComponent> _verseComponents = [];
+    private bool _isLoaded = false;
+    private int _currentSurahIndex = -1;
 
     public QuranView()
     {
         InitializeComponent();
-        PreviousButton.IsEnabled = false;
     }
 
-    public override Task Load(object? parameter)
+    public override Task Load(params object?[] parameter)
     {
-        _surahs = GetData.GetSurahs();
-        _surahOrder = GetData.SurahOrder();
-        _surahSynopsis = GetData.SurahSynopsis();
-
-        var surahTransliterations = GetData.GetSurahTransliterations();
-
-        // Add transliterations to verses.
-        foreach (var surahTransliteration in surahTransliterations)
+        if (!_isLoaded)
         {
-            var surah = _surahs.FirstOrDefault(
-                q => q.Id == surahTransliteration.Id);
+            _surahs = DataManager.Surahs;
+            _surahOrder = DataManager.SurahOrders;
+            _surahSynopsis = DataManager.SurahSynopses;
 
-            if (surah != null)
+            GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
+            _isLoaded = true;
+        }
+
+        if (parameter.Length == 0 || parameter[0] is null)
+        {
+            if (DataManager.CurrentSurah is not null)
             {
-                foreach (var transliterationVerse in surahTransliteration.Verses)
+                var index = _surahs.ToList().FindIndex(q => q.Id == DataManager.CurrentSurah.Id);
+                if (index >= 0)
                 {
-                    var verse = surah.Verses
-                        .FirstOrDefault(v => v.Id == transliterationVerse.Id);
-
-                    if (verse != null)
-                    {
-                        verse.Transliteration =
-                            transliterationVerse.Transliteration;
-                    }
+                    GotoComponent.SurahSelectedIndex = index;
                 }
             }
-        }
+            else
+            {
+                GotoComponent.SurahSelectedIndex = 0;
+            }
 
-        // Populate Surah ComboBox.
-        SurahComboBox.Items.Clear();
-
-        foreach (var surah in _surahs)
-        {
-            SurahComboBox.Items.Add(
-                new ComboBoxItem
-                {
-                    Content =
-                        $"{surah.Id}. {surah.Transliteration} - {surah.Name}",
-                    Tag = surah
-                });
+            if (DataManager.CurrentVerseIndex is not null)
+            {
+                GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex.Value;
+            }
         }
-        if(parameter is null)
-        {
-            SurahComboBox.SelectedIndex = 0;
-        }
-        else if(parameter is Surah surahParam)
+        else if (parameter[0] is Surah surahParam)
         {
             var index = _surahs.ToList().FindIndex(q => q.Id == surahParam.Id);
-            if(index >= 0)
+            if (index >= 0)
             {
-                SurahComboBox.SelectedIndex = index;
+                GotoComponent.SurahSelectedIndex = index;
+            }
+            if(parameter.Length > 1 && parameter[1] is int verseIndexParam)
+            {
+                GotoComponent.VerseSelectedIndex = verseIndexParam;
             }
         }
 
         return Task.CompletedTask;
     }
 
-
-    private void SurahComboBox_OnSelectionChanged(
-        object? sender,
-        SelectionChangedEventArgs e)
+    private void GotoComponent_OnSurahSelected(Surah surah)
     {
-        var comboBoxItem =
-            SurahComboBox.SelectedItem as ComboBoxItem;
-
-        var surah =
-            comboBoxItem?.Tag as Surah;
-
-        if (surah == null)
+        if (_currentSurahIndex == surah.Id)
+        {
             return;
-
-
-        // ==========================================
-        // Load Surah Card
-        // ==========================================
-
+        }
+        if(DataManager.CurrentSurah?.Id != surah.Id)
+        {
+            DataManager.CurrentVerseIndex = 1;
+        }
+        DataManager.CurrentSurah = surah;
+ 
         var synopsis =
-            _surahSynopsis.FirstOrDefault(
-                q => q.SurahId == surah.Id);
-
-        CardComponent.LoadData(surah, synopsis);
-        CardComponent.IsVisible = true;
-
-
-        // ==========================================
-        // Populate Verse ComboBox
-        // ==========================================
-
-        VerseComboBox.SelectionChanged -=
-            VerseComboBox_OnSelectionChanged;
-
-        VerseComboBox.Items.Clear();
-
-        foreach (var verse in surah.Verses)
-        {
-            VerseComboBox.Items.Add(
-                new ComboBoxItem
-                {
-                    Content = $"Verse {verse.Id}",
-                    Tag = verse.Id
-                });
-        }
-
-        VerseComboBox.SelectedIndex = 0;
-
-        VerseComboBox.SelectionChanged +=
-            VerseComboBox_OnSelectionChanged;
-
-
-        // ==========================================
-        // Create Verse Components
-        // ==========================================
-
-        ItemsControl.Items.Clear();
-        foreach (var verseComponent in _verseComponents)
-        {
-            verseComponent.VerseSelected -= VerseComponent_OnVerseSelected;
-        }
-        _verseComponents.Clear();
-
-        foreach (var verse in surah.Verses)
-        {
-            var verseComponent =
-                new VerseComponent(verse);
-
-            _verseComponents.Add(verseComponent);
-            verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
-            ItemsControl.Items.Add(verseComponent);
-        }
-
-
-        // ==========================================
-        // Scroll to first verse
-        // ==========================================
-        PreviousButton.IsEnabled = false;
-        NextButton.IsEnabled = true;
-        ScrollToVerse(0);
-        UpdateSelectedVerse(0);
+            _surahSynopsis.FirstOrDefault(q => q.SurahId == surah.Id);
+        ReaderLineComponent.LoadCard(surah, synopsis);
+        ReaderLineComponent.ClearVerses();
+        ReaderLineComponent.AddVerses(surah.Verses);
     }
 
-    private void VerseComponent_OnVerseSelected(Verse verse)
+
+    private void GotoComponent_OnVerseSelected(int verseId)
     {
-        VerseComboBox.SelectedIndex = verse.Id - 1;
+        DataManager.CurrentVerseIndex = verseId;
+        ScrollToVerse(verseId);
+        UpdateSelectedVerse(verseId);
     }
 
-
-    private void VerseComboBox_OnSelectionChanged(
-        object? sender,
-        SelectionChangedEventArgs e)
-    {
-        if (VerseComboBox.SelectedIndex < 0)
-            return;
-
-        var selectedIndex =
-            VerseComboBox.SelectedIndex;
-
-        ScrollToVerse(selectedIndex);
-        UpdateSelectedVerse(selectedIndex);
-        
-    }
 
 
     private void ScrollToVerse(int verseIndex)
     {
-        if (verseIndex < 0 ||
-            verseIndex >= _verseComponents.Count)
-        {
-            return;
-        }
-
-        var verseComponent =
-            _verseComponents[verseIndex];
-        // Wait until Avalonia has completed layout
-        // before attempting to scroll.
-        Dispatcher.UIThread.Post(
-            () =>
-            {
-                verseComponent.BringIntoView();
-            },
-            DispatcherPriority.Loaded);
+        ReaderLineComponent.BringVerseIntoView(verseIndex);
     }
 
     private void UpdateSelectedVerse(int verseIndex)
     {
-        for (int i = 0; i < _verseComponents.Count; i++)
-        {
-            _verseComponents[i].IsSelected = i == verseIndex;
-        }
+        ReaderLineComponent.UpdateSelectedVerse(verseIndex);
+
     }
-    
-    private void PreviousButton_OnClick(object? sender, RoutedEventArgs e)
+
+    private void ReaderLineComponent_OnVerseSelected(Verse verse)
     {
-
-        if(VerseComboBox.SelectedIndex > 0)
-        {
-            VerseComboBox.SelectedIndex--;
-            NextButton.IsEnabled = true;
-        }
-        if (VerseComboBox.SelectedIndex == 0)
-        {
-            PreviousButton.IsEnabled = false;
-        }
+        GotoComponent.VerseSelectedIndex = verse.Id;
     }
-
-    private void NextButton_OnClick(object? sender, RoutedEventArgs e)
+    private void ReaderLineComponent_OnVersesLoaded()
     {
-
-        if(VerseComboBox.SelectedIndex < VerseComboBox.Items.Count - 1)
-        {
-            VerseComboBox.SelectedIndex++;
-            PreviousButton.IsEnabled = true;
-        }
-        if (VerseComboBox.SelectedIndex ==  VerseComboBox.Items.Count - 1)
-        {
-            NextButton.IsEnabled = false;
-        }
+        GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex is null
+            ? 1
+            : DataManager.CurrentVerseIndex == -1
+                ? 1
+                : DataManager.CurrentVerseIndex.Value;
+        ScrollToVerse(GotoComponent.VerseSelectedIndex);
+        UpdateSelectedVerse(GotoComponent.VerseSelectedIndex);
     }
 
-    private void PreviousSurahButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if(SurahComboBox.SelectedIndex > 0)
-        {
-            SurahComboBox.SelectedIndex--;
-            NextSurahButton.IsEnabled = true;
-        }
-        if (SurahComboBox.SelectedIndex == 0)
-        {
-            PreviousSurahButton.IsEnabled = false;
-        }
-        PreviousButton.IsEnabled = false;
-    }
-
-    private void NextSurahButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if(SurahComboBox.SelectedIndex < SurahComboBox.Items.Count - 1)
-        {
-            SurahComboBox.SelectedIndex++;
-            PreviousSurahButton.IsEnabled = true;
-        }
-        if (SurahComboBox.SelectedIndex == SurahComboBox.Items.Count - 1)
-        {
-            NextSurahButton.IsEnabled = false;
-        }
-        PreviousButton.IsEnabled = false;
-    }
 }

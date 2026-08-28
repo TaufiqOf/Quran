@@ -18,91 +18,21 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <!-- =============================== -->
-            <!-- Surah / Verse Selection -->
-            <!-- =============================== -->
-
-            <StackPanel
-                Grid.Column="0"
-                Orientation="Horizontal"
-                Margin="10">
-
-                <Label
-                    Content="Surah:"
-                    VerticalContentAlignment="Center"
-                    Margin="10,0" />
-
-                <ComboBox
-                    x:Name="SurahComboBox"
-                    Width="250"
-                    SelectionChanged="SurahComboBox_OnSelectionChanged" />
-
-                <Label
-                    Content="Verse:"
-                    VerticalContentAlignment="Center"
-                    Margin="10,0" />
-
-                <ComboBox
-                    x:Name="VerseComboBox"
-                    Width="120"
-                    SelectionChanged="VerseComboBox_OnSelectionChanged" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10">
-                <Button x:Name="PreviousSurahButton" 
-                        ToolTip.Tip="Previous Surah"
-                        Click="PreviousSurahButton_OnClick">
-                    <avalonia:SymbolIcon
-                        Symbol="ArrowLeft"
-                        FontSize="20" />
-                </Button>
-                
-                <Button x:Name="PreviousButton"
-                        ToolTip.Tip="Previous Verse"
-                        Click="PreviousButton_OnClick">
-                    <avalonia:SymbolIcon
-                        Symbol="ArrowUp"
-                        FontSize="20" />
-                </Button>
-                <Button x:Name="NextButton" 
-                        ToolTip.Tip="Next Verse"
-                        Click="NextButton_OnClick">
-                    <avalonia:SymbolIcon
-                        Symbol="ArrowDown"
-                        FontSize="20" />
-                </Button>
-                <Button x:Name="NextSurahButton" 
-                        ToolTip.Tip="Next Surah"
-                        Click="NextSurahButton_OnClick">
-                    <avalonia:SymbolIcon
-                        Symbol="ArrowRight"
-                        FontSize="20" />
-                </Button>
-            </StackPanel>
+           <component:GotoComponent
+                SurahSelected="GotoComponent_OnSurahSelected"
+                VerseSelected="GotoComponent_OnVerseSelected"
+                x:Name="GotoComponent"
+                Grid.Column="1" />
         </Grid>
         <!-- =============================== -->
         <!-- Quran Content -->
         <!-- =============================== -->
 
-        <ScrollViewer
-            x:Name="QuranScrollViewer"
-            Grid.Row="1"
-            HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Auto">
-
-            <StackPanel>
-
-                <component:CardComponent
-                    x:Name="CardComponent"
-                    IsEnabled="False"
-                    IsVisible="False" />
-
-                <ItemsControl
-                    x:Name="ItemsControl" />
-
-            </StackPanel>
-
-        </ScrollViewer>
-
+    <component:ReaderComponent 
+        x:Name="ReaderLineComponent" 
+        VerseSelected="ReaderLineComponent_OnVerseSelected"
+        VersesLoaded="ReaderLineComponent_OnVersesLoaded"
+        Grid.Row="1" />
     </Grid>
 
 </UserControl>

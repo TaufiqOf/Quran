@@ -79,7 +79,11 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
         </Style>
-
+        
+        <Style Selector="Border.card.selected">
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
     </UserControl.Styles>
 
     <Grid
@@ -87,6 +91,7 @@
         VerticalAlignment="Stretch">
 
         <Border
+            x:Name="CardBorder"
             Classes="card"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">

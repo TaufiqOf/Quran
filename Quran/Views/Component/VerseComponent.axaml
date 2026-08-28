@@ -148,7 +148,7 @@
                 Classes="verseNumber"
                 Text="Verse 1"
                 HorizontalAlignment="Left"
-                Margin="0,0,0,16"/>
+                Margin="0,-15,0,16"/>
 
 
             <!-- ===================================== -->
@@ -157,7 +157,7 @@
 
             <TextBlock
                 x:Name="TextBlockArabic"
-                Grid.Row="1"
+                Grid.Row="0"
                 Classes="arabic"
                 TextWrapping="Wrap"
                 HorizontalAlignment="Stretch"

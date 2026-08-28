@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avalonia="using:FluentIcons.Avalonia"
+             x:Class="Quran.Views.Component.GotoComponent"
+             x:Name="Root"
+             Margin="10">
+     <StackPanel
+                Grid.Column="0"
+                Orientation="Horizontal"
+                Margin="10">
+
+                <Label
+                    
+                    Content="Surah:"
+                    VerticalContentAlignment="Center"
+                    Margin="10,0" />
+                <Button x:Name="PreviousSurahButton" 
+                        ToolTip.Tip="Previous Surah"
+                        Click="PreviousSurahButton_OnClick">
+                    <avalonia:SymbolIcon
+                        Symbol="ArrowLeft"
+                        FontSize="20" />
+                </Button>
+                
+                <ComboBox
+                    x:Name="SurahComboBox"
+                    Width="350"
+                    SelectionChanged="SurahComboBox_OnSelectionChanged" />
+                
+                <Button x:Name="NextSurahButton" 
+                        ToolTip.Tip="Next Surah"
+                        Click="NextSurahButton_OnClick">
+                    <avalonia:SymbolIcon
+                        Symbol="ArrowRight"
+                        FontSize="20" />
+                </Button>
+
+                <Label
+                    x:Name="VerseLabel"
+                    Content="Verse:"
+                    VerticalContentAlignment="Center"
+                    Margin="10,0" />
+                
+                <Button x:Name="PreviousButton"
+                        ToolTip.Tip="Previous Verse"
+                        Click="PreviousButton_OnClick">
+                    <avalonia:SymbolIcon
+                        Symbol="ArrowUp"
+                        FontSize="20" />
+                </Button>
+
+                <ComboBox
+                    x:Name="VerseComboBox"
+                    Width="120"
+                    SelectionChanged="VerseComboBox_OnSelectionChanged" />
+                <Button x:Name="NextButton" 
+                        ToolTip.Tip="Next Verse"
+                        Click="NextButton_OnClick">
+                    <avalonia:SymbolIcon
+                        Symbol="ArrowDown"
+                        FontSize="20" />
+                </Button>
+            </StackPanel>
+</UserControl>

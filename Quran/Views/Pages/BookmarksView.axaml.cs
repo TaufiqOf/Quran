@@ -10,7 +10,7 @@ public partial class BookmarksView : AView
         InitializeComponent();
     }
 
-    public override Task Load(object? parameter)
+    public override Task Load(params object?[] parameter)
     {
         return Task.CompletedTask;
     }

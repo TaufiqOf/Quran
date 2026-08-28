@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -5,16 +6,35 @@ using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class CardComponent : UserControl
+public partial class CardComponent : UserControl, IDisposable
 {
-    private Surah? _surah= null;
+    public Surah? Surah { get; private set; } = null;
 
     public delegate void CardClickEventHandler(Surah surah);
+
     public event CardClickEventHandler? CardClick;
+
+    public bool IsSelected
+    {
+        get => CardBorder.Classes.Contains("selected");
+        set
+        {
+            if (value)
+            {
+                CardBorder.Classes.Add("selected");
+            }
+            else
+            {
+                CardBorder.Classes.Remove("selected");
+            }
+        }
+    }
+
     public CardComponent()
     {
         InitializeComponent();
     }
+
     public CardComponent(Surah surah, SurahSynopsis? synopsis)
     {
         InitializeComponent();
@@ -23,10 +43,10 @@ public partial class CardComponent : UserControl
 
     public void LoadData(Surah surah, SurahSynopsis? synopsis)
     {
-        _surah = surah;
-        TextBlockTitle.Text =$"{surah.Id}. {surah.Transliteration}";
+        Surah = surah;
+        TextBlockTitle.Text = $"{surah.Id}. {surah.Transliteration}";
         TextBlockArabicTitle.Text = surah.Name;
-        TextBlockSubtitle.Text = surah.Translation ;
+        TextBlockSubtitle.Text = surah.Translation;
         TextBlockMetadata.Text = $"{surah.Type} - {surah.TotalVerses} verses";
         TextBlockTags.Text = string.Join("ꞏ ", synopsis?.Themes ?? []);
         TextBlockDescription.Text = synopsis?.Synopsis;
@@ -34,9 +54,14 @@ public partial class CardComponent : UserControl
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_surah != null)
+        if (Surah != null)
         {
-            CardClick?.Invoke(_surah);
+            CardClick?.Invoke(Surah);
         }
+    }
+
+    public void Dispose()
+    {
+        Surah = null;
     }
 }

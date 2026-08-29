@@ -14,6 +14,7 @@ namespace Quran.Views.Pages;
 
 public partial class BookmarksView : AView
 {
+    private bool _isChangingFilter;
     private Vector _lastScrollOffset;
     private bool _isLoaded;
     private bool _isLoading;
@@ -75,7 +76,6 @@ public partial class BookmarksView : AView
                 verseComponent.BookmarkVerseRequested += VerseComponentBookmarkVerseRequested;
 
                 VerseComponents.Add(verseComponent);
-                LinerItemsControl.Items.Add(verseComponent);
 
                 if (!SurahComboBox.Items
                         .OfType<ComboBoxItem>()
@@ -145,6 +145,18 @@ public partial class BookmarksView : AView
 
         VerseComponents.Remove(verseComponent);
         LinerItemsControl.Items.Remove(verseComponent);
+        // Reset scroll after changing the filter
+        LinerScrollViewer.Offset = new Vector(0, 0);
+        _lastScrollOffset = new Vector(0, 0);
+        if(VerseComponents.Count(q=>q.Surah.Id == CurrentSurahId) == 0)
+        {
+            // If no more verses in the current Surah, reset to All Surahs
+            SurahComboBox.Items.Remove(SurahComboBox.Items.OfType<ComboBoxItem>().FirstOrDefault(q => (int)q.Tag == CurrentSurahId));
+            
+            CurrentSurahId = -1;
+            SurahComboBox.SelectedItem = SurahComboBox.Items.OfType<ComboBoxItem>().FirstOrDefault(q => (int)q.Tag == -1);
+            ApplySurahFilter(CurrentSurahId);
+        }
     }
 
     private void VerseComponentPointerReleased(
@@ -165,39 +177,68 @@ public partial class BookmarksView : AView
             verseComponent.Verse.Id);
     }
 
-    private void SurahComboBoxOnSelectionChanged(
+    private async void SurahComboBoxOnSelectionChanged(
         object? sender,
         SelectionChangedEventArgs e)
     {
-        if (_isLoading)
+        if (_isLoading ||
+            _isChangingFilter ||
+            SurahComboBox.SelectedItem is not ComboBoxItem selectedItem ||
+            selectedItem.Tag is not int surahId)
+        {
             return;
+        }
 
-        if (SurahComboBox.SelectedItem is not ComboBoxItem selectedItem)
-            return;
+        _isChangingFilter = true;
 
-        if (selectedItem.Tag is not int surahId)
-            return;
-        if (!_isLoading)
+        try
+        {
             CurrentSurahId = surahId;
 
-        ApplySurahFilter(surahId);
+            // Clear and rebuild items
+            ApplySurahFilter(surahId);
+
+            // Force layout recalculation
+            LinerItemsControl.InvalidateMeasure();
+            LinerItemsControl.InvalidateArrange();
+            LinerScrollViewer.InvalidateMeasure();
+            LinerScrollViewer.InvalidateArrange();
+
+            // Wait for Avalonia layout
+            await Dispatcher.UIThread.InvokeAsync(
+                () => { },
+                DispatcherPriority.Background);
+
+            // Reset after layout has recalculated extent
+            LinerScrollViewer.Offset = new Vector(0, 0);
+
+            _lastScrollOffset = new Vector(0, 0);
+        }
+        finally
+        {
+            _isChangingFilter = false;
+        }
     }
 
     private void ApplySurahFilter(int surahId)
     {
+        LinerItemsControl.Items.Clear();
         foreach (var verseComponent in VerseComponents)
         {
-            verseComponent.IsVisible =
-                surahId == -1 ||
-                verseComponent.Surah.Id == surahId;
+            if (surahId == -1 ||
+                verseComponent.Surah.Id == surahId)
+            {
+                LinerItemsControl.Items.Add(verseComponent);
+            }
         }
     }
-
     private void LinerScrollViewerOnScrollChanged(
         object? sender,
         ScrollChangedEventArgs e)
     {
-        if (!_isLoading)
+        if (!_isLoading && !_isChangingFilter)
+        {
             _lastScrollOffset = LinerScrollViewer.Offset;
+        }
     }
 }

@@ -212,6 +212,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
             };
             _copyVerseMenuItem.Header = IsBookMarked ? "Remove Bookmark" : "Bookmark";
         }
+
         IsSelected = true;
 
         VerseContextMenuRequested?.Invoke(Verse);

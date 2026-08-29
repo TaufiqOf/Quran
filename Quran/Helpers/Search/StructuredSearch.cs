@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Quran.Models;
 
 namespace Quran.Helpers.Search;
@@ -29,6 +30,11 @@ public class StructuredSearch : ISearch
           )*
           \s*$",
             RegexOptions.IgnorePatternWhitespace);
+    }
+
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
     }
 
     public List<Surah> PerformSearch(string searchText)

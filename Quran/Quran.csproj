@@ -9,33 +9,41 @@
 
     <!-- Application resources -->
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
-        <AvaloniaResource Include="Data\*.json"/>
+        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Data\*.json" />
+        <None Include="Storage\tokenizer.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Storage\model1.onnx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <PropertyGroup>
         <ApplicationIcon>Assets\Icons\quran.ico</ApplicationIcon>
     </PropertyGroup>
     <!-- NuGet packages -->
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="12.1.1"/>
-        <PackageReference Include="Avalonia.Desktop" Version="12.1.1"/>
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1"/>
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1"/>
+        <PackageReference Include="Avalonia" Version="12.1.1" />
+        <PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1" />
 
         <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
 
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
-        <PackageReference Include="FluentIcons.Avalonia" Version="2.1.337"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.4"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="FluentIcons.Avalonia" Version="2.1.337" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.29.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="Tokenizers.HuggingFace" Version="3.23.1" />
     </ItemGroup>
 
     <!-- Avalonia pages -->
     <ItemGroup>
-        <AdditionalFiles Include="Views\Pages\HomeView.axaml"/>
-        <AdditionalFiles Include="Views\Pages\QuranView.axaml"/>
+        <AdditionalFiles Include="Views\Pages\HomeView.axaml" />
+        <AdditionalFiles Include="Views\Pages\QuranView.axaml" />
     </ItemGroup>
 
     <!-- Code-behind -->

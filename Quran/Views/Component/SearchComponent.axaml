@@ -37,6 +37,12 @@
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Margin" Value="10,0,0,0" />
         </Style>
+        <Style Selector="TextBlock.surahTranslation">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="#CCCCCC" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+        </Style>
 
         <Style Selector="TextBlock.surahTransliteration">
             <Setter Property="FontSize" Value="15" />
@@ -132,27 +138,33 @@
 
         <Expander.Header>
             <Border Classes="surahHeader">
-                <Grid ColumnDefinitions="Auto,*,Auto">
-                    <!-- Surah ID -->
-
+                <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto">
                     <TextBlock
                         Grid.Column="0"
                         Classes="surahId"
                         Text="{Binding Surah.Id, ElementName=Root}" />
 
-                    <!-- Surah Name -->
-
                     <TextBlock
                         Grid.Column="1"
                         Classes="surahName"
                         Text="{Binding Surah.Name, ElementName=Root}" />
-
-                    <!-- Surah Transliteration -->
-
+                    
                     <TextBlock
                         Grid.Column="2"
+                        Classes="surahTranslation"
+                        Text="{Binding Surah.Translation, ElementName=Root}" />
+
+                    <TextBlock
+                        Grid.Column="3"
                         Classes="surahTransliteration"
                         Text="{Binding Surah.Transliteration, ElementName=Root}" />
+
+                    <TextBlock
+                        x:Name="TextBlockVerseCount"
+                        Grid.Column="5"
+                        Classes="surahTransliteration"
+                        Text="{Binding VerseCount, ElementName=Root}" />
+
 
                 </Grid>
             </Border>

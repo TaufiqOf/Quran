@@ -8,7 +8,7 @@ namespace Quran.Helpers;
 
 public static class JsonReader
 {
-    public static string ReadJsonFromResource(string resourceName)
+    public static string ReadStringFromResource(string resourceName)
     {
         var assemblyName = typeof(JsonReader)
             .Assembly

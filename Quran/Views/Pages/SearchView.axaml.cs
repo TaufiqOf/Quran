@@ -24,7 +24,7 @@ public partial class SearchView : AView
         InitializeComponent();
 
         _timer = new Timer();
-        _timer.Interval = 500;
+        _timer.Interval = 1000;
         _timer.Stop();
         _timer.Elapsed += TimerOnElapsed;
     }
@@ -48,17 +48,13 @@ public partial class SearchView : AView
     private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
         _timer.Stop();
-        Application.Current?.Dispatcher.Invoke(() =>
+        Application.Current?.Dispatcher.Invoke(async () =>
         {
             var searchText = SearchTextBox.Text;
-            var results = SearchManager.PerformSearch(searchText);
+            var results = await SearchManager.PerformSearch(searchText);
             foreach (var item in SearchItemsControl.Items)
-            {
                 if (item is SearchComponent searchComponent)
-                {
                     DetachSearchComponentEvents(searchComponent);
-                }
-            }
 
             _results = results;
             SearchItemsControl.Items.Clear();
@@ -76,7 +72,6 @@ public partial class SearchView : AView
 
                 SearchItemsControl.Items.Add(searchComponent);
             }
-
         });
     }
 
@@ -89,6 +84,7 @@ public partial class SearchView : AView
         searchComponent.CopyAllRequested -= SearchComponentOnCopyAllRequested;
         searchComponent.BookmarkVerseRequested -= ContextMenuHelper.OnBookmarkVerseRequested;
     }
+
     private async void SearchComponentOnCopyTranslationRequested(Verse verse)
     {
         await ContextMenuHelper.CopyTranslationRequested(
@@ -112,6 +108,7 @@ public partial class SearchView : AView
         await ContextMenuHelper.VerseComponentOnCopyAllRequested(
             TopLevel.GetTopLevel(this), verse);
     }
+
     private void SearchComponentOnGoToVerseRequested(Surah surah, Verse verse)
     {
         RequestGotoPage("Quran", surah, verse.Id);

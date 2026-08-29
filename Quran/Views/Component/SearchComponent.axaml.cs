@@ -12,10 +12,12 @@ namespace Quran.Views.Component;
 
 public partial class SearchComponent : UserControl
 {
-    public static readonly StyledProperty<Surah?> SurahProperty =
-        AvaloniaProperty.Register<SearchComponent, Surah?>(
+    private static readonly StyledProperty<Surah> SurahProperty =
+        AvaloniaProperty.Register<SearchComponent, Surah>(
             nameof(Surah));
-
+    private static readonly StyledProperty<string> VerseCountProperty =
+        AvaloniaProperty.Register<SearchComponent, string>(
+            nameof(VerseCount));
     private SearchComponent()
     {
         InitializeComponent();
@@ -25,12 +27,19 @@ public partial class SearchComponent : UserControl
         : this()
     {
         Surah = surah;
+        VerseCount = $" Verses({surah.Verses.Count})";
     }
 
-    public Surah? Surah
+    public Surah Surah
     {
         get => GetValue(SurahProperty);
         set => SetValue(SurahProperty, value);
+    }
+
+    public string VerseCount
+    {
+        get => GetValue(VerseCountProperty);
+        set => SetValue(VerseCountProperty, value);
     }
 
     public event Action<Surah, Verse>? GoToVerseRequested;
@@ -137,7 +146,6 @@ public partial class SearchComponent : UserControl
         // =============================
 
         var isBookmarked =
-            Surah != null &&
             DataManager.IsBookmarked(
                 Surah.Id,
                 verse.Id);
@@ -160,9 +168,6 @@ public partial class SearchComponent : UserControl
 
         bookmarkItem.Click += (_, _) =>
         {
-            if (Surah is null)
-                return;
-
             BookmarkVerseRequested?.Invoke(
                 verse,
                 Surah);
@@ -233,9 +238,6 @@ public partial class SearchComponent : UserControl
 
     private void LeftButtonPressed(object? sender)
     {
-        if (Surah is null)
-            return;
-
         if (sender is not Border border)
             return;
 

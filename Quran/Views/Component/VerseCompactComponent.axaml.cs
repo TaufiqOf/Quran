@@ -1,9 +1,6 @@
 using System;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using Quran.Models;
 
 namespace Quran.Views.Component;
@@ -20,6 +17,11 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
         TextBlockBookmark.Text = "\uf02e";
         TextBlockBookmark.IsVisible = IsBookMarked;
         TextBlockVerseNumber.Text = $"Verse {Verse.Id}";
+    }
+
+    public override void Dispose()
+    {
+        Verse = null;
     }
 
 
@@ -55,8 +57,8 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
         TextBlockVerseNumber.Text = $"Verse {Verse.Id}";
     }
 
-    public override void Dispose()
+    public override void UpdateUi()
     {
-        Verse = null;
+        VerseBookMark();
     }
 }

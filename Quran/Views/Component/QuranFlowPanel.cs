@@ -9,13 +9,6 @@ public class QuranFlowPanel : Panel
 {
     private readonly List<Line> _lines = new();
 
-    private sealed class Line
-    {
-        public List<Control> Children { get; } = new();
-        public double Width { get; set; }
-        public double Height { get; set; }
-    }
-
     protected override Size MeasureOverride(Size availableSize)
     {
         _lines.Clear();
@@ -102,5 +95,12 @@ public class QuranFlowPanel : Panel
         }
 
         return finalSize;
+    }
+
+    private sealed class Line
+    {
+        public List<Control> Children { get; } = new();
+        public double Width { get; set; }
+        public double Height { get; set; }
     }
 }

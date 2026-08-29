@@ -1,9 +1,6 @@
 using System;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using Quran.Models;
 
 namespace Quran.Views.Component;
@@ -12,7 +9,7 @@ public partial class VerseComponent : AVerseComponent, IDisposable
 {
     private readonly bool _showSurah;
 
-    public VerseComponent(Surah surah, Verse verse, bool showSurah = false): base(surah, verse)
+    public VerseComponent(Surah surah, Verse verse, bool showSurah = false) : base(surah, verse)
     {
         _showSurah = showSurah;
         Verse = verse;
@@ -23,14 +20,15 @@ public partial class VerseComponent : AVerseComponent, IDisposable
         TextBlockTransliteration.Text = verse.Transliteration;
         TextBlockBookmark.Text = "\uf02e";
         TextBlockBookmark.IsVisible = IsBookMarked;
-        if(showSurah)
-        {
+        if (showSurah)
             TextBlockVerseNumber.Text = $"{surah.Id}. {surah.Transliteration} Verse {verse.Id}";
-        }
         else
-        {
             TextBlockVerseNumber.Text = $"Verse {verse.Id}";
-        }
+    }
+
+    public override void Dispose()
+    {
+        Verse = null;
     }
 
     public override void UpdateSelectedState()
@@ -62,18 +60,14 @@ public partial class VerseComponent : AVerseComponent, IDisposable
     {
         TextBlockBookmark.Text = "\uf02e";
         TextBlockBookmark.IsVisible = IsBookMarked;
-        if(_showSurah)
-        {
+        if (_showSurah)
             TextBlockVerseNumber.Text = $"{Surah.Id}. {Surah.Transliteration} Verse {Verse.Id}";
-        }
         else
-        {
             TextBlockVerseNumber.Text = $"Verse {Verse.Id}";
-        }
     }
 
-    public override void Dispose()
+    public override void UpdateUi()
     {
-        Verse = null;
+        VerseBookMark();
     }
 }

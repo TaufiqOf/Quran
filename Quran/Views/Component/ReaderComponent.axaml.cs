@@ -14,16 +14,17 @@ public partial class ReaderComponent : UserControl, IDisposable
 {
     public delegate void VerseSelectedEventHandler(Verse verse);
 
-    public event VerseSelectedEventHandler? VerseSelected;
-
     public delegate void VersesLoadedEventHandler();
 
-    public event VersesLoadedEventHandler? VersesLoaded;
-
     private readonly List<AVerseComponent> _verseComponents = new();
-    private IEnumerable<Verse> _verses = Array.Empty<Verse>();
     private ReaderMode _mode;
     private Surah _surah;
+    private IEnumerable<Verse> _verses = Array.Empty<Verse>();
+
+    public ReaderComponent()
+    {
+        InitializeComponent();
+    }
 
 
     public ReaderMode Mode
@@ -37,6 +38,22 @@ public partial class ReaderComponent : UserControl, IDisposable
             UpdateMode(_mode);
         }
     }
+
+
+    public void Dispose()
+    {
+        foreach (var verseComponent in _verseComponents)
+        {
+            verseComponent.VerseSelected -= VerseComponent_OnVerseSelected;
+            verseComponent.Dispose();
+        }
+
+        CardComponent.Dispose();
+    }
+
+    public event VerseSelectedEventHandler? VerseSelected;
+
+    public event VersesLoadedEventHandler? VersesLoaded;
 
     private void UpdateMode(ReaderMode mode)
     {
@@ -100,13 +117,9 @@ public partial class ReaderComponent : UserControl, IDisposable
             VerseId = verse.Id
         };
         if (DataManager.IsBookmarked(surah.Id, verse.Id))
-        {
             DataManager.RemoveBookmark(bookmark);
-        }
         else
-        {
             DataManager.AddBookmark(bookmark);
-        }
         var verseComponent = _verseComponents.FirstOrDefault(q => q.Surah.Id == surah.Id && q.Verse.Id == verse.Id);
         verseComponent?.VerseBookMark();
     }
@@ -126,35 +139,21 @@ public partial class ReaderComponent : UserControl, IDisposable
     {
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
 
-        if (clipboard != null)
-        {
-            await clipboard.SetTextAsync(verse.Translation);
-        }
+        if (clipboard != null) await clipboard.SetTextAsync(verse.Translation);
     }
 
     private async void VerseComponentOnCopyTransliterationRequested(Verse verse)
     {
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
 
-        if (clipboard != null)
-        {
-            await clipboard.SetTextAsync(verse.Transliteration);
-        }
+        if (clipboard != null) await clipboard.SetTextAsync(verse.Transliteration);
     }
 
     private async void VerseComponentOnCopyVerseRequested(Verse verse)
     {
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
 
-        if (clipboard != null)
-        {
-            await clipboard.SetTextAsync(verse.Text);
-        }
-    }
-
-    public ReaderComponent()
-    {
-        InitializeComponent();
+        if (clipboard != null) await clipboard.SetTextAsync(verse.Text);
     }
 
     public void LoadCard(Surah surah, SurahSynopsis? synopsis)
@@ -205,15 +204,8 @@ public partial class ReaderComponent : UserControl, IDisposable
         for (var i = 0; i < _verseComponents.Count; i++) _verseComponents[i].IsSelected = i == verseIndex - 1;
     }
 
-
-    public void Dispose()
+    public void UpdateUi()
     {
-        foreach (var verseComponent in _verseComponents)
-        {
-            verseComponent.VerseSelected -= VerseComponent_OnVerseSelected;
-            verseComponent.Dispose();
-        }
-
-        CardComponent.Dispose();
+        _verseComponents.ForEach(verseComponent => verseComponent.UpdateUi());
     }
 }

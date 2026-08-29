@@ -10,11 +10,7 @@ public partial class GotoComponent : UserControl
 {
     public delegate void SurahSelectedHandler(Surah surah);
 
-    public event SurahSelectedHandler? SurahSelected;
-
     public delegate void VerseSelectedHandler(int verseId);
-
-    public event VerseSelectedHandler? VerseSelected;
 
     private IEnumerable<Surah> _surahs = [];
 
@@ -49,6 +45,10 @@ public partial class GotoComponent : UserControl
         get => SurahComboBox.SelectedIndex;
         set => SurahComboBox.SelectedIndex = value;
     }
+
+    public event SurahSelectedHandler? SurahSelected;
+
+    public event VerseSelectedHandler? VerseSelected;
 
     public Task Load(IEnumerable<Surah> surahs, IEnumerable<SurahOrder> surahOrder,
         IEnumerable<SurahSynopsis> surahSynopsis)

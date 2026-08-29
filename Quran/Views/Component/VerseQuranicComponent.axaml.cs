@@ -1,5 +1,4 @@
 using System;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Quran.Models;
@@ -14,8 +13,14 @@ public partial class VerseQuranicComponent : AVerseComponent, IDisposable
 
         InitializeComponent();
         TextBlockVerseNumber.Text = $"۝{ToArabicDigits(verse.Id)}";
-        TextBlockVerseNumber.Foreground = IsBookMarked ? new SolidColorBrush(Colors.Yellow) : new SolidColorBrush(Colors.White);
+        TextBlockVerseNumber.Foreground =
+            IsBookMarked ? new SolidColorBrush(Colors.Yellow) : new SolidColorBrush(Colors.White);
         TextBlockArabic.Text = $"{verse.Text} ";
+    }
+
+    public override void Dispose()
+    {
+        Verse = null;
     }
 
     private static string ToArabicDigits(int number)
@@ -54,11 +59,12 @@ public partial class VerseQuranicComponent : AVerseComponent, IDisposable
 
     public override void VerseBookMark()
     {
-        TextBlockVerseNumber.Foreground = IsBookMarked ? new SolidColorBrush(Colors.Yellow) : new SolidColorBrush(Colors.White);
+        TextBlockVerseNumber.Foreground =
+            IsBookMarked ? new SolidColorBrush(Colors.Yellow) : new SolidColorBrush(Colors.White);
     }
 
-    public override void Dispose()
+    public override void UpdateUi()
     {
-        Verse = null;
+        VerseBookMark();
     }
 }

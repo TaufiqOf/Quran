@@ -1,61 +1,151 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:avalonia="using:FluentIcons.Avalonia"
-             x:Class="Quran.Views.Component.GotoComponent"
-             x:Name="Root">
-    <StackPanel
-        Orientation="Horizontal">
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="using:FluentIcons.Avalonia"
+    x:Class="Quran.Views.Component.GotoComponent">
+
+    <UserControl.Styles>
+
+        <Style Selector="Label.gotoLabel">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="8,0,6,0" />
+        </Style>
+
+        <Style Selector="Button.navButton">
+            <Setter Property="Width" Value="38" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="ComboBox.surahSelector">
+            <Setter Property="Width" Value="280" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="ComboBox.verseSelector">
+            <Setter Property="Width" Value="150" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <Grid
+        Height="48"
+        VerticalAlignment="Center"
+        ColumnDefinitions="
+            Auto,
+            38,
+            280,
+            38,
+            Auto,
+            Auto,
+            Auto,
+            Auto,
+            Auto">
+
+        <!-- Surah -->
 
         <Label
+            Grid.Column="0"
+            Classes="gotoLabel"
+            Content="Surah:" />
 
-            Content="Surah:"
-            VerticalContentAlignment="Center"
-            Margin="10,0" />
-        <Button x:Name="PreviousSurahButton"
-                ToolTip.Tip="Previous Surah"
-                Click="PreviousSurahButton_OnClick">
+
+        <Button
+            Grid.Column="1"
+            x:Name="PreviousSurahButton"
+            Classes="navButton"
+            ToolTip.Tip="Previous Surah"
+            Click="PreviousSurahButton_OnClick">
+
             <avalonia:SymbolIcon
                 Symbol="ArrowLeft"
-                FontSize="20" />
+                FontSize="18" />
+
         </Button>
 
+
         <ComboBox
+            Grid.Column="2"
             x:Name="SurahComboBox"
-            Width="350"
+            Classes="surahSelector"
             SelectionChanged="SurahComboBox_OnSelectionChanged" />
 
-        <Button x:Name="NextSurahButton"
-                ToolTip.Tip="Next Surah"
-                Click="NextSurahButton_OnClick">
+
+        <Button
+            Grid.Column="3"
+            x:Name="NextSurahButton"
+            Classes="navButton"
+            ToolTip.Tip="Next Surah"
+            Click="NextSurahButton_OnClick">
+
             <avalonia:SymbolIcon
                 Symbol="ArrowRight"
-                FontSize="20" />
+                FontSize="18" />
+
         </Button>
+
+
+        <!-- Separator -->
+
+        <Border
+            Grid.Column="4"
+            Width="1"
+            Height="26"
+            Background="#444444"
+            Margin="10,0"
+            VerticalAlignment="Center" />
+
+
+        <!-- Verse -->
 
         <Label
+            Grid.Column="5"
             x:Name="VerseLabel"
-            Content="Verse:"
-            VerticalContentAlignment="Center"
-            Margin="10,0" />
+            Classes="gotoLabel"
+            Content="Verse:" />
 
-        <Button x:Name="PreviousButton"
-                ToolTip.Tip="Previous Verse"
-                Click="PreviousButton_OnClick">
+
+        <Button
+            Grid.Column="6"
+            x:Name="PreviousButton"
+            Classes="navButton"
+            ToolTip.Tip="Previous Verse"
+            Click="PreviousButton_OnClick">
+
             <avalonia:SymbolIcon
                 Symbol="ArrowUp"
-                FontSize="20" />
+                FontSize="18" />
+
         </Button>
 
+
         <ComboBox
+            Grid.Column="7"
             x:Name="VerseComboBox"
-            Width="120"
+            Classes="verseSelector"
             SelectionChanged="VerseComboBox_OnSelectionChanged" />
-        <Button x:Name="NextButton"
-                ToolTip.Tip="Next Verse"
-                Click="NextButton_OnClick">
+
+
+        <Button
+            Grid.Column="8"
+            x:Name="NextButton"
+            Classes="navButton"
+            ToolTip.Tip="Next Verse"
+            Click="NextButton_OnClick">
+
             <avalonia:SymbolIcon
                 Symbol="ArrowDown"
-                FontSize="20" />
+                FontSize="18" />
+
         </Button>
-    </StackPanel>
+
+    </Grid>
+
 </UserControl>

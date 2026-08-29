@@ -1,44 +1,95 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:component="clr-namespace:Quran.Views.Component"
-             x:Class="Quran.Views.Pages.QuranView">
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:component="clr-namespace:Quran.Views.Component"
+    x:Class="Quran.Views.Pages.QuranView">
+
+    <UserControl.Styles>
+
+        <!-- =============================== -->
+        <!-- Top Bar -->
+        <!-- =============================== -->
+
+        <Style Selector="Border.topBar">
+            <Setter Property="Background" Value="#202020" />
+            <Setter Property="BorderBrush" Value="#3A3A3A" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="8" />
+        </Style>
+
+        <!-- =============================== -->
+        <!-- Mode Selector -->
+        <!-- =============================== -->
+
+        <Style Selector="ComboBox.modeSelector">
+            <Setter Property="MinWidth" Value="180" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Margin" Value="0,5,10,0" />
+        </Style>
+
+        <!-- =============================== -->
+        <!-- Reader -->
+        <!-- =============================== -->
+
+        <Style Selector="component|ReaderComponent">
+            <Setter Property="Margin" Value="8" />
+        </Style>
+
+    </UserControl.Styles>
+
 
     <Grid
         HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch">
+        VerticalAlignment="Stretch"
+        RowDefinitions="Auto,*">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Row="0">
+        <!-- =========================== -->
+        <!-- Header -->
+        <!-- =========================== -->
+
+        <Border
+            Grid.Row="0"
+            Classes="topBar">
+
+            <Grid ColumnDefinitions="*,Auto">
+
+                <!-- Reading Mode -->
+
                 <ComboBox
                     x:Name="ModeComboBox"
+                    Classes="modeSelector"
+                    HorizontalAlignment="Stretch"
                     SelectionChanged="SelectingItemsControl_OnSelectionChanged" />
+
+
+                <!-- Go To -->
+
+                <component:GotoComponent
+                    x:Name="GotoComponent"
+                    Grid.Column="1"
+                    Margin="10,0,0,0"
+                    SurahSelected="GotoComponent_OnSurahSelected"
+                    VerseSelected="GotoComponent_OnVerseSelected" />
+
             </Grid>
-            <component:GotoComponent
-                SurahSelected="GotoComponent_OnSurahSelected"
-                VerseSelected="GotoComponent_OnVerseSelected"
-                x:Name="GotoComponent"
-                Grid.Column="1" />
-        </Grid>
-        <!-- =============================== -->
+
+        </Border>
+
+
+        <!-- =========================== -->
         <!-- Quran Content -->
-        <!-- =============================== -->
+        <!-- =========================== -->
 
         <component:ReaderComponent
             x:Name="ReaderComponent"
+            Grid.Row="1"
+            Margin="8"
             Focusable="True"
             IsTabStop="True"
             KeyDown="ReaderComponent_OnKeyDown"
             VerseSelected="ReaderComponent_OnVerseSelected"
-            VersesLoaded="ReaderComponent_OnVersesLoaded"
-            Grid.Row="1" />
+            VersesLoaded="ReaderComponent_OnVersesLoaded" />
+
     </Grid>
 
 </UserControl>

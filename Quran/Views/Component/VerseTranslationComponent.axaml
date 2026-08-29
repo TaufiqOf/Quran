@@ -77,13 +77,14 @@
             <!-- ================================= -->
 
 
-            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
                 <TextBlock
                     x:Name="TextBlockBookmark"
                     Text="&#xF02E; "
                     FontFamily="avares://Quran/Assets/Fonts#Font Awesome 7 Free"
                     FontWeight="Black"
-                    Margin="0,12,0,0" 
+                    Margin="0,12,0,0"
                     FontSize="16" />
                 <TextBlock
                     x:Name="TextBlockVerseNumber"

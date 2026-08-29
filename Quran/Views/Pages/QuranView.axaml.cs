@@ -7,17 +7,16 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
-using Quran.Views.Component;
 
 namespace Quran.Views.Pages;
 
 public partial class QuranView : AView
 {
-    private IEnumerable<Surah> _surahs = [];
+    private readonly int _currentSurahIndex = -1;
+    private bool _isLoaded;
     private IEnumerable<SurahOrder> _surahOrder = [];
     private IEnumerable<SurahSynopsis> _surahSynopsis = [];
-    private bool _isLoaded = false;
-    private int _currentSurahIndex = -1;
+    private IEnumerable<Surah> _surahs = [];
 
     public QuranView()
     {
@@ -34,10 +33,7 @@ public partial class QuranView : AView
 
     public override Task Load(params object?[] parameter)
     {
-        if (parameter.Length == 1 && parameter[0] is object?[] nestedParameters)
-        {
-            parameter = nestedParameters;
-        }
+        if (parameter.Length == 1 && parameter[0] is object?[] nestedParameters) parameter = nestedParameters;
 
         if (!_isLoaded)
         {
@@ -72,7 +68,7 @@ public partial class QuranView : AView
             if (parameter.Length > 1 && parameter[1] is int verseIndexParam)
                 GotoComponent.VerseSelectedIndex = verseIndexParam;
         }
-
+        ReaderComponent.UpdateUi();
         return Task.CompletedTask;
     }
 

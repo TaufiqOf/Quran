@@ -11,16 +11,17 @@ namespace Quran.Views.Pages;
 
 public partial class HomeView : AView
 {
-    public List<CardComponent> Cards { get; set; } = new();
-    private IEnumerable<Surah> _surahs = new List<Surah>();
+    private bool _isLoaded;
     private List<SurahOrder> _surahOrder;
     private List<SurahSynopsis> _surahSynopsis;
-    private bool _isLoaded;
+    private IEnumerable<Surah> _surahs = new List<Surah>();
 
     public HomeView()
     {
         InitializeComponent();
     }
+
+    public List<CardComponent> Cards { get; set; } = new();
 
     public override Task Load(params object?[] parameter)
     {

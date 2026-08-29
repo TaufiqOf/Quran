@@ -1,16 +1,13 @@
 using System;
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using Quran.Models;
 
 namespace Quran.Views.Component;
 
 public partial class VerseTranslationComponent : AVerseComponent, IDisposable
 {
-    public VerseTranslationComponent(Surah surah, Verse verse): base(surah, verse)
+    public VerseTranslationComponent(Surah surah, Verse verse) : base(surah, verse)
     {
         Verse = verse;
         InitializeComponent();
@@ -19,6 +16,11 @@ public partial class VerseTranslationComponent : AVerseComponent, IDisposable
         TextBlockBookmark.Text = "\uf02e";
         TextBlockBookmark.IsVisible = IsBookMarked;
         TextBlockVerseNumber.Text = $"Verse {verse.Id}";
+    }
+
+    public override void Dispose()
+    {
+        Verse = null;
     }
 
     public override void UpdateSelectedState()
@@ -52,8 +54,8 @@ public partial class VerseTranslationComponent : AVerseComponent, IDisposable
         TextBlockBookmark.IsVisible = IsBookMarked;
     }
 
-    public override void Dispose()
+    public override void UpdateUi()
     {
-        Verse = null;
+        VerseBookMark();
     }
 }

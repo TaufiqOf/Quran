@@ -1,16 +1,27 @@
 using System;
+using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
-using Quran.Models;
-using Avalonia.Media;
 using Quran.Helpers;
+using Quran.Models;
 
 namespace Quran.Views.Component;
 
 public abstract class AVerseComponent : UserControl, IDisposable
 {
+    public delegate void VerseContextMenuEventHandler(Verse verse);
+
+    public delegate void VerseSelectedEventHandler(Verse verse);
+
+    public static readonly StyledProperty<bool> IsSelectedProperty =
+        AvaloniaProperty.Register<AVerseComponent, bool>(
+            nameof(IsSelected));
+
+    private MenuItem _copyVerseMenuItem;
+
     public AVerseComponent(Surah surah, Verse verse)
     {
         Surah = surah;
@@ -18,30 +29,40 @@ public abstract class AVerseComponent : UserControl, IDisposable
         ContextMenu = CreateContextMenu();
         ContextMenu.Opening += ContextMenu_OnOpening;
     }
-    public static readonly StyledProperty<bool> IsSelectedProperty =
-        AvaloniaProperty.Register<AVerseComponent, bool>(
-            nameof(IsSelected),
-            false);
 
     public bool IsSelected
     {
         get => GetValue(IsSelectedProperty);
         set => SetValue(IsSelectedProperty, value);
     }
-    public  Surah? Surah { get; protected set; }
+
+    public Surah? Surah { get; protected set; }
     public Verse? Verse { get; protected set; }
 
-    public delegate void VerseSelectedEventHandler(Verse verse);
+    public bool IsBookMarked => DataManager.IsBookmarked(Surah?.Id ?? -1, Verse?.Id ?? -1);
+
+    public virtual void Dispose()
+    {
+        if (ContextMenu != null)
+        {
+            ContextMenu.Opening -= ContextMenu_OnOpening;
+            ContextMenu = null;
+        }
+
+        VerseSelected = null;
+        VerseContextMenuRequested = null;
+        PlayVerseRequested = null;
+        BookmarkVerseRequested = null;
+        CopyVerseRequested = null;
+        CopyTranslationRequested = null;
+        CopyTransliterationRequested = null;
+
+        Verse = null;
+    }
 
     public event VerseSelectedEventHandler? VerseSelected;
 
-    public delegate void VerseContextMenuEventHandler(Verse verse);
-
     public event VerseContextMenuEventHandler? VerseContextMenuRequested;
-
-    private MenuItem _copyVerseMenuItem; 
-    
-    public bool IsBookMarked => DataManager.IsBookmarked(Surah?.Id ?? -1, Verse?.Id ?? -1);
 
     public abstract void UpdateSelectedState();
 
@@ -163,7 +184,6 @@ public abstract class AVerseComponent : UserControl, IDisposable
             if (Verse != null) PlayVerseRequested?.Invoke(Verse);
         };
 
- 
 
         menu.Items.Add(copyItem);
         menu.Items.Add(_copyVerseMenuItem);
@@ -175,13 +195,14 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
     private void ContextMenu_OnOpening(
         object? sender,
-        System.ComponentModel.CancelEventArgs e)
+        CancelEventArgs e)
     {
         if (Verse == null)
         {
             e.Cancel = true;
             return;
         }
+
         _copyVerseMenuItem.Icon = new SymbolIcon
         {
             Symbol = IsBookMarked ? Symbol.BookmarkOff : Symbol.Bookmark,
@@ -202,25 +223,8 @@ public abstract class AVerseComponent : UserControl, IDisposable
     public event Action<Verse>? CopyTranslationRequested;
     public event Action<Verse>? CopyAllRequested;
     public event Action<Verse>? CopyTransliterationRequested;
-    
+
     public abstract void VerseBookMark();
 
-    public virtual void Dispose()
-    {
-        if (ContextMenu != null)
-        {
-            ContextMenu.Opening -= ContextMenu_OnOpening;
-            ContextMenu = null;
-        }
-
-        VerseSelected = null;
-        VerseContextMenuRequested = null;
-        PlayVerseRequested = null;
-        BookmarkVerseRequested = null;
-        CopyVerseRequested = null;
-        CopyTranslationRequested = null;
-        CopyTransliterationRequested = null;
-
-        Verse = null;
-    }
+    public abstract void UpdateUi();
 }

@@ -155,14 +155,14 @@
                 x:Name="TextBlockTransliteration"
                 Grid.Row="2"
                 Classes="transliteration" />
-            
+
             <StackPanel Grid.Row="3" Orientation="Horizontal">
                 <TextBlock
                     x:Name="TextBlockBookmark"
                     Text="&#xF02E; "
                     FontFamily="avares://Quran/Assets/Fonts#Font Awesome 7 Free"
                     FontWeight="Black"
-                    Margin="0,3,0,0" 
+                    Margin="0,3,0,0"
                     FontSize="16" />
                 <TextBlock
                     x:Name="TextBlockVerseNumber"

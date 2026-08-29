@@ -1,0 +1,242 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="clr-namespace:Quran.Models"
+    x:Class="Quran.Views.Component.SearchComponent"
+    x:Name="Root">
+
+    <UserControl.Styles>
+
+        <!-- =============================== -->
+        <!-- Surah Expander -->
+        <!-- =============================== -->
+
+        <Style Selector="Expander.surah">
+            <Setter Property="Margin" Value="4" />
+        </Style>
+
+        <!-- =============================== -->
+        <!-- Surah Header -->
+        <!-- =============================== -->
+
+        <Style Selector="Border.surahHeader">
+            <Setter Property="Background" Value="#2a2a2a" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="12,8" />
+        </Style>
+
+        <Style Selector="TextBlock.surahId">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#3678D4" />
+        </Style>
+
+        <Style Selector="TextBlock.surahName">
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+        </Style>
+
+        <Style Selector="TextBlock.surahTransliteration">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="#CCCCCC" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Verse -->
+        <!-- =============================== -->
+
+        <Style Selector="Border.verse">
+            <Setter Property="Background" Value="#2a2a2a" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Margin" Value="4,2" />
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Arabic -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.arabic">
+            <Setter
+                Property="FontFamily"
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
+
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FlowDirection" Value="RightToLeft" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Translation -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.translation">
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="LineHeight" Value="27" />
+            <Setter Property="Margin" Value="20,8,20,0" />
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Transliteration -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.transliteration">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="20,4,20,0" />
+        </Style>
+
+
+        <!-- =============================== -->
+        <!-- Verse Number -->
+        <!-- =============================== -->
+
+        <Style Selector="TextBlock.verseNumber">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="#777777" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Margin" Value="5,5,0,0" />
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <!-- =============================== -->
+    <!-- Main -->
+    <!-- =============================== -->
+
+    <Expander
+        Classes="surah"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Top">
+
+        <!-- =========================== -->
+        <!-- Surah Header -->
+        <!-- =========================== -->
+
+        <Expander.Header>
+
+            <Border Classes="surahHeader">
+
+                <Grid ColumnDefinitions="Auto,*,Auto">
+
+                    <!-- Surah ID -->
+
+                    <TextBlock
+                        Grid.Column="0"
+                        Classes="surahId"
+                        Text="{Binding Surah.Id, ElementName=Root}" />
+
+
+                    <!-- Surah Name -->
+
+                    <TextBlock
+                        Grid.Column="1"
+                        Classes="surahName"
+                        Text="{Binding Surah.Name, ElementName=Root}" />
+
+
+                    <!-- Surah Transliteration -->
+
+                    <TextBlock
+                        Grid.Column="2"
+                        Classes="surahTransliteration"
+                        Text="{Binding Surah.Transliteration, ElementName=Root}" />
+
+                </Grid>
+
+            </Border>
+
+        </Expander.Header>
+
+
+        <!-- =========================== -->
+        <!-- Matching Verses -->
+        <!-- =========================== -->
+
+        <ItemsControl
+            ItemsSource="{Binding Surah.Verses, ElementName=Root}">
+
+            <ItemsControl.ItemsPanel>
+
+                <ItemsPanelTemplate>
+
+                    <StackPanel />
+
+                </ItemsPanelTemplate>
+
+            </ItemsControl.ItemsPanel>
+
+
+            <ItemsControl.ItemTemplate>
+
+                <DataTemplate x:DataType="models:Verse">
+
+                    <Border
+                        Classes="verse"
+                        PointerPressed="InputElement_OnPointerPressed">
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+
+                            <!-- Arabic -->
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Classes="arabic"
+                                Text="{Binding Text}" />
+
+
+                            <!-- Translation -->
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Classes="translation"
+                                Text="{Binding Translation}" />
+
+
+                            <!-- Transliteration -->
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Classes="transliteration"
+                                Text="{Binding Transliteration}" />
+
+
+                            <!-- Verse Number -->
+
+                            <TextBlock
+                                Grid.Row="3"
+                                Classes="verseNumber"
+                                Text="{Binding Id}" />
+
+                        </Grid>
+
+                    </Border>
+
+                </DataTemplate>
+
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+
+    </Expander>
+
+</UserControl>

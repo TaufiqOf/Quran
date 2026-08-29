@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Quran.Models;
@@ -16,5 +17,5 @@ public class Surah
 
     [JsonPropertyName("total_verses")] public int TotalVerses { get; set; }
 
-    [JsonPropertyName("verses")] public Verse[] Verses { get; set; } = [];
+    [JsonPropertyName("verses")] public List<Verse> Verses { get; set; } = new();
 }

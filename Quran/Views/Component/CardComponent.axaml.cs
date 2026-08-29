@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Quran.Models;
@@ -8,11 +7,20 @@ namespace Quran.Views.Component;
 
 public partial class CardComponent : UserControl, IDisposable
 {
-    public Surah? Surah { get; private set; } = null;
-
     public delegate void CardClickEventHandler(Surah surah);
 
-    public event CardClickEventHandler? CardClick;
+    public CardComponent()
+    {
+        InitializeComponent();
+    }
+
+    public CardComponent(Surah surah, SurahSynopsis? synopsis)
+    {
+        InitializeComponent();
+        LoadData(surah, synopsis);
+    }
+
+    public Surah? Surah { get; private set; }
 
     public bool IsSelected
     {
@@ -26,16 +34,12 @@ public partial class CardComponent : UserControl, IDisposable
         }
     }
 
-    public CardComponent()
+    public void Dispose()
     {
-        InitializeComponent();
+        Surah = null;
     }
 
-    public CardComponent(Surah surah, SurahSynopsis? synopsis)
-    {
-        InitializeComponent();
-        LoadData(surah, synopsis);
-    }
+    public event CardClickEventHandler? CardClick;
 
     public void LoadData(Surah surah, SurahSynopsis? synopsis)
     {
@@ -51,10 +55,5 @@ public partial class CardComponent : UserControl, IDisposable
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
         if (Surah != null) CardClick?.Invoke(Surah);
-    }
-
-    public void Dispose()
-    {
-        Surah = null;
     }
 }

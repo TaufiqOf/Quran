@@ -1,4 +1,4 @@
-namespace Quran.Views.Component;
+namespace Quran.Models;
 
 public enum ReaderMode
 {

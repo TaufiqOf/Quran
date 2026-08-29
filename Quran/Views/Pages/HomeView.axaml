@@ -1,38 +1,121 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:component="clr-namespace:Quran.Views.Component"
-             x:Class="Quran.Views.Pages.HomeView">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:component="clr-namespace:Quran.Views.Component"
+    x:Class="Quran.Views.Pages.HomeView">
 
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+    <UserControl.Styles>
 
-            <component:GotoComponent
-                SurahSelected="GotoComponent_OnSurahSelected"
-                ShowOnlySurah="True"
-                x:Name="GotoComponent"
-                Grid.Column="1" />
-        </Grid>
-        <ScrollViewer x:Name="ScrollViewer" Grid.Row="1"
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
-            <ItemsControl x:Name="ItemsControl">
+        <!-- Top navigation -->
+        <Style Selector="Border.topBar">
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="Background" Value="#202020" />
+            <Setter Property="BorderBrush" Value="#3A3A3A" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+        </Style>
+
+        <!-- Surah cards container -->
+        <Style Selector="ItemsControl.homeItems">
+            <Setter Property="Margin" Value="8" />
+        </Style>
+
+        <!-- Make generated items stretch -->
+        <Style Selector="ItemsControl.homeItems ContentPresenter">
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Stretch" />
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- =========================== -->
+        <!-- Header -->
+        <!-- =========================== -->
+
+        <Border
+            Grid.Row="0"
+            Classes="topBar">
+
+            <Grid
+                ColumnDefinitions="*,Auto"
+                VerticalAlignment="Center">
+
+                <!-- Optional title -->
+
+                <TextBlock
+                    Grid.Column="0"
+                    Text="Surahs"
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    VerticalAlignment="Center"
+                    Margin="8,0" />
+
+
+                <!-- Go To -->
+
+                <component:GotoComponent
+                    Grid.Column="1"
+                    x:Name="GotoComponent"
+                    ShowOnlySurah="True"
+                    VerticalAlignment="Center"
+                    SurahSelected="GotoComponent_OnSurahSelected" />
+
+            </Grid>
+
+        </Border>
+
+
+        <!-- =========================== -->
+        <!-- Surah Grid -->
+        <!-- =========================== -->
+
+        <ScrollViewer
+            Grid.Row="1"
+            x:Name="ScrollViewer"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+
+            <ItemsControl
+                x:Name="ItemsControl"
+                Classes="homeItems"
+                HorizontalAlignment="Stretch">
+
                 <ItemsControl.ItemsPanel>
+
                     <ItemsPanelTemplate>
+
                         <UniformGrid
                             Columns="2"
-                            Margin="16"
                             HorizontalAlignment="Stretch" />
+
                     </ItemsPanelTemplate>
+
                 </ItemsControl.ItemsPanel>
+
+
+                <!-- Ensure cards fill their cells -->
+
+                <ItemsControl.Styles>
+
+                    <Style Selector="ContentPresenter">
+                        <Setter
+                            Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+
+                        <Setter
+                            Property="VerticalContentAlignment"
+                            Value="Stretch" />
+
+                    </Style>
+
+                </ItemsControl.Styles>
+
             </ItemsControl>
+
         </ScrollViewer>
+
     </Grid>
+
 </UserControl>

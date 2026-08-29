@@ -1,6 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:icons="using:FluentIcons.Avalonia"
              x:Class="Quran.Views.Component.VerseComponent"
              x:Name="Root"
              Margin="5">
@@ -82,7 +81,7 @@
             <Setter Property="Foreground" Value="#D8D8D8" />
             <Setter Property="LineHeight" Value="26" />
         </Style>
-        
+
         <Style Selector="Border.card.selected Button.iconButton">
             <Setter Property="Background" Value="#404040" />
         </Style>
@@ -165,7 +164,7 @@
                     Text="&#xF02E; "
                     FontFamily="avares://Quran/Assets/Fonts#Font Awesome 7 Free"
                     FontWeight="Black"
-                    Margin="0,1,0,0" 
+                    Margin="0,1,0,0"
                     FontSize="16" />
                 <TextBlock
                     x:Name="TextBlockVerseNumber"
@@ -175,7 +174,7 @@
                     Margin="5,0,0,0" />
 
             </StackPanel>
-           
+
 
         </Grid>
 

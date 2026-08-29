@@ -1,36 +1,104 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Quran.Views.Pages.BookmarksView">
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="using:FluentIcons.Avalonia"
+    x:Class="Quran.Views.Pages.BookmarksView">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <ComboBox
-                x:Name="SurahComboBox"
-                Width="350"
-                SelectionChanged="SurahComboBoxOnSelectionChanged" />
-        </Grid>
-        <Grid Grid.Row="1"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
-            <ScrollViewer
-                x:Name="LinerScrollViewer"
-                IsVisible="True"
-                ScrollChanged="LinerScrollViewerOnScrollChanged"
-                HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Auto">
-                <ItemsControl
-                    x:Name="LinerItemsControl">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
-        </Grid>
+    <UserControl.Styles>
+
+        <!-- =============================== -->
+        <!-- Header -->
+        <!-- =============================== -->
+
+        <Style Selector="Border.bookmarkHeader">
+            <Setter Property="Background" Value="#202020" />
+            <Setter Property="BorderBrush" Value="#3A3A3A" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="8" />
+        </Style>
+
+        <!-- =============================== -->
+        <!-- Header Icon -->
+        <!-- =============================== -->
+
+        <Style Selector="avalonia|FluentIcon.bookmarkIcon">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Foreground" Value="#3678D4" />
+            <Setter Property="Margin" Value="0,0,10,0" />
+        </Style>
+
+        <!-- =============================== -->
+        <!-- Surah Filter -->
+        <!-- =============================== -->
+
+        <Style Selector="ComboBox.surahFilter">
+            <Setter Property="Width" Value="350" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- =============================== -->
+        <!-- Results -->
+        <!-- =============================== -->
+
+        <Style Selector="ItemsControl.bookmarkItems">
+            <Setter Property="Margin" Value="8" />
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- =========================== -->
+        <!-- Header -->
+        <!-- =========================== -->
+
+        <Border
+            Grid.Row="0"
+            Classes="bookmarkHeader">
+            <Grid>
+                <ComboBox
+                    x:Name="SurahComboBox"
+                    Classes="surahFilter"
+                    HorizontalAlignment="Left"
+                    SelectionChanged="SurahComboBoxOnSelectionChanged" />
+            </Grid>
+        </Border>
+
+
+        <!-- =========================== -->
+        <!-- Bookmarks -->
+        <!-- =========================== -->
+
+        <ScrollViewer
+            Grid.Row="1"
+            x:Name="LinerScrollViewer"
+            ScrollChanged="LinerScrollViewerOnScrollChanged"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+
+            <ItemsControl
+                x:Name="LinerItemsControl"
+                Classes="bookmarkItems"
+                HorizontalAlignment="Stretch">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel
+                            Orientation="Vertical"
+                            HorizontalAlignment="Stretch" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <!-- Make VerseComponents fill width -->
+
+                <ItemsControl.Styles>
+                    <Style Selector="ContentPresenter">
+                        <Setter
+                            Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+                    </Style>
+                </ItemsControl.Styles>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -7,9 +7,6 @@ namespace Quran.Views;
 
 public partial class MainWindow : Window
 {
-    private AView? CurrentPage { get; set; }
-    private Dictionary<string, AView> Pages { get; set; } = new();
-
     public MainWindow()
     {
         InitializeComponent();
@@ -17,6 +14,9 @@ public partial class MainWindow : Window
         ShowPage("Home");
         EnableNavButtons("Home");
     }
+
+    private AView? CurrentPage { get; set; }
+    private Dictionary<string, AView> Pages { get; } = new();
 
     private void NavButton_OnClick(object? sender, RoutedEventArgs e)
     {

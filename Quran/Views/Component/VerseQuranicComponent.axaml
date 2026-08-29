@@ -42,14 +42,20 @@
         Classes="verse"
         HorizontalAlignment="Left"
         PointerPressed="VerseCard_OnPointerPressed">
-
-        <TextBlock
-            x:Name="TextBlockArabic"
-            Classes="arabic"
-            TextWrapping="Wrap"
-            TextAlignment="Center"
-            HorizontalAlignment="Stretch" />
-
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                x:Name="TextBlockVerseNumber"
+                Classes="arabic"
+                TextWrapping="Wrap"
+                TextAlignment="Center"
+                HorizontalAlignment="Stretch" />
+            <TextBlock
+                x:Name="TextBlockArabic"
+                Classes="arabic"
+                TextWrapping="Wrap"
+                TextAlignment="Center"
+                HorizontalAlignment="Stretch" />
+        </StackPanel>
     </Border>
 
 </UserControl>

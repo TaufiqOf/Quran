@@ -38,7 +38,7 @@ public class QuranSemanticSearchService(
                             queryVector,
                             embedding.Vector)
                 })
-            .Where(x => x.Score > .81) // Filter out results with non-positive scores
+            .Where(x => x.Score > .8) // Filter out results with non-positive scores
             .OrderByDescending(x => x.Score)
             .Take(maxResults)
             .ToList();

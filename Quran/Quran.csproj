@@ -11,10 +11,13 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <AvaloniaResource Include="Data\*.json" />
-        <None Include="Storage\tokenizer.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <None Update="Storage\embeddings.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Storage\model1.onnx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Storage\tokenizer.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

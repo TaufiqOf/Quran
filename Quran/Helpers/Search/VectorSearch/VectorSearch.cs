@@ -52,14 +52,14 @@ public class VectorSearch : ISearch
     
     public async Task InitializeAsync()
     {
-        if (!File.Exists(_embeddingDataPath))
-        {
-            await QuranEmbeddingGenerator.GenerateAsync(
-                _surahs,
-                _modelPath,
-                _tokenizerPath,
-                _embeddingDataPath);
-        }
+        // if (!File.Exists(_embeddingDataPath))
+        // {
+        //     await QuranEmbeddingGenerator.GenerateAsync(
+        //         _surahs,
+        //         _modelPath,
+        //         _tokenizerPath,
+        //         _embeddingDataPath);
+        // }
 
         var embeddings =
             await EmbeddingStorage.LoadAsync(

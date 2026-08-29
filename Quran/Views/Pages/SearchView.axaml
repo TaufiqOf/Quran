@@ -62,7 +62,7 @@
             <Setter Property="Foreground" Value="White" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="5" />
-            <Setter Property="Watermark" Value="Search Surahs and verses..." />
+            <Setter Property="Watermark" Value="Search words (Jesus), verses (e.g. fati:1,2:2-5,112:), or ask a question using ? (e.g. ? Who will go to Heaven?)" />
         </Style>
 
         <!-- =============================== -->
@@ -147,7 +147,6 @@
                 x:Name="SearchItemsControl"
                 Classes="searchResults"
                 HorizontalAlignment="Stretch">
-
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel
@@ -155,21 +154,14 @@
                             HorizontalAlignment="Stretch" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-
                 <ItemsControl.Styles>
-
                     <Style Selector="ContentPresenter">
                         <Setter
                             Property="HorizontalContentAlignment"
                             Value="Stretch" />
                     </Style>
-
                 </ItemsControl.Styles>
-
             </ItemsControl>
-
         </ScrollViewer>
-
     </Grid>
-
 </UserControl>

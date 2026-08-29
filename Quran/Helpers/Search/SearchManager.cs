@@ -7,11 +7,16 @@ namespace Quran.Helpers.Search;
 
 public static class SearchManager
 {
-    public static List<ISearch> Searcher { get; } = new()
+    private static List<ISearch> Searcher { get; set; } 
+    
+    public static void RegisterSearcher()
     {
-        new StructuredSearch(),
-        new VectorSearch.VectorSearch()
-    };
+        Searcher = new()
+        {
+            new StructuredSearch(),
+            new VectorSearch.VectorSearch()
+        };
+    }
 
     public static async Task<List<Surah>> PerformSearch(string? searchText)
     {

@@ -14,7 +14,7 @@ public class QuranSemanticSearchService(
 {
     public async Task<List<SemanticSearchResult>> SearchAsync(
         string query,
-        int maxResults = 20,
+        int maxResults = 50,
         CancellationToken cancellationToken = default)
     {
         var queryText =
@@ -38,6 +38,7 @@ public class QuranSemanticSearchService(
                             queryVector,
                             embedding.Vector)
                 })
+            .Where(x => x.Score > .81) // Filter out results with non-positive scores
             .OrderByDescending(x => x.Score)
             .Take(maxResults)
             .ToList();

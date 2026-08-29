@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -13,13 +12,11 @@ namespace Quran.Views.Component;
 
 public partial class SearchComponent : UserControl
 {
-    private MenuItem _copyVerseMenuItem;
-
     public static readonly StyledProperty<Surah?> SurahProperty =
         AvaloniaProperty.Register<SearchComponent, Surah?>(
             nameof(Surah));
 
-    public SearchComponent()
+    private SearchComponent()
     {
         InitializeComponent();
     }
@@ -202,9 +199,7 @@ public partial class SearchComponent : UserControl
 
 
     public event Action<Verse>? PlayVerseRequested;
-
     public event Action<Verse, Surah>? BookmarkVerseRequested;
-
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;
     public event Action<Verse>? CopyAllRequested;
@@ -219,8 +214,8 @@ public partial class SearchComponent : UserControl
             .IsLeftButtonPressed)
             LeftButtonPressed(sender);
         if (e.GetCurrentPoint(sender as Visual)
-                .Properties
-                .IsRightButtonPressed)
+            .Properties
+            .IsRightButtonPressed)
             RightButtonPressed(sender);
         e.Handled = true;
     }
@@ -234,7 +229,6 @@ public partial class SearchComponent : UserControl
             return;
 
         border.ContextMenu = CreateContextMenu(verse);
-
     }
 
     private void LeftButtonPressed(object? sender)
@@ -250,6 +244,4 @@ public partial class SearchComponent : UserControl
 
         GoToVerseRequested?.Invoke(Surah, verse);
     }
-
-  
 }

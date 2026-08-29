@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Avalonia;
@@ -9,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Quran.Helpers;
+using Quran.Helpers.Search;
 using Quran.Models;
 using Quran.Views.Component;
 
@@ -17,7 +17,7 @@ namespace Quran.Views.Pages;
 public partial class SearchView : AView
 {
     private readonly Timer _timer;
-    private List<Surah> _results;
+    private List<Surah> _results = new();
 
     public SearchView()
     {
@@ -33,10 +33,6 @@ public partial class SearchView : AView
     public override Task Load(params object?[] parameter)
     {
         return Task.CompletedTask;
-    }
-
-    private void SurahComboBoxOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
     }
 
     private void LinerScrollViewerOnScrollChanged(object? sender, ScrollChangedEventArgs e)
@@ -55,219 +51,79 @@ public partial class SearchView : AView
         Application.Current?.Dispatcher.Invoke(() =>
         {
             var searchText = SearchTextBox.Text;
-            var mode = GetModeSearchMode(searchText);
-            var results = PerformSearch(searchText, mode);
+            var results = SearchManager.PerformSearch(searchText);
             foreach (var item in SearchItemsControl.Items)
+            {
                 if (item is SearchComponent searchComponent)
-                    searchComponent.GoToVerseRequested -= SearchComponentOnGoToVerseRequested;
+                {
+                    DetachSearchComponentEvents(searchComponent);
+                }
+            }
 
             _results = results;
             SearchItemsControl.Items.Clear();
+
             foreach (var surah in results)
             {
                 var searchComponent = new SearchComponent(surah);
+
                 searchComponent.GoToVerseRequested += SearchComponentOnGoToVerseRequested;
-                searchComponent.CopyTranslationRequested += VerseComponentOnCopyTranslationRequested;
-                searchComponent.CopyTransliterationRequested += VerseComponentOnCopyTransliterationRequested;
-                searchComponent.CopyVerseRequested += VerseComponentOnCopyVerseRequested;
-                searchComponent.CopyAllRequested += VerseComponentOnCopyAllRequested;
-                searchComponent.BookmarkVerseRequested += VerseComponentOnBookmarkVerseRequested;
+                searchComponent.CopyTranslationRequested += SearchComponentOnCopyTranslationRequested;
+                searchComponent.CopyTransliterationRequested += SearchComponentOnCopyTransliterationRequested;
+                searchComponent.CopyVerseRequested += SearchComponentOnCopyVerseRequested;
+                searchComponent.CopyAllRequested += SearchComponentOnCopyAllRequested;
+                searchComponent.BookmarkVerseRequested += ContextMenuHelper.OnBookmarkVerseRequested;
+
                 SearchItemsControl.Items.Add(searchComponent);
             }
+
         });
     }
 
-
-    private void SearchComponentOnGoToVerseRequested(Surah arg1, Verse arg2)
+    private void DetachSearchComponentEvents(SearchComponent searchComponent)
     {
-        RequestGotoPage("Quran", arg1, arg2.Id);
+        searchComponent.GoToVerseRequested -= SearchComponentOnGoToVerseRequested;
+        searchComponent.CopyTranslationRequested -= SearchComponentOnCopyTranslationRequested;
+        searchComponent.CopyTransliterationRequested -= SearchComponentOnCopyTransliterationRequested;
+        searchComponent.CopyVerseRequested -= SearchComponentOnCopyVerseRequested;
+        searchComponent.CopyAllRequested -= SearchComponentOnCopyAllRequested;
+        searchComponent.BookmarkVerseRequested -= ContextMenuHelper.OnBookmarkVerseRequested;
+    }
+    private async void SearchComponentOnCopyTranslationRequested(Verse verse)
+    {
+        await ContextMenuHelper.CopyTranslationRequested(
+            TopLevel.GetTopLevel(this), verse);
     }
 
-    private static List<Surah> PerformSearch(string? searchText, SearchMode mode)
+    private async void SearchComponentOnCopyTransliterationRequested(Verse verse)
     {
-        switch (mode)
-        {
-            case SearchMode.TextSearch:
-                return TextPerformSearch(searchText);
-            case SearchMode.StructuredSearch:
-                return StructuredPerformSearch(searchText);
-            default:
-                return new List<Surah>();
-        }
+        await ContextMenuHelper.CopyTransliterationRequested(
+            TopLevel.GetTopLevel(this), verse);
     }
 
-    private SearchMode GetModeSearchMode(string? searchText)
+    private async void SearchComponentOnCopyVerseRequested(Verse verse)
     {
-        if (string.IsNullOrWhiteSpace(searchText))
-            return SearchMode.TextSearch;
-
-        var isStructuredSearch = Regex.IsMatch(
-            searchText,
-            @"^\s*(?:[\p{L}\d]+(?:\s+[\p{L}\d]+)*(?::\d+(?:-\d+)?)?)(?:\s*,\s*(?:[\p{L}\d]+(?:\s+[\p{L}\d]+)*(?::\d+(?:-\d+)? )?))*\s*$",
-            RegexOptions.IgnorePatternWhitespace);
-
-        return isStructuredSearch
-            ? SearchMode.StructuredSearch
-            : SearchMode.TextSearch;
+        await ContextMenuHelper.CopyVerseRequested(
+            TopLevel.GetTopLevel(this), verse);
     }
 
-    private static List<Surah> StructuredPerformSearch(string? searchText)
+    private async void SearchComponentOnCopyAllRequested(Verse verse)
     {
-        var list = new List<Surah>();
-
-        if (string.IsNullOrWhiteSpace(searchText))
-            return list;
-
-        var searches = searchText.Split(
-            ',',
-            StringSplitOptions.RemoveEmptyEntries |
-            StringSplitOptions.TrimEntries);
-
-        var regex = new Regex(
-            @"^(?<surah>.+?)(?::(?<startVerse>\d+)(?:-(?<endVerse>\d+))?)?$",
-            RegexOptions.IgnoreCase);
-
-        foreach (var search in searches)
-        {
-            var match = regex.Match(search);
-
-            if (!match.Success)
-                continue;
-
-            var surahSearch = match.Groups["surah"]
-                .Value
-                .Trim();
-
-            int? startVerse = match.Groups["startVerse"].Success
-                ? int.Parse(match.Groups["startVerse"].Value)
-                : null;
-
-            int? endVerse = match.Groups["endVerse"].Success
-                ? int.Parse(match.Groups["endVerse"].Value)
-                : null;
-
-            // =====================================
-            // Find Surah by ID or Name
-            // =====================================
-
-            Surah? surah;
-
-            if (int.TryParse(surahSearch, out var surahId))
-                surah = DataManager.Surahs
-                    .FirstOrDefault(s => s.Id == surahId);
-            else
-                surah = DataManager.Surahs
-                    .FirstOrDefault(s =>
-                        s.Name.Contains(
-                            surahSearch,
-                            StringComparison.OrdinalIgnoreCase)
-                        ||
-                        s.Transliteration.Contains(
-                            surahSearch,
-                            StringComparison.OrdinalIgnoreCase)
-                        ||
-                        s.Translation.Contains(
-                            surahSearch,
-                            StringComparison.OrdinalIgnoreCase));
-
-            if (surah is null)
-                continue;
-
-            // =====================================
-            // Entire Surah
-            // Example: Fatihah
-            // =====================================
-
-            if (!startVerse.HasValue)
-            {
-                list.Add(surah);
-                continue;
-            }
-
-            // =====================================
-            // Normalize verse range
-            // =====================================
-
-            var start = startVerse.Value;
-
-            var end = endVerse ?? start;
-
-            var min = Math.Min(start, end);
-            var max = Math.Max(start, end);
-
-            // =====================================
-            // Find verses
-            // =====================================
-
-            var verses = surah.Verses
-                .Where(v =>
-                    v.Id >= min &&
-                    v.Id <= max)
-                .ToList();
-
-            if (!verses.Any())
-                continue;
-
-            // =====================================
-            // Add filtered Surah
-            // =====================================
-
-            list.Add(new Surah
-            {
-                Id = surah.Id,
-                Name = surah.Name,
-                Translation = surah.Translation,
-                Transliteration = surah.Transliteration,
-                Verses = verses
-            });
-        }
-
-        return list;
+        await ContextMenuHelper.VerseComponentOnCopyAllRequested(
+            TopLevel.GetTopLevel(this), verse);
+    }
+    private void SearchComponentOnGoToVerseRequested(Surah surah, Verse verse)
+    {
+        RequestGotoPage("Quran", surah, verse.Id);
     }
 
-    private static List<Surah> TextPerformSearch(string? searchText)
-    {
-        if (string.IsNullOrWhiteSpace(searchText)) return new List<Surah>();
-
-
-        var words = searchText
-            .Split(
-                ' ',
-                StringSplitOptions.RemoveEmptyEntries |
-                StringSplitOptions.TrimEntries);
-
-        return DataManager.Surahs
-            .Where(s =>
-                words.Any(word =>
-                    s.Name.Contains(word, StringComparison.OrdinalIgnoreCase) ||
-                    s.Translation.Contains(word, StringComparison.OrdinalIgnoreCase) ||
-                    s.Transliteration.Contains(word, StringComparison.OrdinalIgnoreCase) ||
-                    s.Verses.Any(v =>
-                        v.Text.Contains(word, StringComparison.OrdinalIgnoreCase) ||
-                        v.Translation.Contains(word, StringComparison.OrdinalIgnoreCase) ||
-                        v.Transliteration.Contains(word, StringComparison.OrdinalIgnoreCase))))
-            .Select(s => new Surah
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Translation = s.Translation,
-                Transliteration = s.Transliteration,
-
-                Verses = s.Verses
-                    .Where(v =>
-                        words.Any(word =>
-                            v.Text.Contains(word, StringComparison.OrdinalIgnoreCase) ||
-                            v.Translation.Contains(word, StringComparison.OrdinalIgnoreCase) ||
-                            v.Transliteration.Contains(word, StringComparison.OrdinalIgnoreCase)))
-                    .ToList()
-            })
-            .ToList();
-    }
 
     private async void CopyButton_OnClick(
         object? sender,
         RoutedEventArgs e)
     {
+        if (!_results.Any())
+            return;
         var surahTexts = _results
             .Select(surah =>
             {
@@ -309,50 +165,4 @@ public partial class SearchView : AView
 
         await clipboard.SetTextAsync(text);
     }
-    
-    private async void VerseComponentOnCopyAllRequested(Verse verse)
-    {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-
-        if (clipboard != null)
-        {
-            var text = $"{verse.Text}\n{verse.Transliteration}\n{verse.Translation}";
-            await clipboard.SetTextAsync(text);
-        }
-    }
-
-    private async void VerseComponentOnCopyTranslationRequested(Verse verse)
-    {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-
-        if (clipboard != null) await clipboard.SetTextAsync(verse.Translation);
-    }
-
-    private async void VerseComponentOnCopyTransliterationRequested(Verse verse)
-    {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-
-        if (clipboard != null) await clipboard.SetTextAsync(verse.Transliteration);
-    }
-
-    private async void VerseComponentOnCopyVerseRequested(Verse verse)
-    {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-
-        if (clipboard != null) await clipboard.SetTextAsync(verse.Text);
-    }
-    private void VerseComponentOnBookmarkVerseRequested(Verse verse, Surah surah)
-    {
-        var bookmark = new Bookmark
-        {
-            SurahId = surah.Id,
-            VerseId = verse.Id
-        };
-        if (DataManager.IsBookmarked(surah.Id, verse.Id))
-            DataManager.RemoveBookmark(bookmark);
-        else
-            DataManager.AddBookmark(bookmark);
-
-    }
-
 }

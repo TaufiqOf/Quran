@@ -68,6 +68,7 @@ public partial class QuranView : AView
             if (parameter.Length > 1 && parameter[1] is int verseIndexParam)
                 GotoComponent.VerseSelectedIndex = verseIndexParam;
         }
+
         ReaderComponent.UpdateUi();
         return Task.CompletedTask;
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
@@ -61,6 +60,7 @@ public partial class ReaderComponent : UserControl, IDisposable
         {
             Dispatcher.UIThread.Post(() =>
             {
+                var topLevel = TopLevel.GetTopLevel(this);
                 ClearVerses();
                 if (mode == ReaderMode.Quranic)
                 {
@@ -71,10 +71,14 @@ public partial class ReaderComponent : UserControl, IDisposable
                         var verseComponent = new VerseQuranicComponent(_surah, verse);
                         _verseComponents.Add(verseComponent);
                         verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
-                        verseComponent.CopyTranslationRequested += VerseComponentOnCopyTranslationRequested;
-                        verseComponent.CopyTransliterationRequested += VerseComponentOnCopyTransliterationRequested;
-                        verseComponent.CopyVerseRequested += VerseComponentOnCopyVerseRequested;
-                        verseComponent.CopyAllRequested += VerseComponentOnCopyAllRequested;
+                        verseComponent.CopyTranslationRequested += async v =>
+                            await ContextMenuHelper.CopyTranslationRequested(topLevel, v);
+                        verseComponent.CopyTransliterationRequested += async v =>
+                            await ContextMenuHelper.CopyTransliterationRequested(topLevel, v);
+                        verseComponent.CopyVerseRequested += async v =>
+                            await ContextMenuHelper.CopyVerseRequested(topLevel, v);
+                        verseComponent.CopyAllRequested += async v =>
+                            await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
                         verseComponent.BookmarkVerseRequested += VerseComponentOnBookmarkVerseRequested;
                         QuranicItemsControl.Items.Add(verseComponent);
                     }
@@ -92,13 +96,16 @@ public partial class ReaderComponent : UserControl, IDisposable
                             ReaderMode.Translation => new VerseTranslationComponent(_surah, verse),
                             _ => throw new ArgumentOutOfRangeException()
                         };
-
                         _verseComponents.Add(verseComponent);
                         verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
-                        verseComponent.CopyTranslationRequested += VerseComponentOnCopyTranslationRequested;
-                        verseComponent.CopyTransliterationRequested += VerseComponentOnCopyTransliterationRequested;
-                        verseComponent.CopyVerseRequested += VerseComponentOnCopyVerseRequested;
-                        verseComponent.CopyAllRequested += VerseComponentOnCopyAllRequested;
+                        verseComponent.CopyTranslationRequested += async v =>
+                            await ContextMenuHelper.CopyTranslationRequested(topLevel, v);
+                        verseComponent.CopyTransliterationRequested += async v =>
+                            await ContextMenuHelper.CopyTransliterationRequested(topLevel, v);
+                        verseComponent.CopyVerseRequested += async v =>
+                            await ContextMenuHelper.CopyVerseRequested(topLevel, v);
+                        verseComponent.CopyAllRequested += async v =>
+                            await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
                         verseComponent.BookmarkVerseRequested += VerseComponentOnBookmarkVerseRequested;
                         LinerItemsControl.Items.Add(verseComponent);
                     }
@@ -111,49 +118,9 @@ public partial class ReaderComponent : UserControl, IDisposable
 
     private void VerseComponentOnBookmarkVerseRequested(Verse verse, Surah surah)
     {
-        var bookmark = new Bookmark
-        {
-            SurahId = surah.Id,
-            VerseId = verse.Id
-        };
-        if (DataManager.IsBookmarked(surah.Id, verse.Id))
-            DataManager.RemoveBookmark(bookmark);
-        else
-            DataManager.AddBookmark(bookmark);
-        var verseComponent = _verseComponents.FirstOrDefault(q => q.Surah.Id == surah.Id && q.Verse.Id == verse.Id);
+        ContextMenuHelper.OnBookmarkVerseRequested(verse, surah);
+        var verseComponent = _verseComponents.FirstOrDefault(q => q.Surah?.Id == surah.Id && q.Verse?.Id == verse.Id);
         verseComponent?.VerseBookMark();
-    }
-
-    private async void VerseComponentOnCopyAllRequested(Verse verse)
-    {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-
-        if (clipboard != null)
-        {
-            var text = $"{verse.Text}\n{verse.Transliteration}\n{verse.Translation}";
-            await clipboard.SetTextAsync(text);
-        }
-    }
-
-    private async void VerseComponentOnCopyTranslationRequested(Verse verse)
-    {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-
-        if (clipboard != null) await clipboard.SetTextAsync(verse.Translation);
-    }
-
-    private async void VerseComponentOnCopyTransliterationRequested(Verse verse)
-    {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-
-        if (clipboard != null) await clipboard.SetTextAsync(verse.Transliteration);
-    }
-
-    private async void VerseComponentOnCopyVerseRequested(Verse verse)
-    {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
-
-        if (clipboard != null) await clipboard.SetTextAsync(verse.Text);
     }
 
     public void LoadCard(Surah surah, SurahSynopsis? synopsis)

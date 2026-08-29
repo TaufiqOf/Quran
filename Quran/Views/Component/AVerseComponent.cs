@@ -20,9 +20,9 @@ public abstract class AVerseComponent : UserControl, IDisposable
         AvaloniaProperty.Register<AVerseComponent, bool>(
             nameof(IsSelected));
 
-    private MenuItem _copyVerseMenuItem;
+    private MenuItem? _copyVerseMenuItem;
 
-    public AVerseComponent(Surah surah, Verse verse)
+    protected AVerseComponent(Surah surah, Verse verse)
     {
         Surah = surah;
         Verse = verse;
@@ -176,7 +176,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
         };
         _copyVerseMenuItem.Click += (_, _) =>
         {
-            if (Verse != null) BookmarkVerseRequested?.Invoke(Verse, Surah);
+            if (Verse != null && Surah != null) BookmarkVerseRequested?.Invoke(Verse, Surah);
         };
 
         playItem.Click += (_, _) =>
@@ -203,12 +203,15 @@ public abstract class AVerseComponent : UserControl, IDisposable
             return;
         }
 
-        _copyVerseMenuItem.Icon = new SymbolIcon
+        if (_copyVerseMenuItem != null)
         {
-            Symbol = IsBookMarked ? Symbol.BookmarkOff : Symbol.Bookmark,
-            FontSize = 18
-        };
-        _copyVerseMenuItem.Header = IsBookMarked ? "Remove Bookmark" : "Bookmark";
+            _copyVerseMenuItem.Icon = new SymbolIcon
+            {
+                Symbol = IsBookMarked ? Symbol.BookmarkOff : Symbol.Bookmark,
+                FontSize = 18
+            };
+            _copyVerseMenuItem.Header = IsBookMarked ? "Remove Bookmark" : "Bookmark";
+        }
         IsSelected = true;
 
         VerseContextMenuRequested?.Invoke(Verse);

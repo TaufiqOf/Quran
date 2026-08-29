@@ -67,7 +67,6 @@
             <Setter
                 Property="FontFamily"
                 Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
-
             <Setter Property="FontSize" Value="32" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="TextAlignment" Value="Center" />
@@ -115,7 +114,6 @@
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="Margin" Value="5,5,0,0" />
         </Style>
-
     </UserControl.Styles>
 
 
@@ -133,11 +131,8 @@
         <!-- =========================== -->
 
         <Expander.Header>
-
             <Border Classes="surahHeader">
-
                 <Grid ColumnDefinitions="Auto,*,Auto">
-
                     <!-- Surah ID -->
 
                     <TextBlock
@@ -145,14 +140,12 @@
                         Classes="surahId"
                         Text="{Binding Surah.Id, ElementName=Root}" />
 
-
                     <!-- Surah Name -->
 
                     <TextBlock
                         Grid.Column="1"
                         Classes="surahName"
                         Text="{Binding Surah.Name, ElementName=Root}" />
-
 
                     <!-- Surah Transliteration -->
 
@@ -162,11 +155,8 @@
                         Text="{Binding Surah.Transliteration, ElementName=Root}" />
 
                 </Grid>
-
             </Border>
-
         </Expander.Header>
-
 
         <!-- =========================== -->
         <!-- Matching Verses -->
@@ -174,69 +164,37 @@
 
         <ItemsControl
             ItemsSource="{Binding Surah.Verses, ElementName=Root}">
-
             <ItemsControl.ItemsPanel>
-
                 <ItemsPanelTemplate>
-
                     <StackPanel />
-
                 </ItemsPanelTemplate>
-
             </ItemsControl.ItemsPanel>
-
-
             <ItemsControl.ItemTemplate>
-
                 <DataTemplate x:DataType="models:Verse">
-
                     <Border
                         Classes="verse"
                         PointerPressed="InputElement_OnPointerPressed">
-
                         <Grid RowDefinitions="Auto,Auto,Auto,Auto">
-
-                            <!-- Arabic -->
-
                             <TextBlock
                                 Grid.Row="0"
                                 Classes="arabic"
                                 Text="{Binding Text}" />
-
-
-                            <!-- Translation -->
-
                             <TextBlock
                                 Grid.Row="1"
                                 Classes="translation"
                                 Text="{Binding Translation}" />
-
-
-                            <!-- Transliteration -->
-
                             <TextBlock
                                 Grid.Row="2"
                                 Classes="transliteration"
                                 Text="{Binding Transliteration}" />
-
-
-                            <!-- Verse Number -->
-
                             <TextBlock
                                 Grid.Row="3"
                                 Classes="verseNumber"
                                 Text="{Binding Id}" />
-
                         </Grid>
-
                     </Border>
-
                 </DataTemplate>
-
             </ItemsControl.ItemTemplate>
-
         </ItemsControl>
-
     </Expander>
-
 </UserControl>

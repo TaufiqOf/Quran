@@ -31,7 +31,6 @@
             <Setter Property="FlowDirection" Value="RightToLeft" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="LineHeight" Value="48" />
         </Style>
         <Style Selector="TextBlock.arabic.selected">
             <Setter Property="Foreground" Value="#3678D4" />

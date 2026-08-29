@@ -1,17 +1,203 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Threading;
+using Quran.Helpers;
+using Quran.Models;
+using Quran.Views.Component;
 
 namespace Quran.Views.Pages;
 
 public partial class BookmarksView : AView
 {
+    private Vector _lastScrollOffset;
+    private bool _isLoaded;
+    private bool _isLoading;
+
+    private int CurrentSurahId { get; set; } = -1;
+
+    List<VerseComponent> VerseComponents { get; set; } = new();
+
     public BookmarksView()
     {
         InitializeComponent();
     }
 
-    public override Task Load(params object?[] parameter)
+    public override async Task Load(params object?[] parameter)
     {
-        return Task.CompletedTask;
+        _isLoading = true;
+
+        try
+        {
+            if (_isLoaded)
+            {
+                _lastScrollOffset = LinerScrollViewer.Offset;
+                foreach (var verseComponent in VerseComponents)
+                {
+                    verseComponent.PointerReleased -= VerseComponentPointerReleased;
+                    verseComponent.BookmarkVerseRequested -= VerseComponentBookmarkVerseRequested;
+                }
+
+                VerseComponents.Clear();
+                LinerItemsControl.Items.Clear();
+                SurahComboBox.Items.Clear();
+            }
+
+            _isLoaded = true;
+
+            SurahComboBox.Items.Add(new ComboBoxItem
+            {
+                Content = "All Surahs",
+                Tag = -1
+            });
+
+            foreach (var bookmark in DataManager.Bookmarks)
+            {
+                var surah = DataManager.Surahs
+                    .FirstOrDefault(q => q.Id == bookmark.SurahId);
+
+                if (surah is null)
+                    continue;
+
+                var verse = surah.Verses
+                    .FirstOrDefault(q => q.Id == bookmark.VerseId);
+
+                if (verse is null)
+                    continue;
+
+                var verseComponent = new VerseComponent(surah, verse, true);
+
+                verseComponent.PointerReleased += VerseComponentPointerReleased;
+                verseComponent.BookmarkVerseRequested += VerseComponentBookmarkVerseRequested;
+
+                VerseComponents.Add(verseComponent);
+                LinerItemsControl.Items.Add(verseComponent);
+
+                if (!SurahComboBox.Items
+                        .OfType<ComboBoxItem>()
+                        .Any(q => q.Tag is int id && id == surah.Id))
+                {
+                    SurahComboBox.Items.Add(new ComboBoxItem
+                    {
+                        Content = $"({surah.Id}) {surah.Transliteration} - {surah.Name}",
+                        Tag = surah.Id
+                    });
+                }
+            }
+
+            // Restore selection using Surah ID
+            var selectedItem = SurahComboBox.Items
+                .OfType<ComboBoxItem>()
+                .FirstOrDefault(q =>
+                    q.Tag is int id &&
+                    id == CurrentSurahId);
+
+            SurahComboBox.SelectedItem =
+                selectedItem ??
+                SurahComboBox.Items.OfType<ComboBoxItem>().FirstOrDefault();
+
+            // Apply filtering explicitly
+            ApplySurahFilter(CurrentSurahId);
+
+            // Wait until controls have been rendered
+            await Dispatcher.UIThread.InvokeAsync(
+                () => { },
+                DispatcherPriority.Loaded);
+
+            // Restore scroll position
+            LinerScrollViewer.Offset = _lastScrollOffset;
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void VerseComponentBookmarkVerseRequested(
+        Verse verse,
+        Surah surah)
+    {
+        var bookmark = new Bookmark
+        {
+            SurahId = surah.Id,
+            VerseId = verse.Id
+        };
+
+        if (DataManager.IsBookmarked(surah.Id, verse.Id))
+        {
+            DataManager.RemoveBookmark(bookmark);
+        }
+        else
+        {
+            DataManager.AddBookmark(bookmark);
+        }
+
+        var verseComponent = VerseComponents.FirstOrDefault(q =>
+            q.Surah.Id == surah.Id &&
+            q.Verse.Id == verse.Id);
+
+        if (verseComponent is null)
+            return;
+
+        VerseComponents.Remove(verseComponent);
+        LinerItemsControl.Items.Remove(verseComponent);
+    }
+
+    private void VerseComponentPointerReleased(
+        object? sender,
+        PointerReleasedEventArgs e)
+    {
+        if (sender is not VerseComponent verseComponent)
+            return;
+
+        var surah = verseComponent.Surah;
+
+        DataManager.CurrentSurah = surah;
+        DataManager.CurrentVerseId = verseComponent.Verse.Id;
+
+        RequestGotoPage(
+            "Quran",
+            surah,
+            verseComponent.Verse.Id);
+    }
+
+    private void SurahComboBoxOnSelectionChanged(
+        object? sender,
+        SelectionChangedEventArgs e)
+    {
+        if (_isLoading)
+            return;
+
+        if (SurahComboBox.SelectedItem is not ComboBoxItem selectedItem)
+            return;
+
+        if (selectedItem.Tag is not int surahId)
+            return;
+        if (!_isLoading)
+            CurrentSurahId = surahId;
+
+        ApplySurahFilter(surahId);
+    }
+
+    private void ApplySurahFilter(int surahId)
+    {
+        foreach (var verseComponent in VerseComponents)
+        {
+            verseComponent.IsVisible =
+                surahId == -1 ||
+                verseComponent.Surah.Id == surahId;
+        }
+    }
+
+    private void LinerScrollViewerOnScrollChanged(
+        object? sender,
+        ScrollChangedEventArgs e)
+    {
+        if (!_isLoading)
+            _lastScrollOffset = LinerScrollViewer.Offset;
     }
 }

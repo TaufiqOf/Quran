@@ -10,15 +10,27 @@ namespace Quran.Views.Component;
 
 public partial class VerseComponent : AVerseComponent, IDisposable
 {
-    public VerseComponent(Verse verse)
+    private readonly bool _showSurah;
+
+    public VerseComponent(Surah surah, Verse verse, bool showSurah = false): base(surah, verse)
     {
+        _showSurah = showSurah;
         Verse = verse;
         InitializeComponent();
 
         TextBlockArabic.Text = verse.Text;
         TextBlockTranslation.Text = verse.Translation;
         TextBlockTransliteration.Text = verse.Transliteration;
-        TextBlockVerseNumber.Text = $"Verse {verse.Id}";
+        TextBlockBookmark.Text = "\uf02e";
+        TextBlockBookmark.IsVisible = IsBookMarked;
+        if(showSurah)
+        {
+            TextBlockVerseNumber.Text = $"{surah.Id}. {surah.Transliteration} Verse {verse.Id}";
+        }
+        else
+        {
+            TextBlockVerseNumber.Text = $"Verse {verse.Id}";
+        }
     }
 
     public override void UpdateSelectedState()
@@ -44,6 +56,20 @@ public partial class VerseComponent : AVerseComponent, IDisposable
     private void VerseCard_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         OnVerseSelected(Verse);
+    }
+
+    public override void VerseBookMark()
+    {
+        TextBlockBookmark.Text = "\uf02e";
+        TextBlockBookmark.IsVisible = IsBookMarked;
+        if(_showSurah)
+        {
+            TextBlockVerseNumber.Text = $"{Surah.Id}. {Surah.Transliteration} Verse {Verse.Id}";
+        }
+        else
+        {
+            TextBlockVerseNumber.Text = $"Verse {Verse.Id}";
+        }
     }
 
     public override void Dispose()

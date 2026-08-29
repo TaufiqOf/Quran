@@ -76,13 +76,22 @@
             <!-- Verse marker -->
             <!-- ================================= -->
 
-            <TextBlock
-                x:Name="TextBlockVerseNumber"
-                Grid.Column="0"
-                Classes="verseNumber"
-                Text="۝١"
-                Margin="4,0,8,0" />
 
+            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock
+                    x:Name="TextBlockBookmark"
+                    Text="&#xF02E; "
+                    FontFamily="avares://Quran/Assets/Fonts#Font Awesome 7 Free"
+                    FontWeight="Black"
+                    Margin="0,12,0,0" 
+                    FontSize="16" />
+                <TextBlock
+                    x:Name="TextBlockVerseNumber"
+                    Classes="verseNumber"
+                    Text="۝١"
+                    Margin="5,5,0,0" />
+
+            </StackPanel>
 
             <!-- ================================= -->
             <!-- Translation -->

@@ -5,11 +5,19 @@ using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Quran.Models;
 using Avalonia.Media;
+using Quran.Helpers;
 
 namespace Quran.Views.Component;
 
 public abstract class AVerseComponent : UserControl, IDisposable
 {
+    public AVerseComponent(Surah surah, Verse verse)
+    {
+        Surah = surah;
+        Verse = verse;
+        ContextMenu = CreateContextMenu();
+        ContextMenu.Opening += ContextMenu_OnOpening;
+    }
     public static readonly StyledProperty<bool> IsSelectedProperty =
         AvaloniaProperty.Register<AVerseComponent, bool>(
             nameof(IsSelected),
@@ -20,7 +28,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
         get => GetValue(IsSelectedProperty);
         set => SetValue(IsSelectedProperty, value);
     }
-
+    public  Surah? Surah { get; protected set; }
     public Verse? Verse { get; protected set; }
 
     public delegate void VerseSelectedEventHandler(Verse verse);
@@ -31,17 +39,11 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
     public event VerseContextMenuEventHandler? VerseContextMenuRequested;
 
-
-    protected AVerseComponent()
-    {
-        ContextMenu = CreateContextMenu();
-
-        ContextMenu.Opening += ContextMenu_OnOpening;
-    }
-
+    private MenuItem _copyVerseMenuItem; 
+    
+    public bool IsBookMarked => DataManager.IsBookmarked(Surah?.Id ?? -1, Verse?.Id ?? -1);
 
     public abstract void UpdateSelectedState();
-
 
     protected override void OnPropertyChanged(
         AvaloniaPropertyChangedEventArgs change)
@@ -67,12 +69,21 @@ public abstract class AVerseComponent : UserControl, IDisposable
             Padding = new Thickness(4),
             FlowDirection = FlowDirection.LeftToRight
         };
+        var copyAllItem = new MenuItem
+        {
+            Header = "Copy All",
+            Icon = new SymbolIcon
+            {
+                Symbol = Symbol.Copy,
+                FontSize = 18
+            }
+        };
         var copyVerseItem = new MenuItem
         {
             Header = "Copy Verse",
             Icon = new SymbolIcon
             {
-                Symbol = Symbol.Copy,
+                Symbol = Symbol.BookOpen,
                 FontSize = 18
             }
         };
@@ -81,7 +92,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
             Header = "Copy Translation",
             Icon = new SymbolIcon
             {
-                Symbol = Symbol.Copy,
+                Symbol = Symbol.Text,
                 FontSize = 18
             }
         };
@@ -90,7 +101,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
             Header = "Copy Transliteration",
             Icon = new SymbolIcon
             {
-                Symbol = Symbol.Copy,
+                Symbol = Symbol.CalligraphyPen,
                 FontSize = 18
             }
         };
@@ -103,10 +114,10 @@ public abstract class AVerseComponent : UserControl, IDisposable
                 Symbol = Symbol.Copy,
                 FontSize = 18
             },
-            Items = { copyVerseItem, copyTranslationItem, copyTransliterationItem }
+            Items = { copyAllItem, copyVerseItem, copyTranslationItem, copyTransliterationItem }
         };
 
-        var bookmarkItem = new MenuItem
+        _copyVerseMenuItem = new MenuItem
         {
             Header = "Bookmark",
             Icon = new SymbolIcon
@@ -138,10 +149,13 @@ public abstract class AVerseComponent : UserControl, IDisposable
         {
             if (Verse != null) CopyTransliterationRequested?.Invoke(Verse);
         };
-
-        bookmarkItem.Click += (_, _) =>
+        copyAllItem.Click += (_, _) =>
         {
-            if (Verse != null) BookmarkVerseRequested?.Invoke(Verse);
+            if (Verse != null) CopyAllRequested?.Invoke(Verse);
+        };
+        _copyVerseMenuItem.Click += (_, _) =>
+        {
+            if (Verse != null) BookmarkVerseRequested?.Invoke(Verse, Surah);
         };
 
         playItem.Click += (_, _) =>
@@ -149,8 +163,10 @@ public abstract class AVerseComponent : UserControl, IDisposable
             if (Verse != null) PlayVerseRequested?.Invoke(Verse);
         };
 
+ 
+
         menu.Items.Add(copyItem);
-        menu.Items.Add(bookmarkItem);
+        menu.Items.Add(_copyVerseMenuItem);
         menu.Items.Add(playItem);
 
         return menu;
@@ -166,7 +182,12 @@ public abstract class AVerseComponent : UserControl, IDisposable
             e.Cancel = true;
             return;
         }
-
+        _copyVerseMenuItem.Icon = new SymbolIcon
+        {
+            Symbol = IsBookMarked ? Symbol.BookmarkOff : Symbol.Bookmark,
+            FontSize = 18
+        };
+        _copyVerseMenuItem.Header = IsBookMarked ? "Remove Bookmark" : "Bookmark";
         IsSelected = true;
 
         VerseContextMenuRequested?.Invoke(Verse);
@@ -175,11 +196,14 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
     public event Action<Verse>? PlayVerseRequested;
 
-    public event Action<Verse>? BookmarkVerseRequested;
+    public event Action<Verse, Surah>? BookmarkVerseRequested;
 
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;
+    public event Action<Verse>? CopyAllRequested;
     public event Action<Verse>? CopyTransliterationRequested;
+    
+    public abstract void VerseBookMark();
 
     public virtual void Dispose()
     {

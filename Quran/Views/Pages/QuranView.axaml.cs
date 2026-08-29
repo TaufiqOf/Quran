@@ -34,6 +34,11 @@ public partial class QuranView : AView
 
     public override Task Load(params object?[] parameter)
     {
+        if (parameter.Length == 1 && parameter[0] is object?[] nestedParameters)
+        {
+            parameter = nestedParameters;
+        }
+
         if (!_isLoaded)
         {
             _surahs = DataManager.Surahs;
@@ -56,8 +61,8 @@ public partial class QuranView : AView
                 GotoComponent.SurahSelectedIndex = 0;
             }
 
-            if (DataManager.CurrentVerseIndex is not null)
-                GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex.Value;
+            if (DataManager.CurrentVerseId is not null)
+                GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseId.Value;
         }
         else if (parameter[0] is Surah surahParam)
         {
@@ -75,7 +80,7 @@ public partial class QuranView : AView
     {
         if (_currentSurahIndex == surah.Id) return;
 
-        if (DataManager.CurrentSurah?.Id != surah.Id) DataManager.CurrentVerseIndex = 1;
+        if (DataManager.CurrentSurah?.Id != surah.Id) DataManager.CurrentVerseId = 1;
 
         DataManager.CurrentSurah = surah;
 
@@ -89,7 +94,7 @@ public partial class QuranView : AView
 
     private void GotoComponent_OnVerseSelected(int verseId)
     {
-        DataManager.CurrentVerseIndex = verseId;
+        DataManager.CurrentVerseId = verseId;
         ScrollToVerse(verseId);
         UpdateSelectedVerse(verseId);
     }
@@ -112,11 +117,11 @@ public partial class QuranView : AView
 
     private void ReaderComponent_OnVersesLoaded()
     {
-        GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex is null
+        GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseId is null
             ? 1
-            : DataManager.CurrentVerseIndex == -1
+            : DataManager.CurrentVerseId == -1
                 ? 1
-                : DataManager.CurrentVerseIndex.Value;
+                : DataManager.CurrentVerseId.Value;
         ScrollToVerse(GotoComponent.VerseSelectedIndex);
         UpdateSelectedVerse(GotoComponent.VerseSelectedIndex);
     }

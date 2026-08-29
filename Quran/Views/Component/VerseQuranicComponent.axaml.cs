@@ -1,12 +1,13 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class VerseQuranicComponent : AVerseComponent
+public partial class VerseQuranicComponent : AVerseComponent, IDisposable
 {
-    public VerseQuranicComponent(Verse verse)
+    public VerseQuranicComponent(Surah surah, Verse verse) : base(surah, verse)
     {
         Verse = verse;
 
@@ -49,6 +50,11 @@ public partial class VerseQuranicComponent : AVerseComponent
         OnVerseSelected(Verse);
     }
 
+
+    public override void VerseBookMark()
+    {
+        
+    }
 
     public override void Dispose()
     {

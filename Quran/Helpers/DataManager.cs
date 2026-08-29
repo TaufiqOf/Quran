@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Avalonia;
 using Quran.Models;
 
 namespace Quran.Helpers;
@@ -9,16 +12,25 @@ public static class DataManager
     public static List<Surah> Surahs { get; private set; }
     public static List<SurahOrder> SurahOrders { get; private set; }
     public static List<SurahSynopsis> SurahSynopses { get; private set; }
+    
 
     public static Surah? CurrentSurah { get; set; }
-    public static int? CurrentVerseIndex { get; set; }
-
+    public static int? CurrentVerseId { get; set; }
+    
+    public static List<Bookmark> Bookmarks { get; private set; }
+    
+    private static readonly string bookmarkFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");
     static DataManager()
     {
+        if(!File.Exists(bookmarkFilePath))
+        {
+            File.WriteAllText(bookmarkFilePath, "[]");
+        }
         // Load Surahs and Surah Orders on initialization
         Surahs = GetSurahs();
         SurahOrders = SurahOrder();
         SurahSynopses = SurahSynopsis();
+        Bookmarks = GetBookmarks();
 
         // Add transliterations to verses.
         foreach (var surahTransliteration in GetSurahTransliterations())
@@ -36,6 +48,7 @@ public static class DataManager
                             transliterationVerse.Transliteration;
                 }
         }
+        
     }
 
     public static List<Surah> GetSurahs()
@@ -66,5 +79,42 @@ public static class DataManager
     {
         var json = JsonReader.ReadJsonFromResource("surah_synopsis.json");
         return JsonReader.ReadJsonList<SurahSynopsis>(json);
+    }
+    
+    public static List<Bookmark> GetBookmarks()
+    {
+        var json = File.ReadAllText(bookmarkFilePath);
+        return JsonReader.ReadJsonList<Bookmark>(json) ?? new List<Bookmark>();
+    }
+    public static bool IsBookmarked(int surahId, int verseId)
+    {
+        return Bookmarks.Any(b => b.SurahId == surahId && b.VerseId == verseId);
+    }
+    public static void AddBookmark(Bookmark bookmark)
+    {
+        if(IsBookmarked(bookmark.SurahId, bookmark.VerseId))
+        {
+            return; // Bookmark already exists, do not add it again
+        }
+        bookmark.Timestamp = DateTime.Now; // Update the timestamp to the current time
+        Bookmarks.Add(bookmark);
+        SaveBookmarks(Bookmarks);
+    }
+    
+    public static void RemoveBookmark(Bookmark bookmark)
+    {
+        if(!IsBookmarked(bookmark.SurahId, bookmark.VerseId))
+        {
+            return; // Bookmark does not exist, do not remove it
+        }
+        
+        Bookmarks.RemoveAll(b => b.SurahId == bookmark.SurahId && b.VerseId == bookmark.VerseId);
+        SaveBookmarks(Bookmarks);
+    }
+    
+    public static void SaveBookmarks(List<Bookmark> bookmarks)
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(bookmarks);
+        File.WriteAllText(bookmarkFilePath, json);
     }
 }

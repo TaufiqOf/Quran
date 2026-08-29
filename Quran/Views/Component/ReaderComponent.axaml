@@ -5,8 +5,7 @@
     x:Class="Quran.Views.Component.ReaderComponent"
     x:Name="Root"
     Focusable="True"
-    IsTabStop="True"
-    Margin="10">
+    IsTabStop="True">
 
     <Grid RowDefinitions="Auto,*">
 

@@ -53,8 +53,8 @@ public partial class HomeView : AView
             GotoComponent.SurahSelectedIndex = 0;
         }
 
-        if (DataManager.CurrentVerseIndex is not null)
-            GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseIndex.Value;
+        if (DataManager.CurrentVerseId is not null)
+            GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseId.Value;
 
         return Task.CompletedTask;
     }
@@ -68,7 +68,7 @@ public partial class HomeView : AView
         else
         {
             DataManager.CurrentSurah = surah;
-            DataManager.CurrentVerseIndex = 1;
+            DataManager.CurrentVerseId = 1;
             RequestGotoPage("Quran", surah);
         }
     }

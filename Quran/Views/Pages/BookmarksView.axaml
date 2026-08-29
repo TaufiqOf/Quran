@@ -3,27 +3,36 @@
              x:Class="Quran.Views.Pages.BookmarksView">
 
     <Grid>
-        <Grid
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <ComboBox
+                x:Name="SurahComboBox"
+                Width="350"
+                SelectionChanged="SurahComboBoxOnSelectionChanged" />
+        </Grid>
+        <Grid Grid.Row="1"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
-
-            <StackPanel
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Spacing="12">
-
-                <TextBlock
-                    Text="Bookmarks"
-                    FontSize="32"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Center" />
-
-                <TextBlock
-                    Text="Welcome to the Quran application."
-                    FontSize="16"
-                    HorizontalAlignment="Center" />
-
-            </StackPanel>
+            <ScrollViewer
+                x:Name="LinerScrollViewer"
+                IsVisible="True"
+                ScrollChanged="LinerScrollViewerOnScrollChanged"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl
+                    x:Name="LinerItemsControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel
+                                Orientation="Vertical"
+                                CacheLength="1" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </UserControl>

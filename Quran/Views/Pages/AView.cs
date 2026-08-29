@@ -8,11 +8,11 @@ public abstract class AView : UserControl
 {
     public abstract Task Load(params object?[] parameter);
 
-    public delegate void GoToEventHandler(string pageName, object? parameter = null);
+    public delegate void GoToEventHandler(string pageName, params object?[] parameter);
 
     public event GoToEventHandler? GotoPageRequested;
 
-    public void RequestGotoPage(string pageName, object? parameter = null)
+    public void RequestGotoPage(string pageName,params object?[] parameter)
     {
         GotoPageRequested?.Invoke(pageName, parameter);
     }

@@ -56,6 +56,55 @@ jobs:
             -p:DebugType=None `
             -p:DebugSymbols=false
 
+      - name: Create macOS app bundle
+        if: matrix.rid == 'osx-arm64'
+        shell: pwsh
+        run: |
+          $source = "artifacts/${{ matrix.artifact }}"
+          $bundle = Join-Path $source "Quran.app"
+          $contents = Join-Path $bundle "Contents"
+          $macOS = Join-Path $contents "MacOS"
+
+          New-Item -ItemType Directory -Path $macOS -Force | Out-Null
+
+          Get-ChildItem -Path $source -Force |
+            Where-Object { $_.Name -ne 'Quran.app' } |
+            ForEach-Object {
+              Copy-Item -Path $_.FullName -Destination $macOS -Recurse -Force
+            }
+
+          $executable = Join-Path $macOS "Quran"
+          if (-not (Test-Path $executable)) {
+            throw "Published executable was not found in the macOS app bundle."
+          }
+
+          & chmod +x $executable
+
+          @"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleName</key>
+            <string>Quran</string>
+            <key>CFBundleDisplayName</key>
+            <string>Quran</string>
+            <key>CFBundleExecutable</key>
+            <string>Quran</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.github.quran.desktop</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>1.0.0</string>
+            <key>CFBundleVersion</key>
+            <string>1</string>
+            <key>LSMinimumSystemVersion</key>
+            <string>13.0</string>
+          </dict>
+          </plist>
+          "@ | Set-Content -Encoding utf8 (Join-Path $contents "Info.plist")
+
       # LibVLCSharp loads these libraries by path at runtime. They must remain
       # external to the single-file executable.
       - name: Include Windows LibVLC native runtime
@@ -97,7 +146,16 @@ jobs:
             throw "Storage directory is empty."
           }
 
-      - name: Create ZIP
+      - name: Create ZIP for macOS
+        if: matrix.rid == 'osx-arm64'
+        shell: pwsh
+        run: |
+          ditto -c -k --keepParent `
+            "artifacts/${{ matrix.artifact }}/Quran.app" `
+            "artifacts/${{ matrix.artifact }}.zip"
+
+      - name: Create ZIP for Windows and Linux
+        if: matrix.rid != 'osx-arm64'
         shell: pwsh
         run: |
           Compress-Archive `

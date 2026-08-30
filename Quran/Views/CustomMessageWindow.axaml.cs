@@ -10,24 +10,23 @@ namespace Quran.Views;
 public partial class CustomMessageWindow : Window
 {
     public static readonly StyledProperty<string> HeadingProperty =
-        AvaloniaProperty.Register<CustomMessageWindow, string>(nameof(Heading), "Message");
+        AvaloniaProperty.Register<CustomMessageWindow, string>(nameof(Heading));
 
-    public static readonly StyledProperty<string> MessageProperty =
-        AvaloniaProperty.Register<CustomMessageWindow, string>(nameof(Message), string.Empty);
-    
+    public static readonly StyledProperty<UserControl> UserContentControlProperty =
+        AvaloniaProperty.Register<CustomMessageWindow, UserControl>(nameof(UserContentControl));
 
-    public CustomMessageWindow()
+
+    public CustomMessageWindow(string title)
     {
         InitializeComponent();
+        Heading = title;
+        this.Title = title;
+    }
+    public void SetControl(UserControl content)
+    {
+        ContentControl.Content = content;
     }
 
-    public CustomMessageWindow(string title, string message)
-        : this()
-    {
-        Title = title;
-        Heading = title;
-        Message = message;
-    }
 
     public string Heading
     {
@@ -35,10 +34,10 @@ public partial class CustomMessageWindow : Window
         set => SetValue(HeadingProperty, value);
     }
 
-    public string Message
+    public UserControl UserContentControl
     {
-        get => GetValue(MessageProperty);
-        set => SetValue(MessageProperty, value);
+        get => GetValue(UserContentControlProperty);
+        set => SetValue(UserContentControlProperty, value);
     }
 
     private void CloseButton_OnClick(object? sender, RoutedEventArgs e)

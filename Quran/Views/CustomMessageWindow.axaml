@@ -19,14 +19,10 @@
                 BorderThickness="1"
                 CornerRadius="8"
                 Padding="8">
-            <TextBox Text="{Binding Message, ElementName=Root}"
-                     IsReadOnly="True"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+            <ContentControl x:Name="ContentControl">
+                
+            </ContentControl>
+
         </Border>
 
         <Button Grid.Row="1"

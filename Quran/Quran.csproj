@@ -125,8 +125,6 @@
 
     <ItemGroup>
 
-        <AdditionalFiles Include="Views\MessageWindow.axaml" />
-
         <AdditionalFiles
                 Include="Views\Pages\HomeView.axaml"/>
 
@@ -191,6 +189,10 @@
             <SubType>
                 Code
             </SubType>
+        </Compile>
+        <Compile Update="Views\Component\MessageControl\TextBoxMessageControl.axaml.cs">
+          <DependentUpon>TextBoxMessageControl.axaml</DependentUpon>
+          <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
 </Project>

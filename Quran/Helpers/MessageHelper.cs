@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using Quran.Views;
+using Quran.Views.Component;
+using TextBoxMessageControl = Quran.Views.Component.MessageControl.TextBoxMessageControl;
 
 namespace Quran.Helpers;
 
@@ -10,6 +12,12 @@ public static class MessageHelper
 
     public static void ShowMessage(string title, string message)
     {
+        var userControl = new TextBoxMessageControl(message);
+        ShowMessage(title, userControl);
+    }
+
+    public static void ShowMessage(string title, UserControl userControl)
+    {
         if (_isShowing)
             return;
 
@@ -17,14 +25,13 @@ public static class MessageHelper
 
         var owner = MainWindow;
         var dialog = new CustomMessageWindow(
-            title,
-            message)
+            title)
         {
             WindowStartupLocation = owner is null
                 ? WindowStartupLocation.CenterScreen
                 : WindowStartupLocation.CenterOwner
         };
-
+        dialog.SetControl(userControl);
         dialog.Closed += (_, _) => _isShowing = false;
 
         if (owner?.IsVisible == true)

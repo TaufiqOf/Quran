@@ -28,10 +28,10 @@ jobs:
             rid: linux-x64
             artifact: Quran-linux-x64
 
-          - name: macOS ARM64
+          - name: macOS x64
             os: macos-latest
-            rid: osx-arm64
-            artifact: Quran-macos-arm64
+            rid: osx-x64
+            artifact: Quran-macos-x64
 
     steps:
       - name: Checkout
@@ -57,13 +57,14 @@ jobs:
             -p:DebugSymbols=false
 
       - name: Create macOS app bundle
-        if: matrix.rid == 'osx-arm64'
+        if: matrix.rid == 'osx-x64'
         shell: pwsh
         run: |
           $source = "artifacts/${{ matrix.artifact }}"
           $bundle = Join-Path $source "Quran.app"
           $contents = Join-Path $bundle "Contents"
           $macOS = Join-Path $contents "MacOS"
+          $vlcBundleRoot = Join-Path $macOS "libvlc/osx-x64"
 
           New-Item -ItemType Directory -Path $macOS -Force | Out-Null
 
@@ -79,6 +80,35 @@ jobs:
           }
 
           & chmod +x $executable
+
+          if (-not (Get-Command brew -ErrorAction SilentlyContinue)) {
+            throw "Homebrew is required to install the VLC runtime on macOS."
+          }
+
+          & brew install --cask vlc
+
+          $vlcApp = Get-ChildItem -Path "/Applications" -Directory -Filter "VLC.app" -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+
+          if ($null -eq $vlcApp) {
+            throw "VLC.app was not found after installation."
+          }
+
+          $vlcMacOS = Join-Path $vlcApp.FullName "Contents/MacOS"
+          $vlcLib = Join-Path $vlcMacOS "lib"
+          $vlcPlugins = Join-Path $vlcMacOS "plugins"
+
+          if (-not (Test-Path $vlcLib)) {
+            throw "VLC lib directory was not found."
+          }
+
+          if (-not (Test-Path $vlcPlugins)) {
+            throw "VLC plugins directory was not found."
+          }
+
+          New-Item -ItemType Directory -Path (Join-Path $vlcBundleRoot "lib") -Force | Out-Null
+          Copy-Item -Path $vlcLib -Destination $vlcBundleRoot -Recurse -Force
+          Copy-Item -Path $vlcPlugins -Destination $vlcBundleRoot -Recurse -Force
 
           @"
           <?xml version="1.0" encoding="UTF-8"?>
@@ -147,7 +177,7 @@ jobs:
           }
 
       - name: Create ZIP for macOS
-        if: matrix.rid == 'osx-arm64'
+        if: matrix.rid == 'osx-x64'
         shell: pwsh
         run: |
           ditto -c -k --keepParent `
@@ -155,7 +185,7 @@ jobs:
             "artifacts/${{ matrix.artifact }}.zip"
 
       - name: Create ZIP for Windows and Linux
-        if: matrix.rid != 'osx-arm64'
+        if: matrix.rid != 'osx-x64'
         shell: pwsh
         run: |
           Compress-Archive `
@@ -196,4 +226,4 @@ jobs:
           files: |
             release-files/Quran-windows-x64.zip
             release-files/Quran-linux-x64.zip
-            release-files/Quran-macos-arm64.zip
+            release-files/Quran-macos-x64.zip

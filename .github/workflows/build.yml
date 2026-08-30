@@ -9,8 +9,8 @@ permissions:
 
 jobs:
   build:
-    name: ${{ matrix.name }}
-    runs-on: ${{ matrix.os }}
+    name: ${{matrix.name}}
+    runs-on: ${{matrix.os}}
 
     strategy:
       fail-fast: false
@@ -41,9 +41,9 @@ jobs:
         run: |
           dotnet publish Quran/Quran.csproj `
             --configuration Release `
-            --runtime ${{ matrix.rid }} `
+            --runtime ${{matrix.rid}} `
             --self-contained true `
-            --output "artifacts/${{ matrix.artifact }}" `
+            --output "artifacts/${{matrix.artifact}}" `
             -p:PublishSingleFile=true `
             -p:EnableCompressionInSingleFile=true `
             -p:IncludeNativeLibrariesForSelfExtract=true `
@@ -53,13 +53,13 @@ jobs:
       - name: Verify Storage deployment
         shell: pwsh
         run: |
-          $storage = "artifacts/${{ matrix.artifact }}/Storage"
+          $storage = "artifacts/${{matrix.artifact}}/Storage"
           if (-not (Test-Path $storage)) { throw "Storage directory was not published." }
           if (-not (Get-ChildItem -Path $storage -File -Recurse)) { throw "Storage directory is empty." }
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact }}
-          path: artifacts/${{ matrix.artifact }}
+          name: ${{matrix.artifact}}
+          path: artifacts/${{matrix.artifact}}
           if-no-files-found: error

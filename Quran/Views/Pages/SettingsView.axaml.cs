@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Quran.Helpers;
 
@@ -8,7 +6,6 @@ namespace Quran.Views.Pages;
 
 public partial class SettingsView : AView
 {
-    
     public SettingsView()
     {
         InitializeComponent();

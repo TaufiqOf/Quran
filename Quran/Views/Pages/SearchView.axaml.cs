@@ -15,9 +15,9 @@ namespace Quran.Views.Pages;
 
 public partial class SearchView : AView
 {
-    private readonly Timer _timer;
-    private List<Surah> _results = new();
-    private Timer _messageTimer;
+    private readonly Timer _messageTimer;
+
+    private readonly Random _random = new();
 
     private readonly List<string> _searchTips = new()
     {
@@ -33,7 +33,8 @@ public partial class SearchView : AView
         "📚 Verse range format: Chapter:Start-End Example: 2:2-5"
     };
 
-    private readonly Random _random = new();
+    private readonly Timer _timer;
+    private List<Surah> _results = new();
 
     public SearchView()
     {
@@ -49,13 +50,10 @@ public partial class SearchView : AView
         _messageTimer.Elapsed += MessageTimerOnElapsed;
         SearchManager.SearcherRegistered += SearcherRegistered;
         if (SearchManager.IsSearcherRegistered)
-        {
             _messageTimer.Start();
-        }
         else
-        {
-            MessageTextBlock.Text = "Context Search is not initialized yet. You can still search for verses by keywords, or reference (Chapter:Verse). For example, you can search for '2:255' or 'Jesus'.";
-        }
+            MessageTextBlock.Text =
+                "Context Search is not initialized yet. You can still search for verses by keywords, or reference (Chapter:Verse). For example, you can search for '2:255' or 'Jesus'.";
     }
 
     private void MessageTimerOnElapsed(object? sender, ElapsedEventArgs e)
@@ -76,7 +74,8 @@ public partial class SearchView : AView
     private void SearcherRegistered()
     {
         MessageTextBlock.Classes.Add("fade-in");
-        MessageTextBlock.Text = "Context Search is now initialized. You can search for questions and get context-aware results. using the '?' prefix. For example, you can search for '? Who will go to Heaven?' or '2:255'.";
+        MessageTextBlock.Text =
+            "Context Search is now initialized. You can search for questions and get context-aware results. using the '?' prefix. For example, you can search for '? Who will go to Heaven?' or '2:255'.";
         _messageTimer.Start();
     }
 

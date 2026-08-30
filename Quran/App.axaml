@@ -38,7 +38,7 @@
 
     <Application.Styles>
 
-        <FluentTheme  />
+        <FluentTheme />
 
         <!-- Default Text -->
         <Style Selector="TextBlock">

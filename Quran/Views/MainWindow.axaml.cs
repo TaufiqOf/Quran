@@ -18,14 +18,14 @@ public partial class MainWindow : Window
         };
     }
 
+    private AView? CurrentPage { get; set; }
+    private Dictionary<string, AView> Pages { get; } = new();
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
         SearchManager.RegisterSearcher();
     }
-
-    private AView? CurrentPage { get; set; }
-    private Dictionary<string, AView> Pages { get; } = new();
 
     private void NavButton_OnClick(object? sender, RoutedEventArgs e)
     {

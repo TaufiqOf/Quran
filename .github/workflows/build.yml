@@ -75,15 +75,17 @@ jobs:
             }
 
           $executable = Join-Path $macOS "Quran"
+
           if (-not (Test-Path $executable)) {
             throw "Published executable was not found in the macOS app bundle."
           }
 
           & chmod +x $executable
 
-          # Remove Windows-only native DLLs that the OnnxRuntime NuGet package
-          # incorrectly includes when cross-compiling for macOS.
-          Get-ChildItem -Path $macOS -Filter "*.dll" -File | Remove-Item -Force
+          # Remove unnecessary Windows DLLs
+          Get-ChildItem -Path $macOS -Filter "*.dll" -File |
+            Where-Object { $_.Name -notmatch "onnxruntime" } |
+            Remove-Item -Force
 
           if (-not (Get-Command brew -ErrorAction SilentlyContinue)) {
             throw "Homebrew is required to install the VLC runtime on macOS."
@@ -91,7 +93,11 @@ jobs:
 
           & brew install --cask vlc
 
-          $vlcApp = Get-ChildItem -Path "/Applications" -Directory -Filter "VLC.app" -ErrorAction SilentlyContinue |
+          $vlcApp = Get-ChildItem `
+            -Path "/Applications" `
+            -Directory `
+            -Filter "VLC.app" `
+            -ErrorAction SilentlyContinue |
             Select-Object -First 1
 
           if ($null -eq $vlcApp) {
@@ -110,62 +116,238 @@ jobs:
             throw "VLC plugins directory was not found."
           }
 
-          New-Item -ItemType Directory -Path (Join-Path $vlcBundleRoot "lib") -Force | Out-Null
-          Copy-Item -Path $vlcLib -Destination $vlcBundleRoot -Recurse -Force
-          Copy-Item -Path $vlcPlugins -Destination $vlcBundleRoot -Recurse -Force
+          New-Item `
+            -ItemType Directory `
+            -Path (Join-Path $vlcBundleRoot "lib") `
+            -Force |
+            Out-Null
+
+          Copy-Item `
+            -Path $vlcLib `
+            -Destination $vlcBundleRoot `
+            -Recurse `
+            -Force
+
+          Copy-Item `
+            -Path $vlcPlugins `
+            -Destination $vlcBundleRoot `
+            -Recurse `
+            -Force
 
           @"
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
-            <key>CFBundleName</key>
-            <string>Quran</string>
-            <key>CFBundleDisplayName</key>
-            <string>Quran</string>
-            <key>CFBundleExecutable</key>
-            <string>Quran</string>
-            <key>CFBundleIdentifier</key>
-            <string>com.github.quran.desktop</string>
-            <key>CFBundlePackageType</key>
-            <string>APPL</string>
-            <key>CFBundleShortVersionString</key>
-            <string>1.0.0</string>
-            <key>CFBundleVersion</key>
-            <string>1</string>
-            <key>LSMinimumSystemVersion</key>
-            <string>13.0</string>
+              <key>CFBundleName</key>
+              <string>Quran</string>
+
+              <key>CFBundleDisplayName</key>
+              <string>Quran</string>
+
+              <key>CFBundleExecutable</key>
+              <string>Quran</string>
+
+              <key>CFBundleIdentifier</key>
+              <string>com.github.quran.desktop</string>
+
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+
+              <key>CFBundleShortVersionString</key>
+              <string>1.0.0</string>
+
+              <key>CFBundleVersion</key>
+              <string>1</string>
+
+              <key>LSMinimumSystemVersion</key>
+              <string>13.0</string>
           </dict>
           </plist>
-          "@ | Set-Content -Encoding utf8 (Join-Path $contents "Info.plist")
+          "@ | Set-Content `
+            -Encoding utf8 `
+            (Join-Path $contents "Info.plist")
 
-      # LibVLCSharp loads these libraries by path at runtime. They must remain
-      # external to the single-file executable.
       - name: Include Windows LibVLC native runtime
         if: matrix.rid == 'win-x64'
         shell: pwsh
         run: |
           $nugetPackages = if ($env:NUGET_PACKAGES) {
             $env:NUGET_PACKAGES
-          } else {
+          }
+          else {
             Join-Path $env:USERPROFILE ".nuget/packages"
           }
-          $package = Get-ChildItem -Path (Join-Path $nugetPackages "videolan.libvlc.windows") -Directory |
+
+          $package = Get-ChildItem `
+            -Path (Join-Path $nugetPackages "videolan.libvlc.windows") `
+            -Directory |
             Sort-Object Name -Descending |
             Select-Object -First 1
-          if ($null -eq $package) { throw "VideoLAN.LibVLC.Windows was not restored." }
+
+          if ($null -eq $package) {
+            throw "VideoLAN.LibVLC.Windows was not restored."
+          }
 
           $source = Join-Path $package.FullName "build/x64"
           $destination = "artifacts/${{ matrix.artifact }}/libvlc/win-x64"
-          New-Item -ItemType Directory -Path $destination -Force | Out-Null
-          Copy-Item -Path (Join-Path $source "*") -Destination $destination -Recurse -Force
+
+          New-Item `
+            -ItemType Directory `
+            -Path $destination `
+            -Force |
+            Out-Null
+
+          Copy-Item `
+            -Path (Join-Path $source "*") `
+            -Destination $destination `
+            -Recurse `
+            -Force
 
           if (-not (Test-Path (Join-Path $destination "libvlc.dll"))) {
-            throw "libvlc.dll was not copied to the release package."
+            throw "libvlc.dll was not copied."
           }
+
           if (-not (Test-Path (Join-Path $destination "libvlccore.dll"))) {
-            throw "libvlccore.dll was not copied to the release package."
+            throw "libvlccore.dll was not copied."
           }
+
+      - name: Include Windows ONNX Runtime DLLs
+        if: matrix.rid == 'win-x64'
+        shell: pwsh
+        run: |
+          $nugetPackages = if ($env:NUGET_PACKAGES) {
+            $env:NUGET_PACKAGES
+          }
+          else {
+            Join-Path $env:USERPROFILE ".nuget/packages"
+          }
+
+          $package = Get-ChildItem `
+            -Path (Join-Path $nugetPackages "microsoft.ml.onnxruntime") `
+            -Directory |
+            Sort-Object Name -Descending |
+            Select-Object -First 1
+
+          if ($null -eq $package) {
+            throw "Microsoft.ML.OnnxRuntime was not restored."
+          }
+
+          $source = Join-Path $package.FullName "runtimes/win-x64/native"
+          $destination = "artifacts/${{ matrix.artifact }}"
+
+          if (-not (Test-Path $source)) {
+            throw "ONNX Runtime native directory not found at $source"
+          }
+
+          Copy-Item `
+            (Join-Path $source "onnxruntime.dll") `
+            -Destination $destination `
+            -Force `
+            -ErrorAction SilentlyContinue
+
+          Copy-Item `
+            (Join-Path $source "onnxruntime_providers_shared.dll") `
+            -Destination $destination `
+            -Force `
+            -ErrorAction SilentlyContinue
+
+      - name: Include Linux ONNX Runtime DLLs
+        if: matrix.rid == 'linux-x64'
+        shell: bash
+        run: |
+          if [ -n "$NUGET_PACKAGES" ]; then
+            NUGET_ROOT="$NUGET_PACKAGES"
+          else
+            NUGET_ROOT="$HOME/.nuget/packages"
+          fi
+
+          ONNX_PACKAGE=$(find "$NUGET_ROOT/microsoft.ml.onnxruntime" \
+            -maxdepth 1 -type d | sort -V | tail -1)
+
+          if [ -z "$ONNX_PACKAGE" ] || [ ! -d "$ONNX_PACKAGE" ]; then
+            echo "WARNING: ONNX Runtime package not found"
+            exit 0
+          fi
+
+          SOURCE="$ONNX_PACKAGE/runtimes/linux-x64/native"
+          DESTINATION="artifacts/${{ matrix.artifact }}"
+
+          if [ ! -d "$SOURCE" ]; then
+            echo "WARNING: ONNX Runtime native directory not found"
+            exit 0
+          fi
+
+          cp "$SOURCE"/onnxruntime.so "$DESTINATION/" 2>/dev/null || true
+          cp "$SOURCE"/onnxruntime_providers_shared.so "$DESTINATION/" 2>/dev/null || true
+
+      - name: Include macOS ONNX Runtime libraries
+        if: matrix.rid == 'osx-arm64'
+        shell: bash
+        run: |
+          if [ -n "$NUGET_PACKAGES" ]; then
+            NUGET_ROOT="$NUGET_PACKAGES"
+          else
+            NUGET_ROOT="$HOME/.nuget/packages"
+          fi
+
+          ONNX_PACKAGE=$(find "$NUGET_ROOT/microsoft.ml.onnxruntime" \
+            -maxdepth 1 -type d | sort -V | tail -1)
+
+          if [ -z "$ONNX_PACKAGE" ] || [ ! -d "$ONNX_PACKAGE" ]; then
+            echo "WARNING: ONNX Runtime package not found"
+            exit 0
+          fi
+
+          SOURCE="$ONNX_PACKAGE/runtimes/osx-arm64/native"
+          DESTINATION="artifacts/${{ matrix.artifact }}/Quran.app/Contents/MacOS"
+
+          if [ ! -d "$SOURCE" ]; then
+            echo "WARNING: macOS ARM64 ONNX Runtime directory not found"
+            exit 0
+          fi
+
+          cp "$SOURCE"/onnxruntime.dylib "$DESTINATION/" 2>/dev/null || true
+          cp "$SOURCE"/onnxruntime_providers_shared.dylib "$DESTINATION/" 2>/dev/null || true
+
+      - name: Include Linux LibVLC native runtime
+        if: matrix.rid == 'linux-x64'
+        shell: bash
+        run: |
+          if [ -n "$NUGET_PACKAGES" ]; then
+            NUGET_ROOT="$NUGET_PACKAGES"
+          else
+            NUGET_ROOT="$HOME/.nuget/packages"
+          fi
+
+          LIBVLC_PACKAGE=$(find "$NUGET_ROOT/videolan.libvlc.linux" \
+            -maxdepth 1 -type d | sort -V | tail -1)
+
+          if [ -z "$LIBVLC_PACKAGE" ] || [ ! -d "$LIBVLC_PACKAGE" ]; then
+            echo "ERROR: VideoLAN.LibVLC.Linux package not found"
+            exit 1
+          fi
+
+          SOURCE="$LIBVLC_PACKAGE/build/x64"
+          DESTINATION="artifacts/${{ matrix.artifact }}/libvlc/linux-x64"
+
+          if [ ! -d "$SOURCE" ]; then
+            echo "ERROR: LibVLC build directory not found"
+            exit 1
+          fi
+
+          mkdir -p "$DESTINATION"
+          cp -r "$SOURCE"/* "$DESTINATION/"
+
+          if [ ! -f "$DESTINATION/libvlc.so" ]; then
+            echo "ERROR: libvlc.so was not copied"
+            exit 1
+          fi
+
+          if [ ! -f "$DESTINATION/libvlccore.so" ]; then
+            echo "ERROR: libvlccore.so was not copied"
+            exit 1
+          fi
 
       - name: Verify Storage
         shell: pwsh
@@ -207,7 +389,6 @@ jobs:
     name: Upload files to Release
     needs: build
 
-    # Only upload to a release when triggered by a release.
     if: github.event_name == 'release'
 
     runs-on: ubuntu-latest

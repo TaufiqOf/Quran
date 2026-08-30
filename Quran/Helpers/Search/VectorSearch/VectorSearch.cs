@@ -44,9 +44,9 @@ public class VectorSearch : ISearch
     public async Task InitializeAsync()
     {
         if (!File.Exists(_modelPath))
-        {
-            await DownloadHelper.DownloadFileAsync("https://huggingface.co/intfloat/multilingual-e5-small/resolve/main/onnx/model.onnx?download=true", _modelPath);
-        }
+            await DownloadHelper.DownloadFileAsync(
+                "https://huggingface.co/intfloat/multilingual-e5-small/resolve/main/onnx/model.onnx?download=true",
+                _modelPath);
 
         var tokenizer = new LocalTokenizer(_tokenizerPath);
 

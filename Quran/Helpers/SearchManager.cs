@@ -11,16 +11,17 @@ namespace Quran.Helpers;
 public static class SearchManager
 {
     public static Action? SearcherRegistered;
-    public static bool IsSearcherRegistered { get; private set; } = false;
-    private static List<ISearch>? Searcher { get; set; }
 
     static SearchManager()
     {
         Searcher = new List<ISearch>
         {
-            new StructuredSearch(),
+            new StructuredSearch()
         };
     }
+
+    public static bool IsSearcherRegistered { get; private set; }
+    private static List<ISearch>? Searcher { get; }
 
     public static async void RegisterSearcher()
     {

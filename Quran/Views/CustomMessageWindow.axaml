@@ -12,16 +12,14 @@
 
     <Grid RowDefinitions="*,Auto"
           RowSpacing="16">
-        
+
         <Border Grid.Row="0"
                 Background="#252525"
                 BorderBrush="#4b4b4b"
                 BorderThickness="1"
                 CornerRadius="8"
                 Padding="8">
-            <ContentControl x:Name="ContentControl">
-                
-            </ContentControl>
+            <ContentControl x:Name="ContentControl" />
 
         </Border>
 

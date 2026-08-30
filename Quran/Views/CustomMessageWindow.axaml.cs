@@ -5,7 +5,7 @@ using Avalonia.Interactivity;
 namespace Quran.Views;
 
 /// <summary>
-/// A reusable application message dialog that can display optional details.
+///     A reusable application message dialog that can display optional details.
 /// </summary>
 public partial class CustomMessageWindow : Window
 {
@@ -20,11 +20,7 @@ public partial class CustomMessageWindow : Window
     {
         InitializeComponent();
         Heading = title;
-        this.Title = title;
-    }
-    public void SetControl(UserControl content)
-    {
-        ContentControl.Content = content;
+        Title = title;
     }
 
 
@@ -38,6 +34,11 @@ public partial class CustomMessageWindow : Window
     {
         get => GetValue(UserContentControlProperty);
         set => SetValue(UserContentControlProperty, value);
+    }
+
+    public void SetControl(UserControl content)
+    {
+        ContentControl.Content = content;
     }
 
     private void CloseButton_OnClick(object? sender, RoutedEventArgs e)

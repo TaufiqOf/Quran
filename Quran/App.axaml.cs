@@ -1,6 +1,4 @@
-using System;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
@@ -41,6 +39,6 @@ public class App : Application
         if (_isShowingUnhandledException)
             return;
         _isShowingUnhandledException = true;
-        MessageHelper.ShowMessage("Unexpected error",  e.Exception.ToString());
+        MessageHelper.ShowMessage("Unexpected error", e.Exception.ToString());
     }
 }

@@ -21,15 +21,15 @@
     <!-- Application resources -->
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
-        <AvaloniaResource Include="Data\**" />
+        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Data\**"/>
         <!-- Keep model assets next to the published executable, not embedded in it. -->
         <None Update="Storage\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </None>
         <None Update="Storage\model1.onnx">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
 
     </ItemGroup>
@@ -41,15 +41,15 @@
 
         <!-- Avalonia -->
 
-        <PackageReference Include="Avalonia" Version="12.1.1" />
+        <PackageReference Include="Avalonia" Version="12.1.1"/>
 
-        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="12.0.0" />
+        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="12.0.0"/>
 
-        <PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
+        <PackageReference Include="Avalonia.Desktop" Version="12.1.1"/>
 
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1"/>
 
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1"/>
 
 
         <!-- Diagnostics -->
@@ -69,40 +69,40 @@
 
         <!-- MVVM -->
 
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
 
 
         <!-- Icons -->
 
-        <PackageReference Include="FluentIcons.Avalonia" Version="2.1.337" />
+        <PackageReference Include="FluentIcons.Avalonia" Version="2.1.337"/>
 
 
         <!-- Audio -->
 
-        <PackageReference Include="LibVLCSharp" Version="3.10.1" />
+        <PackageReference Include="LibVLCSharp" Version="3.10.1"/>
 
     </ItemGroup>
 
     <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
-        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.*" />
+        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.*"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
-        <PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.*" />
+        <PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.*"/>
     </ItemGroup>
 
     <ItemGroup>
 
         <!-- AI -->
 
-        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.29.0" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.29.0"/>
 
-        <PackageReference Include="Tokenizers.HuggingFace" Version="3.23.1" />
+        <PackageReference Include="Tokenizers.HuggingFace" Version="3.23.1"/>
 
 
         <!-- JSON -->
 
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4"/>
 
     </ItemGroup>
 
@@ -111,9 +111,9 @@
 
     <ItemGroup>
 
-        <AdditionalFiles Include="Views\Pages\HomeView.axaml" />
+        <AdditionalFiles Include="Views\Pages\HomeView.axaml"/>
 
-        <AdditionalFiles Include="Views\Pages\QuranView.axaml" />
+        <AdditionalFiles Include="Views\Pages\QuranView.axaml"/>
 
     </ItemGroup>
 
@@ -175,8 +175,8 @@
             </SubType>
         </Compile>
         <Compile Update="Views\Component\MessageControl\TextBoxMessageControl.axaml.cs">
-          <DependentUpon>TextBoxMessageControl.axaml</DependentUpon>
-          <SubType>Code</SubType>
+            <DependentUpon>TextBoxMessageControl.axaml</DependentUpon>
+            <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
 </Project>

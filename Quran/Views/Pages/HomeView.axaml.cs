@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
 using Quran.Views.Component;
@@ -45,6 +43,7 @@ public partial class HomeView : AView
 
             SurahRepeater.ItemsSource = Cards;
         }
+
         _isLoaded = true;
 
         if (DataManager.CurrentSurah is not null)
@@ -80,10 +79,7 @@ public partial class HomeView : AView
     private void GotoComponent_OnSurahSelected(Surah surah)
     {
         var card = Cards.FirstOrDefault(c => c.Surah!.Id == surah.Id);
-        if (card != null)
-        {
-            Application.Current.Dispatcher.Invoke(() => { SelectCard(card); });
-        }
+        if (card != null) Application.Current.Dispatcher.Invoke(() => { SelectCard(card); });
     }
 
     private void SelectCard(CardComponent card)

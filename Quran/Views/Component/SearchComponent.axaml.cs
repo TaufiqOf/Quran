@@ -16,8 +16,6 @@ namespace Quran.Views.Component;
 
 public partial class SearchComponent : UserControl
 {
-    private readonly string[] _searchTerms = [];
-
     private static readonly IBrush SearchHighlightBrush = new SolidColorBrush(Color.FromArgb(96, 54, 120, 212));
 
     private static readonly StyledProperty<Surah> SurahProperty =
@@ -27,6 +25,8 @@ public partial class SearchComponent : UserControl
     private static readonly StyledProperty<string> VerseCountProperty =
         AvaloniaProperty.Register<SearchComponent, string>(
             nameof(VerseCount));
+
+    private readonly string[] _searchTerms = [];
 
     private SearchComponent()
     {
@@ -174,12 +174,10 @@ public partial class SearchComponent : UserControl
         foreach (var range in mergedRanges)
         {
             if (range.Start > position)
-            {
                 yield return new Run
                 {
                     Text = text.Substring(position, range.Start - position)
                 };
-            }
 
             var highlight = new Span
             {
@@ -197,12 +195,10 @@ public partial class SearchComponent : UserControl
         }
 
         if (position < text.Length)
-        {
             yield return new Run
             {
                 Text = text.Substring(position)
             };
-        }
     }
 
 

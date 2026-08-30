@@ -1,13 +1,12 @@
 using Avalonia.Controls;
 using Quran.Views;
-using Quran.Views.Component;
 using TextBoxMessageControl = Quran.Views.Component.MessageControl.TextBoxMessageControl;
 
 namespace Quran.Helpers;
 
 public static class MessageHelper
 {
-    private static bool _isShowing = false;
+    private static bool _isShowing;
     public static Window? MainWindow { get; set; }
 
     public static void ShowMessage(string title, string message)

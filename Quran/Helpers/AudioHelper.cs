@@ -11,9 +11,6 @@ public static class AudioHelper
     private static readonly MediaPlayer? MediaPlayer;
     private static Media? _currentMedia;
 
-    /// <summary>True when the native VLC libraries loaded successfully.</summary>
-    public static bool IsAvailable { get; private set; }
-
     static AudioHelper()
     {
         try
@@ -30,6 +27,9 @@ public static class AudioHelper
             IsAvailable = false;
         }
     }
+
+    /// <summary>True when the native VLC libraries loaded successfully.</summary>
+    public static bool IsAvailable { get; }
 
     public static TimeSpan CurrentPosition =>
         IsAvailable

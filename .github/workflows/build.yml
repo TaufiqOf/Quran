@@ -252,6 +252,27 @@ jobs:
             -Force `
             -ErrorAction SilentlyContinue
 
+      - name: Install Linux LibVLC
+        if: matrix.rid == 'linux-x64'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libvlc5 libvlccore9 vlc-plugin-base
+          
+          # Create destination directory
+          mkdir -p "artifacts/${{ matrix.artifact }}/libvlc/linux-x64"
+          
+          # Copy libvlc libraries
+          cp /usr/lib/x86_64-linux-gnu/libvlc.so* "artifacts/${{ matrix.artifact }}/libvlc/linux-x64/" 2>/dev/null || true
+          cp /usr/lib/x86_64-linux-gnu/libvlccore.so* "artifacts/${{ matrix.artifact }}/libvlc/linux-x64/" 2>/dev/null || true
+          
+          # Copy VLC plugins directory
+          if [ -d "/usr/lib/x86_64-linux-gnu/vlc/plugins" ]; then
+            cp -r "/usr/lib/x86_64-linux-gnu/vlc/plugins" "artifacts/${{ matrix.artifact }}/libvlc/linux-x64/" 2>/dev/null || true
+          fi
+          
+          echo "LibVLC libraries installed"
+
       - name: Include Linux ONNX Runtime DLLs
         if: matrix.rid == 'linux-x64'
         shell: bash

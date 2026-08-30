@@ -34,7 +34,7 @@
             <Setter Property="Opacity" Value="1" />
         </Style>
         <Style Selector="TextBlock.messageTextBlock.fade-in">
-            <Setter Property="Foreground" Value="Green" /> 
+            <Setter Property="Foreground" Value="White" /> 
             <Style.Animations>
                 <Animation Duration="0:0:0.4">
                     <KeyFrame Cue="0%">

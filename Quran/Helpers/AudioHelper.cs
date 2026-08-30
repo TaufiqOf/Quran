@@ -7,17 +7,23 @@ namespace Quran.Helpers;
 
 public static class AudioHelper
 {
+    private static bool _isInitialized = false;
     private static readonly LibVLC LibVlc;
     private static readonly MediaPlayer MediaPlayer;
     private static Media? _currentMedia;
 
     static AudioHelper()
     {
-        LibVlc = new LibVLC();
-
-        MediaPlayer = new MediaPlayer(LibVlc);
-
-        MediaPlayer.EndReached += (_, _) => { AudioEnded?.Invoke(); };
+        if(_isInitialized) return;
+        try
+        {
+            LibVlc = new LibVLC();
+            MediaPlayer = new MediaPlayer(LibVlc);
+            MediaPlayer.EndReached += (_, _) => { AudioEnded?.Invoke(); };
+        }
+        finally{
+            _isInitialized = true;
+        }
     }
 
     public static TimeSpan CurrentPosition =>

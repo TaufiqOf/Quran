@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Quran.Helpers;
@@ -15,6 +16,7 @@ public partial class HomeView : AView
     private List<SurahOrder> _surahOrder = new();
     private List<SurahSynopsis> _surahSynopsis = new();
     private IEnumerable<Surah> _surahs = new List<Surah>();
+    private Dictionary<int, SurahSynopsis> _synopsisLookup = new();
 
     public HomeView()
     {
@@ -31,19 +33,19 @@ public partial class HomeView : AView
             _surahs = DataManager.Surahs;
             _surahOrder = DataManager.SurahOrders;
             _surahSynopsis = DataManager.SurahSynopses;
+            _synopsisLookup = DataManager.SurahSynopses.ToDictionary(x => x.SurahId);
             GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
             foreach (var surah in _surahs)
             {
-                var synopsis = _surahSynopsis.FirstOrDefault(q => q.SurahId == surah.Id);
+                _synopsisLookup.TryGetValue(surah.Id, out var synopsis);
                 var card = new CardComponent(surah, synopsis);
                 card.CardClick += Card_CardClick;
                 Cards.Add(card);
-                ItemsControl.Items.Add(card);
             }
 
-            _isLoaded = true;
+            SurahRepeater.ItemsSource = Cards;
         }
-
+        _isLoaded = true;
 
         if (DataManager.CurrentSurah is not null)
         {
@@ -80,10 +82,7 @@ public partial class HomeView : AView
         var card = Cards.FirstOrDefault(c => c.Surah!.Id == surah.Id);
         if (card != null)
         {
-            Dispatcher.UIThread.Post(
-                () => { card.BringIntoView(); },
-                DispatcherPriority.Loaded);
-            SelectCard(card);
+            Application.Current.Dispatcher.Invoke(() => { SelectCard(card); });
         }
     }
 

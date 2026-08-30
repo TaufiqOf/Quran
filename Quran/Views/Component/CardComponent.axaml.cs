@@ -48,7 +48,7 @@ public partial class CardComponent : UserControl, IDisposable
         TextBlockArabicTitle.Text = surah.Name;
         TextBlockSubtitle.Text = surah.Translation;
         TextBlockMetadata.Text = $"{surah.Type} - {surah.TotalVerses} verses";
-        TextBlockTags.Text = string.Join("ꞏ ", synopsis?.Themes ?? []);
+        TextBlockTags.Text = string.Join(" - ", synopsis?.Themes ?? []);
         TextBlockDescription.Text = synopsis?.Synopsis;
     }
 

@@ -76,43 +76,18 @@
             x:Name="ScrollViewer"
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
-
-            <ItemsControl
-                x:Name="ItemsControl"
-                Classes="homeItems"
+            <ItemsRepeater
+                x:Name="SurahRepeater"
                 HorizontalAlignment="Stretch">
-
-                <ItemsControl.ItemsPanel>
-
-                    <ItemsPanelTemplate>
-
-                        <UniformGrid
-                            Columns="2"
-                            HorizontalAlignment="Stretch" />
-
-                    </ItemsPanelTemplate>
-
-                </ItemsControl.ItemsPanel>
-
-
-                <!-- Ensure cards fill their cells -->
-
-                <ItemsControl.Styles>
-
-                    <Style Selector="ContentPresenter">
-                        <Setter
-                            Property="HorizontalContentAlignment"
-                            Value="Stretch" />
-
-                        <Setter
-                            Property="VerticalContentAlignment"
-                            Value="Stretch" />
-
-                    </Style>
-
-                </ItemsControl.Styles>
-
-            </ItemsControl>
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout
+                        MinItemWidth="400"
+                        MinItemHeight="235"
+                        MinColumnSpacing="12"
+                        MinRowSpacing="12"
+                        ItemsStretch="Fill" />
+                </ItemsRepeater.Layout>
+            </ItemsRepeater>
 
         </ScrollViewer>
 

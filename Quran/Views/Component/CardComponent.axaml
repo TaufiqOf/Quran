@@ -196,13 +196,13 @@
                         Text="The Opener" />
 
                     <TextBlock
-                        Text="•"
+                        Text="-"
                         Classes="metadata" />
 
                     <TextBlock
                         x:Name="TextBlockMetadata"
                         Classes="metadata"
-                        Text="Meccan • 7 verses" />
+                        Text="Meccan - 7 verses" />
 
                 </StackPanel>
 
@@ -226,7 +226,7 @@
                         x:Name="TextBlockTags"
                         Grid.Row="0"
                         Classes="tags"
-                        Text="• Praise of Allah • Worship • Guidance • The straight path • Prayer"
+                        Text="- Praise of Allah - Worship - Guidance - The straight path - Prayer"
                         TextWrapping="Wrap" />
 
                     <!-- Description -->

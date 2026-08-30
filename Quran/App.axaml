@@ -1,39 +1,88 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Quran.App"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Dark">
+
+    <Application.Resources>
+
+        <!-- Main application colors -->
+        <Color x:Key="AppBackgroundColor">#1E1E1E</Color>
+        <Color x:Key="PanelBackgroundColor">#252525</Color>
+        <Color x:Key="CardBackgroundColor">#303030</Color>
+
+        <Color x:Key="PrimaryTextColor">#F5F5F5</Color>
+        <Color x:Key="SecondaryTextColor">#C8C8C8</Color>
+
+        <Color x:Key="BorderColor">#606060</Color>
+
+        <!-- Brushes -->
+        <SolidColorBrush x:Key="AppBackgroundBrush"
+                         Color="{DynamicResource AppBackgroundColor}" />
+
+        <SolidColorBrush x:Key="PanelBackgroundBrush"
+                         Color="{DynamicResource PanelBackgroundColor}" />
+
+        <SolidColorBrush x:Key="CardBackgroundBrush"
+                         Color="{DynamicResource CardBackgroundColor}" />
+
+        <SolidColorBrush x:Key="PrimaryTextBrush"
+                         Color="{DynamicResource PrimaryTextColor}" />
+
+        <SolidColorBrush x:Key="SecondaryTextBrush"
+                         Color="{DynamicResource SecondaryTextColor}" />
+
+        <SolidColorBrush x:Key="BorderBrush"
+                         Color="{DynamicResource BorderColor}" />
+
+    </Application.Resources>
 
     <Application.Styles>
 
         <FluentTheme />
 
-        <!-- Default font -->
+        <!-- Default Text -->
         <Style Selector="TextBlock">
-            <Setter
-                Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+            <Setter Property="FontFamily"
+                    Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+
+            <Setter Property="Foreground"
+                    Value="{DynamicResource PrimaryTextBrush}" />
         </Style>
 
+        <!-- Default Button -->
         <Style Selector="Button">
-            <Setter
-                Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+            <Setter Property="FontFamily"
+                    Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+
+            <Setter Property="Foreground"
+                    Value="#F5F5F5" />
+
+            <Setter Property="Background"
+                    Value="#353535" />
         </Style>
 
+        <!-- Labels -->
         <Style Selector="Label">
-            <Setter
-                Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+            <Setter Property="FontFamily"
+                    Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+
+            <Setter Property="Foreground"
+                    Value="#F5F5F5" />
         </Style>
 
+        <!-- ComboBox -->
         <Style Selector="ComboBox">
-            <Setter
-                Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+            <Setter Property="FontFamily"
+                    Value="avares://Quran/Assets/Fonts/Poppins-Regular.ttf#Poppins" />
+
+            <Setter Property="Foreground"
+                    Value="#F5F5F5" />
         </Style>
 
+        <!-- Verse Menu Button -->
         <Style Selector="Button.verseMenuButton">
             <Setter Property="Background" Value="#353535" />
+            <Setter Property="Foreground" Value="#F5F5F5" />
             <Setter Property="BorderBrush" Value="Transparent" />
         </Style>
 

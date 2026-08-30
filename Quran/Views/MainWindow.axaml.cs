@@ -11,9 +11,11 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-
-        ShowPage("Home");
-        EnableNavButtons("Home");
+        Opened += async (_, _) =>
+        {
+            ShowPage("Home");
+            EnableNavButtons("Home");
+        };
     }
 
     protected override void OnInitialized()

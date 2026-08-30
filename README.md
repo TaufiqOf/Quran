@@ -9,7 +9,7 @@ A cross-platform desktop application for reading and studying the Quran. Built w
 - Navigate directly to a surah or verse.
 - Bookmark verses and manage them from one place.
 - Play recitations while reading.
-- Search the Quran, including semantic search results.
+- Search for words, phrases, surah names, or verse numbers, and see the matching verses right away.
 - Runs on Windows, Linux, and macOS.
 
 ## Screenshots
@@ -46,6 +46,8 @@ A cross-platform desktop application for reading and studying the Quran. Built w
 
 ![Search](docs/screenshots/Quran-Search.png)
 
+Search is simple and fast. Type what you remember, and the app will show the verses that match. When a verse contains your search words, those words are highlighted so they are easier to spot.
+
 ## Build from source
 
 Install the .NET 10 SDK, then run:
@@ -61,7 +63,3 @@ dotnet publish Quran.csproj -c Release -r <runtime> --self-contained true
 ```
 
 Published builds must keep the `Storage/` directory alongside the executable because it contains the local search model and its supporting files.
-
-## Continuous builds
-
-Every push triggers GitHub Actions builds for Windows, Linux, and macOS. The completed artifacts can be downloaded from the workflow run; GitHub Releases are created manually.

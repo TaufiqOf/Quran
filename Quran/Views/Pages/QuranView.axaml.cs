@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -21,9 +22,9 @@ public partial class QuranView : AView
     public QuranView()
     {
         InitializeComponent();
-        AudioComponent.PlayAction +=  PlayCurrentVerse;
-        AudioComponent.PauseAction +=  PauseCurrentVerse;
-        AudioComponent.SeekAction +=  SeekCurrentVerse;
+        AudioComponent.PlayAction += PlayCurrentVerse;
+        AudioComponent.PauseAction += PauseCurrentVerse;
+        AudioComponent.SeekAction += SeekCurrentVerse;
         foreach (var value in Enum.GetValues(typeof(ReaderMode))) ModeComboBox.Items.Add(value.ToString());
         ModeComboBox.SelectedIndex = 0;
         AttachedToVisualTree += (_, _) =>
@@ -32,8 +33,8 @@ public partial class QuranView : AView
                 () => ReaderComponent.Focus(),
                 DispatcherPriority.Loaded);
         };
+        AudioHelper.AudioEnded += AudioEnded;
     }
-
 
 
     public override Task Load(params object?[] parameter)
@@ -99,6 +100,10 @@ public partial class QuranView : AView
         DataManager.CurrentVerseId = verseId;
         ScrollToVerse(verseId);
         UpdateSelectedVerse(verseId);
+        if(AudioHelper.IsPlaying)
+        {
+            AudioHelper.PlayAudio(DataManager.CurrentSurah?.Id ?? 1, verseId);
+        }
     }
 
 
@@ -138,19 +143,73 @@ public partial class QuranView : AView
     {
         GotoComponent.SetFocusOnVerse();
     }
-    
+
     private void SeekCurrentVerse(double position)
     {
-        
+        AudioHelper.SeekAudio(position);
     }
 
     private void PauseCurrentVerse()
     {
-        
+        AudioHelper.PauseAudio();
     }
 
     private void PlayCurrentVerse()
     {
-        
+        AudioHelper.PlayAudio(DataManager.CurrentSurah?.Id ?? 1, DataManager.CurrentVerseId ?? 1);
+    }
+
+    private void AudioEnded()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            var currentSurah = DataManager.CurrentSurah;
+            if (currentSurah is null)
+                return;
+
+            var currentVerseId = DataManager.CurrentVerseId ?? 1;
+            var nextVerseId = currentVerseId + 1;
+            // Next verse in current Surah
+            if (nextVerseId <= currentSurah.Verses.Count)
+            {
+                DataManager.CurrentVerseId = nextVerseId;
+                GotoComponent.VerseSelectedIndex = nextVerseId;
+                ScrollToVerse(nextVerseId);
+                UpdateSelectedVerse(nextVerseId);
+                AudioHelper.PlayAudio(currentSurah.Id,nextVerseId);
+                return;
+            }
+
+            // Find next Surah
+            var nextSurah = _surahs.OrderBy(s => s.Id).FirstOrDefault(s => s.Id > currentSurah.Id);
+
+            // Finished last Surah
+            if (nextSurah is null)
+            {
+                nextSurah = _surahs.OrderBy(s => s.Id).FirstOrDefault();
+                if (nextSurah is null)
+                    return;
+            }
+
+            // Update application state FIRST
+            DataManager.CurrentSurah = nextSurah;
+            DataManager.CurrentVerseId = 1;
+
+            // Update UI
+            GotoComponent.SurahSelectedIndex =
+                _surahs
+                    .ToList()
+                    .FindIndex(s => s.Id == nextSurah.Id);
+
+            GotoComponent.VerseSelectedIndex = 1;
+
+            ReaderComponent.LoadCard(nextSurah,_surahSynopsis.FirstOrDefault(s => s.SurahId == nextSurah.Id));
+            ReaderComponent.ClearVerses();
+            ReaderComponent.AddVerses(nextSurah.Verses);
+            ScrollToVerse(1);
+            UpdateSelectedVerse(1);
+            // Play explicitly with the new IDs
+            AudioHelper.PlayAudio(nextSurah.Id, 1);
+        });
     }
 }

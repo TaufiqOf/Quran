@@ -21,6 +21,8 @@ public partial class AudioComponent : UserControl
         RoutedEventArgs e)
     {
         PlayAction?.Invoke();
+        PlayButton.IsEnabled = false;
+        PauseButton.IsEnabled = true;
     }
 
     private void PauseButton_OnClick(
@@ -28,6 +30,8 @@ public partial class AudioComponent : UserControl
         RoutedEventArgs e)
     {
         PauseAction?.Invoke();
+        PlayButton.IsEnabled = true;
+        PauseButton.IsEnabled = false;
     }
 
     private void ProgressSlider_OnValueChanged(

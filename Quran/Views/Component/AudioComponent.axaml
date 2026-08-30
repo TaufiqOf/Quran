@@ -71,6 +71,7 @@
             Classes="progressSlider"
             Minimum="0"
             Maximum="100"
+            IsVisible="False"
             ValueChanged="ProgressSlider_OnValueChanged" />
 
         <!-- Current Time -->
@@ -78,6 +79,7 @@
         <Label
             Grid.Column="3"
             x:Name="CurrentTimeLabel"
+            IsVisible="False"
             Classes="audioLabel"
             Content="00:00" />
     </Grid>

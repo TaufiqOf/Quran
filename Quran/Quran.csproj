@@ -1,79 +1,200 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <ApplicationManifest>app.manifest</ApplicationManifest>
-    </PropertyGroup>
 
-    <!-- Application resources -->
-    <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
-        <AvaloniaResource Include="Data\*.json" />
-        <None Update="Storage\embeddings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Storage\model1.onnx">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Storage\tokenizer.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-    <PropertyGroup>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+
+        <RuntimeIdentifiers>
+            win-x64;
+            linux-x64;
+            osx-x64;
+            osx-arm64
+        </RuntimeIdentifiers>
+
         <ApplicationIcon>Assets\Icons\quran.ico</ApplicationIcon>
     </PropertyGroup>
-    <!-- NuGet packages -->
-    <ItemGroup>
-        <PackageReference Include="Avalonia" Version="12.1.1" />
-        <PackageReference Include="Avalonia.Desktop" Version="12.1.1" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1" />
 
-        <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
-            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
-            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+
+    <!-- Application resources -->
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Data\**" />
+        <None Update="Storage\embeddings.json">
+            <CopyToOutputDirectory>
+                PreserveNewest
+            </CopyToOutputDirectory>
+        </None>
+        <None Update="Storage\model1.onnx">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+
+        <None Update="Storage\tokenizer.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+
+    </ItemGroup>
+
+
+    <!-- NuGet packages -->
+
+    <ItemGroup>
+
+        <!-- Avalonia -->
+
+        <PackageReference
+                Include="Avalonia"
+                Version="12.1.1" />
+
+        <PackageReference
+                Include="Avalonia.Desktop"
+                Version="12.1.1" />
+
+        <PackageReference
+                Include="Avalonia.Themes.Fluent"
+                Version="12.1.1" />
+
+        <PackageReference
+                Include="Avalonia.Fonts.Inter"
+                Version="12.1.1" />
+
+
+        <!-- Diagnostics -->
+
+        <PackageReference
+                Include="AvaloniaUI.DiagnosticsSupport"
+                Version="2.2.3">
+
+            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">
+                None
+            </IncludeAssets>
+
+            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">
+                All
+            </PrivateAssets>
+
         </PackageReference>
 
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-        <PackageReference Include="FluentIcons.Avalonia" Version="2.1.337" />
-        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.29.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="Tokenizers.HuggingFace" Version="3.23.1" />
+
+        <!-- MVVM -->
+
+        <PackageReference
+                Include="CommunityToolkit.Mvvm"
+                Version="8.4.2" />
+
+
+        <!-- Icons -->
+
+        <PackageReference
+                Include="FluentIcons.Avalonia"
+                Version="2.1.337" />
+
+
+        <!-- Audio -->
+
+        <PackageReference
+                Include="LibVLCSharp"
+                Version="3.10.1" />
+
+        <PackageReference
+                Include="VideoLAN.LibVLC.Windows"
+                Version="3.*" />
+
+        <PackageReference
+                Include="VideoLAN.LibVLC.Mac"
+                Version="3.*" />
+
+
+        <!-- AI -->
+
+        <PackageReference
+                Include="Microsoft.ML.OnnxRuntime"
+                Version="1.29.0" />
+
+        <PackageReference
+                Include="Tokenizers.HuggingFace"
+                Version="3.23.1" />
+
+
+        <!-- JSON -->
+
+        <PackageReference
+                Include="Newtonsoft.Json"
+                Version="13.0.4" />
+
     </ItemGroup>
+
 
     <!-- Avalonia pages -->
+
     <ItemGroup>
-        <AdditionalFiles Include="Views\Pages\HomeView.axaml" />
-        <AdditionalFiles Include="Views\Pages\QuranView.axaml" />
+
+        <AdditionalFiles
+                Include="Views\Pages\HomeView.axaml" />
+
+        <AdditionalFiles
+                Include="Views\Pages\QuranView.axaml" />
+
     </ItemGroup>
+
 
     <!-- Code-behind -->
+
     <ItemGroup>
+
         <Compile Update="Views\Pages\BookmarksView.axaml.cs">
-            <DependentUpon>BookmarksView.axaml</DependentUpon>
-            <SubType>Code</SubType>
+
+            <DependentUpon>
+                BookmarksView.axaml
+            </DependentUpon>
+
+            <SubType>
+                Code
+            </SubType>
+
         </Compile>
+
 
         <Compile Update="Views\Pages\SearchView.axaml.cs">
-            <DependentUpon>SearchView.axaml</DependentUpon>
-            <SubType>Code</SubType>
+
+            <DependentUpon>
+                SearchView.axaml
+            </DependentUpon>
+
+            <SubType>
+                Code
+            </SubType>
+
         </Compile>
+
 
         <Compile Update="Views\Pages\SettingsView.axaml.cs">
-            <DependentUpon>SettingsView.axaml</DependentUpon>
-            <SubType>Code</SubType>
+
+            <DependentUpon>
+                SettingsView.axaml
+            </DependentUpon>
+
+            <SubType>
+                Code
+            </SubType>
+
         </Compile>
+
 
         <Compile Update="Views\Component\VerseCompactComponent.axaml.cs">
-            <DependentUpon>VerseCompactComponent.axaml</DependentUpon>
+            <DependentUpon>
+                VerseCompactComponent.axaml
+            </DependentUpon>
         </Compile>
-
         <Compile Update="Views\Component\VerseTranslationComponent.axaml.cs">
-            <DependentUpon>VerseTranslationComponent.axaml</DependentUpon>
-            <SubType>Code</SubType>
+            <DependentUpon>
+                VerseTranslationComponent.axaml
+            </DependentUpon>
+            <SubType>
+                Code
+            </SubType>
         </Compile>
     </ItemGroup>
-
 </Project>

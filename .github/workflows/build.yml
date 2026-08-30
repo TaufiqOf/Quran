@@ -1,8 +1,9 @@
-name: Build
+name: Build Release
 
 on:
   release:
-    types: [created]
+    types: [published]
+
   workflow_dispatch:
 
 permissions:
@@ -21,25 +22,27 @@ jobs:
             os: windows-latest
             rid: win-x64
             artifact: Quran-windows-x64
-    
+
           - name: Linux x64
             os: ubuntu-latest
             rid: linux-x64
             artifact: Quran-linux-x64
-    
+
           - name: macOS ARM64
             os: macos-latest
             rid: osx-arm64
             artifact: Quran-macos-arm64
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
-      - name: Publish self-contained application
+      - name: Publish application
         shell: pwsh
         run: |
           dotnet publish Quran/Quran.csproj `
@@ -53,16 +56,58 @@ jobs:
             -p:DebugType=None `
             -p:DebugSymbols=false
 
-      - name: Verify Storage deployment
+      - name: Verify Storage
         shell: pwsh
         run: |
           $storage = "artifacts/${{ matrix.artifact }}/Storage"
-          if (-not (Test-Path $storage)) { throw "Storage directory was not published." }
-          if (-not (Get-ChildItem -Path $storage -File -Recurse)) { throw "Storage directory is empty." }
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v5
+          if (-not (Test-Path $storage)) {
+            throw "Storage directory was not published."
+          }
+
+          if (-not (Get-ChildItem -Path $storage -File -Recurse)) {
+            throw "Storage directory is empty."
+          }
+
+      - name: Create ZIP
+        shell: pwsh
+        run: |
+          Compress-Archive `
+            -Path "artifacts/${{ matrix.artifact }}/*" `
+            -DestinationPath "artifacts/${{ matrix.artifact }}.zip"
+
+      - name: Upload temporary build artifact
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: artifacts/${{ matrix.artifact }}
+          path: artifacts/${{ matrix.artifact }}.zip
           if-no-files-found: error
+
+  upload-release:
+    name: Upload files to Release
+    needs: build
+
+    # Only upload to a release when triggered by a release.
+    if: github.event_name == 'release'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all builds
+        uses: actions/download-artifact@v4
+        with:
+          path: release-files
+          merge-multiple: true
+
+      - name: Show release files
+        run: |
+          ls -lah release-files
+
+      - name: Upload ZIP files to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            release-files/Quran-windows-x64.zip
+            release-files/Quran-linux-x64.zip
+            release-files/Quran-macos-arm64.zip

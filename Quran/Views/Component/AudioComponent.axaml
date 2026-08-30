@@ -56,12 +56,12 @@
             Grid.Column="1"
             x:Name="PauseButton"
             Classes="audioButton"
-            ToolTip.Tip="Pause"
+            ToolTip.Tip="Stop"
             IsEnabled="False"
             Click="PauseButton_OnClick">
 
             <avalonia:SymbolIcon
-                Symbol="Pause"
+                Symbol="Stop"
                 FontSize="18" />
         </Button>
 

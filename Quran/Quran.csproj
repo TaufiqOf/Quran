@@ -22,15 +22,10 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <AvaloniaResource Include="Data\**" />
-        <None Update="Storage\embeddings.json">
+        <!-- Keep model assets next to the published executable, not embedded in it. -->
+        <None Update="Storage\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Storage\model1.onnx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-
-        <None Update="Storage\tokenizer.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </None>
 
     </ItemGroup>

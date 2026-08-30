@@ -24,61 +24,58 @@ public static class AudioHelper
         _mediaPlayer.EndReached += (_, _) => { AudioEnded?.Invoke(); };
     }
 
-    public static void PlayAudio(
-        int surahId,
-        int verseId,
-        string reciterName = "Al-Husary")
-    {
-        StopAudio();
-
-        var resourceName =
-            $"{surahId:D3}{verseId:D3}.mp3";
-
-        _currentStream = GetAudioStream(
-            resourceName,
-            reciterName);
-
-        _currentMedia = new Media(
-            _libVLC,
-            new StreamMediaInput(_currentStream));
-
-        _mediaPlayer.Play(_currentMedia);
-    }
-
-    public static void PauseAudio()
-    {
-        if (_mediaPlayer.IsPlaying)
+        public static void PlayAudio(
+            int surahId,
+            int verseId,
+            string reciterName = "Al-Husary")
         {
-            _mediaPlayer.Pause();
-        }
-    }
+            StopAudio();
 
-    public static void ResumeAudio()
-    {
-        if (!_mediaPlayer.IsPlaying)
+            var resourceName = $"{surahId:D3}{verseId:D3}.mp3";
+            var audioPath = GetAudioFile(resourceName, reciterName);
+
+            _currentMedia = new Media(
+                _libVLC,
+                audioPath,
+                FromType.FromPath);
+
+            _mediaPlayer.Play(_currentMedia);
+        }
+
+        public static void PauseAudio()
         {
-            _mediaPlayer.Play();
+            if (_mediaPlayer.IsPlaying)
+            {
+                _mediaPlayer.Pause();
+            }
         }
-    }
 
-    public static void StopAudio()
-    {
-        _mediaPlayer.Stop();
+        public static void ResumeAudio()
+        {
+            if (!_mediaPlayer.IsPlaying)
+            {
+                _mediaPlayer.Play();
+            }
+        }
 
-        // Do not dispose here immediately.
-        // LibVLC may still be finishing the previous media.
-        _currentMedia = null;
+        public static void StopAudio()
+        {
+            _mediaPlayer.Stop();
 
-        _currentStream = null;
-    }
+            // Do not dispose here immediately.
+            // LibVLC may still be finishing the previous media.
+            _currentMedia = null;
 
-    public static void SeekAudio(double position)
-    {
-        position = Math.Clamp(position, 0, 100);
+            _currentStream = null;
+        }
 
-        _mediaPlayer.Position =
-            (float)(position / 100.0);
-    }
+        public static void SeekAudio(double position)
+        {
+            position = Math.Clamp(position, 0, 100);
+
+            _mediaPlayer.Position =
+                (float)(position / 100.0);
+        }
 
     public static TimeSpan CurrentPosition =>
         TimeSpan.FromMilliseconds(
@@ -102,27 +99,26 @@ public static class AudioHelper
             Math.Clamp(value, 0, 100);
     }
 
-    private static Stream GetAudioStream(
-        string resourceName,
-        string reciterName)
+    private static string GetAudioFile(string resourceName, string reciterName)
     {
-        var assemblyName =
-            typeof(AudioHelper)
-                .Assembly
-                .GetName()
-                .Name;
-
+        var assemblyName = typeof(AudioHelper).Assembly.GetName().Name;
         if (string.IsNullOrWhiteSpace(assemblyName))
         {
-            throw new InvalidOperationException(
-                "Could not determine assembly name.");
+            throw new InvalidOperationException("Could not determine assembly name.");
         }
 
-        var uri = new Uri(
-            $"avares://{assemblyName}/" +
-            $"Data/Audio/{reciterName}/" +
-            resourceName);
+        var resourceUri = new Uri($"avares://{assemblyName}/Data/Audio/{reciterName}/{resourceName}");
+        var cacheDirectory = Path.Combine(Path.GetTempPath(), "Quran", "Audio", reciterName);
+        Directory.CreateDirectory(cacheDirectory);
+        var audioPath = Path.Combine(cacheDirectory, resourceName);
+        if (File.Exists(audioPath))
+        {
+            return audioPath;
+        }
 
-        return AssetLoader.Open(uri);
+        using var sourceStream = AssetLoader.Open(resourceUri);
+        using var destinationStream = File.Create(audioPath);
+        sourceStream.CopyTo(destinationStream);
+        return audioPath;
     }
 }

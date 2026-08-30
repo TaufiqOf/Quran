@@ -1,0 +1,63 @@
+name: Build
+
+on:
+  # Build every branch push. This workflow intentionally does not create releases.
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows x64
+            os: windows-latest
+            rid: win-x64
+            artifact: Quran-windows-x64
+          - name: Linux x64
+            os: ubuntu-latest
+            rid: linux-x64
+            artifact: Quran-linux-x64
+          - name: macOS x64
+            os: macos-13
+            rid: osx-x64
+            artifact: Quran-macos-x64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish self-contained application
+        shell: pwsh
+        run: |
+          dotnet publish Quran.csproj `
+            --configuration Release `
+            --runtime ${{ matrix.rid }} `
+            --self-contained true `
+            --output "artifacts/${{ matrix.artifact }}" `
+            -p:PublishSingleFile=true `
+            -p:EnableCompressionInSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:DebugType=None `
+            -p:DebugSymbols=false
+
+      - name: Verify Storage deployment
+        shell: pwsh
+        run: |
+          $storage = "artifacts/${{ matrix.artifact }}/Storage"
+          if (-not (Test-Path $storage)) { throw "Storage directory was not published." }
+          if (-not (Get-ChildItem -Path $storage -File -Recurse)) { throw "Storage directory is empty." }
+
+      # Downloading the artifact produces a directory containing the executable and Storage/.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: artifacts/${{ matrix.artifact }}
+          if-no-files-found: error

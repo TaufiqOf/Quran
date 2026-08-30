@@ -28,7 +28,8 @@ public class VectorSearch : ISearch
                 "embeddings.json");
 
         _modelPath = Path.Combine(
-            AppContext.BaseDirectory,
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Quran",
             "Storage",
             "model1.onnx");
 

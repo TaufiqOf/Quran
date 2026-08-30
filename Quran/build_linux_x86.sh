@@ -129,8 +129,7 @@ fi
 echo
 echo "==> Installing executable..."
 
-cp "$GENERATED_EXECUTABLE" \
-    "$APPDIR/usr/bin/$APP_NAME"
+cp -a "$PUBLISH_DIR/." "$APPDIR/usr/bin/"
 
 chmod +x "$APPDIR/usr/bin/$APP_NAME"
 

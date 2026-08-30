@@ -252,7 +252,7 @@ jobs:
             -Force `
             -ErrorAction SilentlyContinue
 
-      - name: Install Linux LibVLC
+      - name: Include Linux LibVLC native runtime
         if: matrix.rid == 'linux-x64'
         shell: bash
         run: |

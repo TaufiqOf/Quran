@@ -20,8 +20,9 @@ public static class AudioHelper
             MediaPlayer.EndReached += (_, _) => { AudioEnded?.Invoke(); };
             IsAvailable = true;
         }
-        catch
+        catch(Exception exception)
         {
+            MessageHelper.ShowMessage("Audio Unavailable", exception.Message);
             // Native VLC libraries are missing on this platform.
             // Audio features will be silently disabled.
             IsAvailable = false;

@@ -1,7 +1,6 @@
 name: Build
 
-on:
-  # Build every branch push. This workflow intentionally does not create releases.
+on: [push, pull_request, workflow_dispatch]
 
 permissions:
   contents: read
@@ -37,7 +36,7 @@ jobs:
       - name: Publish self-contained application
         shell: pwsh
         run: |
-          dotnet publish Quran.csproj `
+          dotnet publish Quran/Quran.csproj `
             --configuration Release `
             --runtime ${{ matrix.rid }} `
             --self-contained true `

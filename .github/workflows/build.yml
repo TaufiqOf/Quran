@@ -10,28 +10,85 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: ${{ matrix.name }}
-    runs-on: ${{ matrix.os }}
+  build-linux:
+    name: Linux x64 (AppImage)
+    runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Windows x64
-            os: windows-latest
-            rid: win-x64
-            artifact: Quran-windows-x64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
 
-          - name: Linux x64
-            os: ubuntu-latest
-            rid: linux-x64
-            artifact: Quran-linux-x64
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
 
-          - name: macOS ARM64
-            os: macos-latest
-            rid: osx-arm64
-            artifact: Quran-macos-arm64
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget fuse libfuse2 libvlc5 libvlccore9 vlc-plugin-base
+
+      - name: Build Linux AppImage
+        working-directory: Quran
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: 1
+        run: bash build_linux_x86.sh
+
+      - name: Verify AppImage
+        run: |
+          if [ ! -f "Quran/dist/linux/Quran-x86_64.AppImage" ]; then
+            echo "ERROR: AppImage was not created."
+            exit 1
+          fi
+          ls -lh Quran/dist/linux/Quran-x86_64.AppImage
+
+      - name: Upload Linux AppImage artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: Quran-linux-x64
+          path: Quran/dist/linux/Quran-x86_64.AppImage
+          if-no-files-found: error
+
+  build-windows:
+    name: Windows x64
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget zip unzip
+
+      - name: Build Windows ZIP
+        working-directory: Quran
+        run: bash build_windows_x86.sh
+
+      - name: Verify ZIP
+        run: |
+          if [ ! -f "Quran/dist/windows/Quran-windows-x64.zip" ]; then
+            echo "ERROR: Windows ZIP was not created."
+            exit 1
+          fi
+          ls -lh Quran/dist/windows/Quran-windows-x64.zip
+
+      - name: Upload Windows ZIP artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: Quran-windows-x64
+          path: Quran/dist/windows/Quran-windows-x64.zip
+          if-no-files-found: error
+
+  build-macos:
+    name: macOS ARM64
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
@@ -47,9 +104,9 @@ jobs:
         run: |
           dotnet publish Quran/Quran.csproj `
             --configuration Release `
-            --runtime ${{ matrix.rid }} `
+            --runtime osx-arm64 `
             --self-contained true `
-            --output "artifacts/${{ matrix.artifact }}" `
+            --output "artifacts/Quran-macos-arm64" `
             -p:PublishSingleFile=true `
             -p:EnableCompressionInSingleFile=true `
             -p:IncludeNativeLibrariesForSelfExtract=true `
@@ -57,10 +114,9 @@ jobs:
             -p:DebugSymbols=false
 
       - name: Create macOS app bundle
-        if: matrix.rid == 'osx-arm64'
         shell: pwsh
         run: |
-          $source = "artifacts/${{ matrix.artifact }}"
+          $source = "artifacts/Quran-macos-arm64"
           $bundle = Join-Path $source "Quran.app"
           $contents = Join-Path $bundle "Contents"
           $macOS = Join-Path $contents "MacOS"
@@ -168,142 +224,7 @@ jobs:
             -Encoding utf8 `
             (Join-Path $contents "Info.plist")
 
-      - name: Include Windows LibVLC native runtime
-        if: matrix.rid == 'win-x64'
-        shell: pwsh
-        run: |
-          $nugetPackages = if ($env:NUGET_PACKAGES) {
-            $env:NUGET_PACKAGES
-          }
-          else {
-            Join-Path $env:USERPROFILE ".nuget/packages"
-          }
-
-          $package = Get-ChildItem `
-            -Path (Join-Path $nugetPackages "videolan.libvlc.windows") `
-            -Directory |
-            Sort-Object Name -Descending |
-            Select-Object -First 1
-
-          if ($null -eq $package) {
-            throw "VideoLAN.LibVLC.Windows was not restored."
-          }
-
-          $source = Join-Path $package.FullName "build/x64"
-          $destination = "artifacts/${{ matrix.artifact }}/libvlc/win-x64"
-
-          New-Item `
-            -ItemType Directory `
-            -Path $destination `
-            -Force |
-            Out-Null
-
-          Copy-Item `
-            -Path (Join-Path $source "*") `
-            -Destination $destination `
-            -Recurse `
-            -Force
-
-          if (-not (Test-Path (Join-Path $destination "libvlc.dll"))) {
-            throw "libvlc.dll was not copied."
-          }
-
-          if (-not (Test-Path (Join-Path $destination "libvlccore.dll"))) {
-            throw "libvlccore.dll was not copied."
-          }
-
-      - name: Include Windows ONNX Runtime DLLs
-        if: matrix.rid == 'win-x64'
-        shell: pwsh
-        run: |
-          $nugetPackages = if ($env:NUGET_PACKAGES) {
-            $env:NUGET_PACKAGES
-          }
-          else {
-            Join-Path $env:USERPROFILE ".nuget/packages"
-          }
-
-          $package = Get-ChildItem `
-            -Path (Join-Path $nugetPackages "microsoft.ml.onnxruntime") `
-            -Directory |
-            Sort-Object Name -Descending |
-            Select-Object -First 1
-
-          if ($null -eq $package) {
-            throw "Microsoft.ML.OnnxRuntime was not restored."
-          }
-
-          $source = Join-Path $package.FullName "runtimes/win-x64/native"
-          $destination = "artifacts/${{ matrix.artifact }}"
-
-          if (-not (Test-Path $source)) {
-            throw "ONNX Runtime native directory not found at $source"
-          }
-
-          Copy-Item `
-            (Join-Path $source "onnxruntime.dll") `
-            -Destination $destination `
-            -Force `
-            -ErrorAction SilentlyContinue
-
-          Copy-Item `
-            (Join-Path $source "onnxruntime_providers_shared.dll") `
-            -Destination $destination `
-            -Force `
-            -ErrorAction SilentlyContinue
-
-      - name: Include Linux LibVLC native runtime
-        if: matrix.rid == 'linux-x64'
-        shell: bash
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libvlc5 libvlccore9 vlc-plugin-base
-          
-          # Create destination directory
-          mkdir -p "artifacts/${{ matrix.artifact }}/libvlc/linux-x64"
-          
-          # Copy libvlc libraries
-          cp /usr/lib/x86_64-linux-gnu/libvlc.so* "artifacts/${{ matrix.artifact }}/libvlc/linux-x64/" 2>/dev/null || true
-          cp /usr/lib/x86_64-linux-gnu/libvlccore.so* "artifacts/${{ matrix.artifact }}/libvlc/linux-x64/" 2>/dev/null || true
-          
-          # Copy VLC plugins directory
-          if [ -d "/usr/lib/x86_64-linux-gnu/vlc/plugins" ]; then
-            cp -r "/usr/lib/x86_64-linux-gnu/vlc/plugins" "artifacts/${{ matrix.artifact }}/libvlc/linux-x64/" 2>/dev/null || true
-          fi
-          
-          echo "LibVLC libraries installed"
-
-      - name: Include Linux ONNX Runtime DLLs
-        if: matrix.rid == 'linux-x64'
-        shell: bash
-        run: |
-          if [ -n "$NUGET_PACKAGES" ]; then
-            NUGET_ROOT="$NUGET_PACKAGES"
-          else
-            NUGET_ROOT="$HOME/.nuget/packages"
-          fi
-
-          ONNX_PACKAGE=$(find "$NUGET_ROOT/microsoft.ml.onnxruntime" \
-            -maxdepth 1 -type d | sort -V | tail -1)
-
-          if [ -z "$ONNX_PACKAGE" ] || [ ! -d "$ONNX_PACKAGE" ]; then
-            echo "WARNING: ONNX Runtime package not found"
-            exit 0
-          fi
-
-          SOURCE="$ONNX_PACKAGE/runtimes/linux-x64/native"
-          DESTINATION="artifacts/${{ matrix.artifact }}"
-
-          if [ ! -d "$SOURCE" ]; then
-            echo "WARNING: ONNX Runtime native directory not found"
-            exit 0
-          fi
-
-          cp "$SOURCE"/onnxruntime.so "$DESTINATION/" 2>/dev/null || true
-          cp "$SOURCE"/onnxruntime_providers_shared.so "$DESTINATION/" 2>/dev/null || true
-
       - name: Include macOS ONNX Runtime libraries
-        if: matrix.rid == 'osx-arm64'
         shell: bash
         run: |
           if [ -n "$NUGET_PACKAGES" ]; then
@@ -321,7 +242,7 @@ jobs:
           fi
 
           SOURCE="$ONNX_PACKAGE/runtimes/osx-arm64/native"
-          DESTINATION="artifacts/${{ matrix.artifact }}/Quran.app/Contents/MacOS"
+          DESTINATION="artifacts/Quran-macos-arm64/Quran.app/Contents/MacOS"
 
           if [ ! -d "$SOURCE" ]; then
             echo "WARNING: macOS ARM64 ONNX Runtime directory not found"
@@ -331,11 +252,10 @@ jobs:
           cp "$SOURCE"/onnxruntime.dylib "$DESTINATION/" 2>/dev/null || true
           cp "$SOURCE"/onnxruntime_providers_shared.dylib "$DESTINATION/" 2>/dev/null || true
 
-
       - name: Verify Storage
         shell: pwsh
         run: |
-          $storage = "artifacts/${{ matrix.artifact }}/Storage"
+          $storage = "artifacts/Quran-macos-arm64/Storage"
 
           if (-not (Test-Path $storage)) {
             throw "Storage directory was not published."
@@ -345,53 +265,24 @@ jobs:
             throw "Storage directory is empty."
           }
 
-      - name: Create ZIP for macOS
-        if: matrix.rid == 'osx-arm64'
+      - name: Create ZIP
         shell: pwsh
         run: |
           ditto -c -k --keepParent `
-            "artifacts/${{ matrix.artifact }}/Quran.app" `
-            "artifacts/${{ matrix.artifact }}.zip"
+            "artifacts/Quran-macos-arm64/Quran.app" `
+            "artifacts/Quran-macos-arm64.zip"
 
-      - name: Create ZIP for Windows and Linux
-        if: matrix.rid != 'osx-arm64'
-        shell: pwsh
-        run: |
-          Compress-Archive `
-            -Path "artifacts/${{ matrix.artifact }}/*" `
-            -DestinationPath "artifacts/${{ matrix.artifact }}.zip"
-
-      - name: Upload temporary build artifact
+      - name: Upload macOS artifact
         uses: actions/upload-artifact@v5
         with:
-          name: ${{ matrix.artifact }}
-          path: artifacts/${{ matrix.artifact }}.zip
+          name: Quran-macos-arm64
+          path: artifacts/Quran-macos-arm64.zip
           if-no-files-found: error
 
   upload-release:
     name: Upload files to Release
-    needs: build
+    needs: [build-linux, build-windows, build-macos]
 
     if: github.event_name == 'release'
 
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download all builds
-        uses: actions/download-artifact@v5
-        with:
-          path: release-files
-          merge-multiple: true
-
-      - name: Show release files
-        run: |
-          ls -lah release-files
-
-      - name: Upload ZIP files to GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.event.release.tag_name }}
-          files: |
-            release-files/Quran-windows-x64.zip
-            release-files/Quran-linux-x64.zip
-            release-files/Quran-macos-arm64.zip
+    runs-on: ubuntu-l

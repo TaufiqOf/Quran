@@ -28,10 +28,10 @@ jobs:
             rid: linux-x64
             artifact: Quran-linux-x64
 
-          - name: macOS x64
+          - name: macOS ARM64
             os: macos-latest
-            rid: osx-x64
-            artifact: Quran-macos-x64
+            rid: osx-arm64
+            artifact: Quran-macos-arm64
 
     steps:
       - name: Checkout
@@ -57,14 +57,14 @@ jobs:
             -p:DebugSymbols=false
 
       - name: Create macOS app bundle
-        if: matrix.rid == 'osx-x64'
+        if: matrix.rid == 'osx-arm64'
         shell: pwsh
         run: |
           $source = "artifacts/${{ matrix.artifact }}"
           $bundle = Join-Path $source "Quran.app"
           $contents = Join-Path $bundle "Contents"
           $macOS = Join-Path $contents "MacOS"
-          $vlcBundleRoot = Join-Path $macOS "libvlc/osx-x64"
+          $vlcBundleRoot = Join-Path $macOS "libvlc/osx-arm64"
 
           New-Item -ItemType Directory -Path $macOS -Force | Out-Null
 
@@ -80,6 +80,10 @@ jobs:
           }
 
           & chmod +x $executable
+
+          # Remove Windows-only native DLLs that the OnnxRuntime NuGet package
+          # incorrectly includes when cross-compiling for macOS.
+          Get-ChildItem -Path $macOS -Filter "*.dll" -File | Remove-Item -Force
 
           if (-not (Get-Command brew -ErrorAction SilentlyContinue)) {
             throw "Homebrew is required to install the VLC runtime on macOS."
@@ -177,7 +181,7 @@ jobs:
           }
 
       - name: Create ZIP for macOS
-        if: matrix.rid == 'osx-x64'
+        if: matrix.rid == 'osx-arm64'
         shell: pwsh
         run: |
           ditto -c -k --keepParent `
@@ -185,7 +189,7 @@ jobs:
             "artifacts/${{ matrix.artifact }}.zip"
 
       - name: Create ZIP for Windows and Linux
-        if: matrix.rid != 'osx-x64'
+        if: matrix.rid != 'osx-arm64'
         shell: pwsh
         run: |
           Compress-Archive `
@@ -226,4 +230,4 @@ jobs:
           files: |
             release-files/Quran-windows-x64.zip
             release-files/Quran-linux-x64.zip
-            release-files/Quran-macos-x64.zip
+            release-files/Quran-macos-arm64.zip

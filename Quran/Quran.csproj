@@ -81,10 +81,17 @@
 
         <PackageReference Include="LibVLCSharp" Version="3.10.1" />
 
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
         <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.*" />
+    </ItemGroup>
 
+    <ItemGroup Condition="'$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64'">
         <PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.*" />
+    </ItemGroup>
 
+    <ItemGroup>
 
         <!-- AI -->
 

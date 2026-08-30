@@ -7,45 +7,54 @@ namespace Quran.Helpers;
 
 public static class AudioHelper
 {
-    private static bool _isInitialized = false;
-    private static readonly LibVLC LibVlc;
-    private static readonly MediaPlayer MediaPlayer;
+    private static readonly LibVLC? LibVlc;
+    private static readonly MediaPlayer? MediaPlayer;
     private static Media? _currentMedia;
+
+    /// <summary>True when the native VLC libraries loaded successfully.</summary>
+    public static bool IsAvailable { get; private set; }
 
     static AudioHelper()
     {
-        if(_isInitialized) return;
         try
         {
             LibVlc = new LibVLC();
             MediaPlayer = new MediaPlayer(LibVlc);
             MediaPlayer.EndReached += (_, _) => { AudioEnded?.Invoke(); };
+            IsAvailable = true;
         }
-        finally{
-            _isInitialized = true;
+        catch
+        {
+            // Native VLC libraries are missing on this platform.
+            // Audio features will be silently disabled.
+            IsAvailable = false;
         }
     }
 
     public static TimeSpan CurrentPosition =>
-        TimeSpan.FromMilliseconds(
-            Math.Max(0, MediaPlayer.Time));
+        IsAvailable
+            ? TimeSpan.FromMilliseconds(Math.Max(0, MediaPlayer!.Time))
+            : TimeSpan.Zero;
 
     public static TimeSpan Duration =>
-        TimeSpan.FromMilliseconds(
-            Math.Max(0, MediaPlayer.Length));
+        IsAvailable
+            ? TimeSpan.FromMilliseconds(Math.Max(0, MediaPlayer!.Length))
+            : TimeSpan.Zero;
 
     public static double Position =>
-        MediaPlayer.Position * 100;
+        IsAvailable ? MediaPlayer!.Position * 100 : 0;
 
     public static bool IsPlaying =>
-        MediaPlayer.IsPlaying;
+        IsAvailable && MediaPlayer!.IsPlaying;
 
     public static int Volume
     {
-        get => MediaPlayer.Volume;
-
-        set => MediaPlayer.Volume =
-            Math.Clamp(value, 0, 100);
+        get => IsAvailable ? MediaPlayer!.Volume : 0;
+        set
+        {
+            if (IsAvailable)
+                MediaPlayer!.Volume = Math.Clamp(value, 0, 100);
+        }
     }
 
     public static event Action? AudioEnded;
@@ -55,31 +64,32 @@ public static class AudioHelper
         int verseId,
         string reciterName = "Al-Husary")
     {
+        if (!IsAvailable) return;
+
         StopAudio();
 
         var resourceName = $"{surahId:D3}{verseId:D3}.mp3";
         var audioPath = GetAudioFile(resourceName, reciterName);
 
-        _currentMedia = new Media(
-            LibVlc,
-            audioPath);
-
-        MediaPlayer.Play(_currentMedia);
+        _currentMedia = new Media(LibVlc!, audioPath);
+        MediaPlayer!.Play(_currentMedia);
     }
 
     public static void PauseAudio()
     {
-        if (MediaPlayer.IsPlaying) MediaPlayer.Pause();
+        if (IsAvailable && MediaPlayer!.IsPlaying) MediaPlayer.Pause();
     }
 
     public static void ResumeAudio()
     {
-        if (!MediaPlayer.IsPlaying) MediaPlayer.Play();
+        if (IsAvailable && !MediaPlayer!.IsPlaying) MediaPlayer.Play();
     }
 
     public static void StopAudio()
     {
-        MediaPlayer.Stop();
+        if (!IsAvailable) return;
+
+        MediaPlayer!.Stop();
 
         // Do not dispose here immediately.
         // LibVLC may still be finishing the previous media.
@@ -88,10 +98,10 @@ public static class AudioHelper
 
     public static void SeekAudio(double position)
     {
-        position = Math.Clamp(position, 0, 100);
+        if (!IsAvailable) return;
 
-        MediaPlayer.Position =
-            (float)(position / 100.0);
+        position = Math.Clamp(position, 0, 100);
+        MediaPlayer!.Position = (float)(position / 100.0);
     }
 
     private static string GetAudioFile(string resourceName, string reciterName)

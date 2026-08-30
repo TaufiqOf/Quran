@@ -32,14 +32,10 @@ public partial class QuranView : AView
                 () => ReaderComponent.Focus(),
                 DispatcherPriority.Loaded);
         };
-        try
-        {
+        if (AudioHelper.IsAvailable)
             AudioHelper.AudioEnded += AudioEnded;
-        }
-        catch (Exception e)
-        {
-            AudioComponent.PlayButton.IsEnabled = false;
-        }
+        else
+            AudioComponent.IsVisible = false;
     }
 
 

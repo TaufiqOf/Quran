@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Views;
@@ -16,6 +17,7 @@ public class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        RequestedThemeVariant = ThemeVariant.Dark;
     }
 
     public override void OnFrameworkInitializationCompleted()

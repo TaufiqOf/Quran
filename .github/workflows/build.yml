@@ -282,7 +282,27 @@ jobs:
   upload-release:
     name: Upload files to Release
     needs: [build-linux, build-windows, build-macos]
-
+    
     if: github.event_name == 'release'
-
-    runs-on: ubuntu-l
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: artifacts
+          merge-multiple: true
+  
+      - name: Display downloaded files
+        run: ls -lh artifacts/
+  
+      - name: Upload Artifacts to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/Quran-x86_64.AppImage
+            artifacts/Quran-windows-x64.zip
+            artifacts/Quran-macos-arm64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

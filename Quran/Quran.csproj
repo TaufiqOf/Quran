@@ -125,6 +125,8 @@
 
     <ItemGroup>
 
+        <AdditionalFiles Include="Views\MessageWindow.axaml" />
+
         <AdditionalFiles
                 Include="Views\Pages\HomeView.axaml"/>
 

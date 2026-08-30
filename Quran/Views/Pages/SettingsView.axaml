@@ -23,6 +23,7 @@
                     Text="Welcome to the Quran application."
                     FontSize="16"
                     HorizontalAlignment="Center" />
+                <Button Click="Button_OnClick"></Button>
 
             </StackPanel>
 

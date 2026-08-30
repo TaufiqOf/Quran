@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Quran.Views.CustomMessageWindow"
+        x:Name="Root"
+        Title="Message"
+        Width="500"
+        Height="300"
+        MinWidth="500"
+        CanMaximize="False"
+        CanMinimize="False"
+        MinHeight="300">
+
+    <Grid RowDefinitions="*,Auto"
+          RowSpacing="16">
+        
+        <Border Grid.Row="0"
+                Background="#252525"
+                BorderBrush="#4b4b4b"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="8">
+            <TextBox Text="{Binding Message, ElementName=Root}"
+                     IsReadOnly="True"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+        </Border>
+
+        <Button Grid.Row="1"
+                Content="Close"
+                Click="CloseButton_OnClick"
+                HorizontalAlignment="Right"
+                MinWidth="110" />
+    </Grid>
+</Window>

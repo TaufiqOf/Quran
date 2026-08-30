@@ -118,7 +118,7 @@
 
     <!-- macOS Apple Silicon -->
     <ItemGroup Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">
-        <PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.10.0" />
+        <PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.1.3.1" />
     </ItemGroup>
 
     <!-- ============================== -->

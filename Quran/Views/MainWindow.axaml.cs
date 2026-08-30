@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Quran.Helpers;
 using Quran.Views.Pages;
 
 namespace Quran.Views;
@@ -13,6 +14,12 @@ public partial class MainWindow : Window
 
         ShowPage("Home");
         EnableNavButtons("Home");
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SearchManager.RegisterSearcher();
     }
 
     private AView? CurrentPage { get; set; }

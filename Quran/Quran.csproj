@@ -28,6 +28,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </None>
+        <None Update="Storage\model1.onnx">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
 
     </ItemGroup>
 

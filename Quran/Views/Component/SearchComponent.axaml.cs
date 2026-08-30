@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
@@ -12,6 +16,10 @@ namespace Quran.Views.Component;
 
 public partial class SearchComponent : UserControl
 {
+    private readonly string[] _searchTerms = [];
+
+    private static readonly IBrush SearchHighlightBrush = new SolidColorBrush(Color.FromArgb(96, 54, 120, 212));
+
     private static readonly StyledProperty<Surah> SurahProperty =
         AvaloniaProperty.Register<SearchComponent, Surah>(
             nameof(Surah));
@@ -25,9 +33,10 @@ public partial class SearchComponent : UserControl
         InitializeComponent();
     }
 
-    public SearchComponent(Surah surah)
+    public SearchComponent(Surah surah, string? searchText = null)
         : this()
     {
+        _searchTerms = CreateSearchTerms(searchText);
         Surah = surah;
         VerseCount = $" Verses({surah.Verses.Count})";
     }
@@ -45,6 +54,156 @@ public partial class SearchComponent : UserControl
     }
 
     public event Action<Surah, Verse>? GoToVerseRequested;
+
+
+    private static string[] CreateSearchTerms(string? searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+            return [];
+
+        return searchText
+            .Split([' ', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(term => term.Trim())
+            .Where(term => term.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+
+    private void ApplyVerseHighlighting(Border border, Verse verse)
+    {
+        if (_searchTerms.Length == 0)
+            return;
+
+        if (border.Child is not Grid grid)
+            return;
+
+        var textBlocks = grid.Children.OfType<TextBlock>().ToArray();
+        if (textBlocks.Length < 3)
+            return;
+
+        SetHighlightedText(textBlocks[0], verse.Text);
+        SetHighlightedText(textBlocks[1], verse.Translation);
+        SetHighlightedText(textBlocks[2], verse.Transliteration);
+    }
+
+
+    private void SetHighlightedText(TextBlock? textBlock, string? text)
+    {
+        if (textBlock is null)
+            return;
+
+        if (string.IsNullOrEmpty(text))
+            return;
+
+        var inlines = textBlock.Inlines;
+        if (inlines is null)
+            return;
+
+        inlines.Clear();
+        textBlock.Text = string.Empty;
+
+        foreach (var inline in CreateHighlightedInlines(text))
+            inlines.Add(inline);
+    }
+
+
+    private IEnumerable<Inline> CreateHighlightedInlines(string text)
+    {
+        if (_searchTerms.Length == 0)
+        {
+            yield return new Run { Text = text };
+            yield break;
+        }
+
+        var ranges = new List<(int Start, int Length)>();
+
+        foreach (var term in _searchTerms)
+        {
+            var index = 0;
+
+            while ((index = text.IndexOf(term, index, StringComparison.OrdinalIgnoreCase)) >= 0)
+            {
+                ranges.Add((index, term.Length));
+                index += Math.Max(term.Length, 1);
+            }
+        }
+
+        if (ranges.Count == 0)
+        {
+            yield return new Run { Text = text };
+            yield break;
+        }
+
+        ranges.Sort((left, right) =>
+        {
+            var comparison = left.Start.CompareTo(right.Start);
+            return comparison != 0
+                ? comparison
+                : right.Length.CompareTo(left.Length);
+        });
+
+        var mergedRanges = new List<(int Start, int Length)>();
+
+        foreach (var range in ranges)
+        {
+            if (mergedRanges.Count == 0)
+            {
+                mergedRanges.Add(range);
+                continue;
+            }
+
+            var lastIndex = mergedRanges.Count - 1;
+            var lastRange = mergedRanges[lastIndex];
+            var lastEnd = lastRange.Start + lastRange.Length;
+            var currentEnd = range.Start + range.Length;
+
+            if (range.Start > lastEnd)
+            {
+                mergedRanges.Add(range);
+                continue;
+            }
+
+            mergedRanges[lastIndex] = (
+                lastRange.Start,
+                Math.Max(lastEnd, currentEnd) - lastRange.Start);
+        }
+
+        var position = 0;
+
+        foreach (var range in mergedRanges)
+        {
+            if (range.Start > position)
+            {
+                yield return new Run
+                {
+                    Text = text.Substring(position, range.Start - position)
+                };
+            }
+
+            var highlight = new Span
+            {
+                Background = SearchHighlightBrush,
+                FontWeight = FontWeight.SemiBold
+            };
+
+            highlight.Inlines.Add(new Run
+            {
+                Text = text.Substring(range.Start, range.Length)
+            });
+
+            yield return highlight;
+            position = range.Start + range.Length;
+        }
+
+        if (position < text.Length)
+        {
+            yield return new Run
+            {
+                Text = text.Substring(position)
+            };
+        }
+    }
 
 
     private ContextMenu CreateContextMenu(Verse verse)
@@ -247,5 +406,17 @@ public partial class SearchComponent : UserControl
             return;
 
         GoToVerseRequested?.Invoke(Surah, verse);
+    }
+
+
+    private void VerseBorder_OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Border border)
+            return;
+
+        if (border.DataContext is not Verse verse)
+            return;
+
+        ApplyVerseHighlighting(border, verse);
     }
 }

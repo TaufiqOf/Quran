@@ -185,6 +185,7 @@
                 <DataTemplate x:DataType="models:Verse">
                     <Border
                         Classes="verse"
+                        Loaded="VerseBorder_OnLoaded"
                         PointerPressed="InputElement_OnPointerPressed">
                         <Grid RowDefinitions="Auto,Auto,Auto,Auto">
                             <TextBlock

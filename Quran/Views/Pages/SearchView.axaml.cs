@@ -17,6 +17,23 @@ public partial class SearchView : AView
 {
     private readonly Timer _timer;
     private List<Surah> _results = new();
+    private Timer _messageTimer;
+
+    private readonly List<string> _searchTips = new()
+    {
+        "💡 Search Tips",
+        "🔍 Search for a word Example: Jesus",
+        "📖 Open a specific verse Example: 2:255",
+        "📚 Open a range of verses Example: 2:2-5",
+        "📖 Open an entire chapter Example: 112:",
+        "❓ Ask a question using ? Example: ? Who will go to Heaven?",
+        "🔎 Use multiple words to narrow your search Example: Jesus Mary",
+        "💡 Try different or simpler keywords if you don't find what you need.",
+        "📖 Verse format: Chapter:Verse Example: 2:255",
+        "📚 Verse range format: Chapter:Start-End Example: 2:2-5"
+    };
+
+    private readonly Random _random = new();
 
     public SearchView()
     {
@@ -26,6 +43,41 @@ public partial class SearchView : AView
         _timer.Interval = 1000;
         _timer.Stop();
         _timer.Elapsed += TimerOnElapsed;
+        _messageTimer = new Timer();
+        _messageTimer.Interval = 10000;
+        _messageTimer.Stop();
+        _messageTimer.Elapsed += MessageTimerOnElapsed;
+        SearchManager.SearcherRegistered += SearcherRegistered;
+        if (SearchManager.IsSearcherRegistered)
+        {
+            _messageTimer.Start();
+        }
+        else
+        {
+            MessageTextBlock.Text = "Context Search is not initialized yet. You can still search for verses by keywords, or reference (Chapter:Verse). For example, you can search for '2:255' or 'Jesus'.";
+        }
+    }
+
+    private void MessageTimerOnElapsed(object? sender, ElapsedEventArgs e)
+    {
+        var tip = _searchTips[_random.Next(_searchTips.Count)];
+        Application.Current?.Dispatcher.Invoke(() => { ShowMessage(tip); });
+    }
+
+    private void ShowMessage(string text)
+    {
+        MessageTextBlock.Classes.Remove("fade-in");
+        MessageTextBlock.Text = text;
+
+        // Re-add the class after removing it
+        MessageTextBlock.Classes.Add("fade-in");
+    }
+
+    private void SearcherRegistered()
+    {
+        MessageTextBlock.Classes.Add("fade-in");
+        MessageTextBlock.Text = "Context Search is now initialized. You can search for questions and get context-aware results. using the '?' prefix. For example, you can search for '? Who will go to Heaven?' or '2:255'.";
+        _messageTimer.Start();
     }
 
 
@@ -49,18 +101,22 @@ public partial class SearchView : AView
         _timer.Stop();
         Application.Current?.Dispatcher.Invoke(async () =>
         {
-            var searchText = SearchTextBox.Text;
+            var text = SearchTextBox.Text;
+            var searchText = text;
             var results = await SearchManager.PerformSearch(searchText);
             foreach (var item in SearchItemsControl.Items)
                 if (item is SearchComponent searchComponent)
                     DetachSearchComponentEvents(searchComponent);
-
+            _messageTimer.Stop();
+            ShowMessage("Search completed. Found " + results.Count + " results.");
+            _messageTimer.Start();
             _results = results;
             SearchItemsControl.Items.Clear();
 
             foreach (var surah in results)
             {
-                var searchComponent = new SearchComponent(surah);
+                var sText = text.Replace("?", string.Empty).Trim();
+                var searchComponent = new SearchComponent(surah, sText);
 
                 searchComponent.GoToVerseRequested += SearchComponentOnGoToVerseRequested;
                 searchComponent.CopyTranslationRequested += SearchComponentOnCopyTranslationRequested;

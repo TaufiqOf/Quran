@@ -22,7 +22,6 @@ public class App : Application
     {
         Dispatcher.UIThread.UnhandledException += OnUiThreadUnhandledException;
 
-        SearchManager.RegisterSearcher();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();

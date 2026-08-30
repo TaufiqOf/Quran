@@ -26,6 +26,26 @@
         <Style Selector="Button.copyButton:pressed">
             <Setter Property="Background" Value="#444444" />
         </Style>
+
+        <Style Selector="TextBlock.messageTextBlock">
+            <Setter Property="Foreground" Value="LightCoral" /> 
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="HorizontalAlignment" Value="Center" /> 
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="TextBlock.messageTextBlock.fade-in">
+            <Setter Property="Foreground" Value="Green" /> 
+            <Style.Animations>
+                <Animation Duration="0:0:0.4">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
         <!-- =============================== -->
         <!-- Search Container -->
         <!-- =============================== -->
@@ -63,7 +83,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="5" />
             <Setter Property="Watermark"
-                    Value="Search words (Jesus), verses (e.g. fati:1,2:2-5,112:), or ask a question using ? (e.g. ? Who will go to Heaven?)" />
+                    Value="Search words e.g (Jesus), verses (e.g. fati:1,2:2-5,112:), or ask a question using ? (e.g. ? Who will go to Heaven?)" />
         </Style>
 
         <!-- =============================== -->
@@ -83,8 +103,7 @@
     <!-- =============================== -->
     <!-- Main Layout -->
     <!-- =============================== -->
-
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*">
 
         <!-- =========================== -->
         <!-- Search Bar -->
@@ -125,20 +144,24 @@
                     <avalonia:FluentIcon
                         Icon="Copy"
                         FontSize="18" />
-
                 </Button>
-
             </Grid>
-
         </Border>
 
-
+        <!-- =========================== -->
+        <!-- Message -->
+        <!-- =========================== -->
+        <TextBlock
+            Grid.Row="1"
+            x:Name="MessageTextBlock"
+            Classes="messageTextBlock">
+        </TextBlock>
         <!-- =========================== -->
         <!-- Search Results -->
         <!-- =========================== -->
 
         <ScrollViewer
-            Grid.Row="1"
+            Grid.Row="2"
             x:Name="SearchScrollViewer"
             ScrollChanged="LinerScrollViewerOnScrollChanged"
             HorizontalScrollBarVisibility="Disabled"

@@ -21,14 +21,16 @@ jobs:
             os: windows-latest
             rid: win-x64
             artifact: Quran-windows-x64
+    
           - name: Linux x64
             os: ubuntu-latest
             rid: linux-x64
             artifact: Quran-linux-x64
-          - name: macOS x64
-            os: macos-13
-            rid: osx-x64
-            artifact: Quran-macos-x64
+    
+          - name: macOS ARM64
+            os: macos-latest
+            rid: osx-arm64
+            artifact: Quran-macos-arm64
 
     steps:
       - uses: actions/checkout@v4

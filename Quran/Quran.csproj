@@ -112,14 +112,6 @@
                           Version="3.10.1" />
 
     </ItemGroup>
-    <!-- Linux -->
-
-    <ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
-
-        <PackageReference Include="VideoLAN.LibVLC.Linux"
-                          Version="3.*" />
-
-    </ItemGroup>
 
     <!-- Windows -->
 

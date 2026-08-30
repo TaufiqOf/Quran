@@ -310,44 +310,6 @@ jobs:
           cp "$SOURCE"/onnxruntime.dylib "$DESTINATION/" 2>/dev/null || true
           cp "$SOURCE"/onnxruntime_providers_shared.dylib "$DESTINATION/" 2>/dev/null || true
 
-      - name: Include Linux LibVLC native runtime
-        if: matrix.rid == 'linux-x64'
-        shell: bash
-        run: |
-          if [ -n "$NUGET_PACKAGES" ]; then
-            NUGET_ROOT="$NUGET_PACKAGES"
-          else
-            NUGET_ROOT="$HOME/.nuget/packages"
-          fi
-
-          LIBVLC_PACKAGE=$(find "$NUGET_ROOT/videolan.libvlc.linux" \
-            -maxdepth 1 -type d | sort -V | tail -1)
-
-          if [ -z "$LIBVLC_PACKAGE" ] || [ ! -d "$LIBVLC_PACKAGE" ]; then
-            echo "ERROR: VideoLAN.LibVLC.Linux package not found"
-            exit 1
-          fi
-
-          SOURCE="$LIBVLC_PACKAGE/build/x64"
-          DESTINATION="artifacts/${{ matrix.artifact }}/libvlc/linux-x64"
-
-          if [ ! -d "$SOURCE" ]; then
-            echo "ERROR: LibVLC build directory not found"
-            exit 1
-          fi
-
-          mkdir -p "$DESTINATION"
-          cp -r "$SOURCE"/* "$DESTINATION/"
-
-          if [ ! -f "$DESTINATION/libvlc.so" ]; then
-            echo "ERROR: libvlc.so was not copied"
-            exit 1
-          fi
-
-          if [ ! -f "$DESTINATION/libvlccore.so" ]; then
-            echo "ERROR: libvlccore.so was not copied"
-            exit 1
-          fi
 
       - name: Verify Storage
         shell: pwsh

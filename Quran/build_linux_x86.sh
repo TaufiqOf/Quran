@@ -256,7 +256,7 @@ echo "==> Cleaning temporary files..."
 
 rm -rf "$PUBLISH_DIR"
 rm -rf "$APPDIR"
-
+rm -f "$APPIMAGETOOL"
 
 # ============================================================
 # Result

@@ -9,13 +9,7 @@ set -euo pipefail
 #     ./build-windows.sh
 #
 # Result:
-#     dist/windows/Quran.exe
-#
-# The executable is:
-#   - Windows x64
-#   - Self-contained
-#   - Single file
-#   - Includes the application icon
+#     dist/windows/Quran-windows-x64.zip
 # ============================================================
 
 APP_NAME="Quran"
@@ -25,11 +19,13 @@ CONFIGURATION="Release"
 FRAMEWORK="net10.0"
 
 # Application icon
+ICON_NAME="quran"
 ICON_FILE="Assets/Icons/quran.ico"
 
 OUTPUT_DIR="dist/windows"
 PUBLISH_DIR="$OUTPUT_DIR/publish"
-EXE_FILE="$OUTPUT_DIR/$APP_NAME.exe"
+EXE_FILE="$PUBLISH_DIR/$APP_NAME.exe"
+ZIP_FILE="$OUTPUT_DIR/${APP_NAME}-windows-x64.zip"
 
 echo
 echo "============================================================"
@@ -41,9 +37,16 @@ echo
 # Check prerequisites
 # ------------------------------------------------------------
 
-if ! command -v dotnet >/dev/null 2>&1; then
-    echo "ERROR: dotnet was not found."
-    echo "Install the .NET SDK first."
+MISSING_DEPS=()
+for cmd in dotnet wget unzip zip find cp rm mkdir; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        MISSING_DEPS+=("$cmd")
+    fi
+done
+
+if [ ${#MISSING_DEPS[@]} -ne 0 ]; then
+    echo "ERROR: Missing required utilities: ${MISSING_DEPS[*]}"
+    echo "Install missing tools (e.g., sudo apt install zip unzip wget)"
     exit 1
 fi
 
@@ -53,16 +56,10 @@ if [ ! -f "$PROJECT_FILE" ]; then
     exit 1
 fi
 
-# ------------------------------------------------------------
-# Check icon
-# ------------------------------------------------------------
-
 if [ ! -f "$ICON_FILE" ]; then
     echo
     echo "ERROR: Application icon was not found:"
     echo "  $ICON_FILE"
-    echo
-    echo "Create the icon first."
     exit 1
 fi
 
@@ -73,7 +70,6 @@ fi
 echo "==> Cleaning previous Windows build..."
 
 rm -rf "$OUTPUT_DIR"
-
 mkdir -p "$PUBLISH_DIR"
 
 # ------------------------------------------------------------
@@ -116,14 +112,12 @@ dotnet publish "$PROJECT_FILE" \
     -o "$PUBLISH_DIR"
 
 # ------------------------------------------------------------
-# Find the generated executable
+# Check generated executable
 # ------------------------------------------------------------
 
-GENERATED_EXE="$PUBLISH_DIR/$APP_NAME.exe"
-
-if [ ! -f "$GENERATED_EXE" ]; then
+if [ ! -f "$EXE_FILE" ]; then
     echo
-    echo "ERROR: $GENERATED_EXE was not created."
+    echo "ERROR: $EXE_FILE was not created."
     echo
     echo "Files generated:"
     find "$PUBLISH_DIR" -maxdepth 1 -type f -printf '  %f\n'
@@ -131,17 +125,77 @@ if [ ! -f "$GENERATED_EXE" ]; then
 fi
 
 # ------------------------------------------------------------
-# Move the single EXE to dist/windows
+# Download and Extract Native LibVLC DLLs into Publish Directory
 # ------------------------------------------------------------
 
-mv "$GENERATED_EXE" "$EXE_FILE"
+echo "==> Fetching native LibVLC Windows runtime binaries..."
 
-# Remove the publish directory.
-# The final output is intentionally only the EXE.
-rm -rf "$PUBLISH_DIR"
+LIBVLC_VERSION="3.0.21"
+LIBVLC_ZIP="$OUTPUT_DIR/vlc-${LIBVLC_VERSION}-win64.zip"
+LIBVLC_URL="https://get.videolan.org/vlc/${LIBVLC_VERSION}/win64/vlc-${LIBVLC_VERSION}-win64.zip"
+
+if [ ! -f "$LIBVLC_ZIP" ]; then
+    wget -q --show-progress -O "$LIBVLC_ZIP" "$LIBVLC_URL"
+fi
+
+# Extract native runtime DLLs and plugins directly into the publish folder alongside the .exe
+unzip -q -o "$LIBVLC_ZIP" "vlc-${LIBVLC_VERSION}/libvlc.dll" -d "$PUBLISH_DIR"
+unzip -q -o "$LIBVLC_ZIP" "vlc-${LIBVLC_VERSION}/libvlccore.dll" -d "$PUBLISH_DIR"
+unzip -q -o "$LIBVLC_ZIP" "vlc-${LIBVLC_VERSION}/plugins/*" -d "$PUBLISH_DIR"
+
+# Clean up nested directory if created by unzip
+if [ -d "$PUBLISH_DIR/vlc-${LIBVLC_VERSION}" ]; then
+    cp -r "$PUBLISH_DIR/vlc-${LIBVLC_VERSION}/." "$PUBLISH_DIR/"
+    rm -rf "$PUBLISH_DIR/vlc-${LIBVLC_VERSION}"
+fi
+
+rm -f "$LIBVLC_ZIP"
 
 # ------------------------------------------------------------
-# Show result
+# Create Windows First-Run Shortcut Script (.vbs)
+# ------------------------------------------------------------
+
+echo "==> Creating Windows shortcut installer script..."
+
+cat > "$OUTPUT_DIR/Create-Shortcut.vbs" <<'EOF'
+Set WshShell = CreateObject("WScript.Shell")
+strDesktop = WshShell.SpecialFolders("Desktop")
+strCurrentDir = WshShell.CurrentDirectory
+
+Set oShellLink = WshShell.CreateShortcut(strDesktop & "\Quran.lnk")
+oShellLink.TargetPath = strCurrentDir & "\publish\Quran.exe"
+oShellLink.WorkingDirectory = strCurrentDir & "\publish"
+oShellLink.IconLocation = strCurrentDir & "\quran.ico, 0"
+oShellLink.Description = "Launch Quran Application"
+oShellLink.Save
+
+MsgBox "Shortcut successfully created on your Desktop!", 64, "Quran Setup"
+EOF
+
+# ------------------------------------------------------------
+# Zip All Contents in Output Directory (with progress)
+# ------------------------------------------------------------
+
+echo "==> Packaging all contents of $OUTPUT_DIR into $ZIP_FILE..."
+
+# Create the ZIP file directly outside of OUTPUT_DIR to avoid I/O collision
+FINAL_ZIP_NAME="${APP_NAME}-windows-x64.zip"
+(cd "$OUTPUT_DIR" && zip -r "../$FINAL_ZIP_NAME" .)
+
+# Move the completed ZIP archive into OUTPUT_DIR location
+TEMP_ZIP="dist/$FINAL_ZIP_NAME"
+
+# ------------------------------------------------------------
+# Cleanup Everything Except the ZIP
+# ------------------------------------------------------------
+
+echo "==> Cleaning up build files and folders..."
+
+rm -rf "${OUTPUT_DIR:?}"/*
+mv "$TEMP_ZIP" "$ZIP_FILE"
+
+# ------------------------------------------------------------
+# Summary
 # ------------------------------------------------------------
 
 echo
@@ -149,25 +203,8 @@ echo "============================================================"
 echo " Build completed successfully!"
 echo "============================================================"
 echo
-
-echo "Windows executable:"
-echo "  $EXE_FILE"
-
+echo "Output Archive:"
+echo "  $ZIP_FILE"
 echo
-echo "Application icon:"
-echo "  $ICON_FILE"
-
-echo
-
-ls -lh "$EXE_FILE"
-
-echo
-echo "The executable is:"
-echo "  ✓ Self-contained"
-echo "  ✓ Single-file"
-echo "  ✓ Windows x64"
-echo "  ✓ Application icon embedded"
-echo
-echo "The executable does not require"
-echo "the .NET runtime to be installed on Windows."
+ls -lh "$ZIP_FILE"
 echo

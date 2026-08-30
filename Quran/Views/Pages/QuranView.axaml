@@ -56,11 +56,11 @@
                 <!-- Reading Mode -->
 
                 <ComboBox Grid.Column="0"
-                    x:Name="ModeComboBox"
-                    Classes="modeSelector"
-                    HorizontalAlignment="Stretch"
-                    SelectionChanged="SelectingItemsControl_OnSelectionChanged" />
-                
+                          x:Name="ModeComboBox"
+                          Classes="modeSelector"
+                          HorizontalAlignment="Stretch"
+                          SelectionChanged="SelectingItemsControl_OnSelectionChanged" />
+
                 <component:AudioComponent x:Name="AudioComponent" Grid.Column="1" />
 
                 <!-- Go To -->

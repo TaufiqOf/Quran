@@ -15,30 +15,27 @@ public class QuranEmbeddingIndexer(IEmbeddingService embeddingService)
         var embeddings = new List<VerseEmbedding>();
 
         foreach (var surah in surahs)
+        foreach (var verse in surah.Verses)
         {
-            foreach (var verse in surah.Verses)
+            var text =
+                EmbeddingTextBuilder.Build(
+                    surah,
+                    verse);
+
+            var vector =
+                await embeddingService
+                    .CreateEmbeddingAsync(
+                        text,
+                        cancellationToken);
+
+            embeddings.Add(new VerseEmbedding
             {
-                var text =
-                    EmbeddingTextBuilder.Build(
-                        surah,
-                        verse);
-
-                var vector =
-                    await embeddingService
-                        .CreateEmbeddingAsync(
-                            text,
-                            cancellationToken);
-
-                embeddings.Add(new VerseEmbedding
-                {
-                    SurahId = surah.Id,
-                    VerseId = verse.Id,
-                    Vector = vector
-                });
-            }
+                SurahId = surah.Id,
+                VerseId = verse.Id,
+                Vector = vector
+            });
         }
 
         return embeddings;
     }
-
 }

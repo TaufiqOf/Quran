@@ -15,9 +15,11 @@ public partial class SearchComponent : UserControl
     private static readonly StyledProperty<Surah> SurahProperty =
         AvaloniaProperty.Register<SearchComponent, Surah>(
             nameof(Surah));
+
     private static readonly StyledProperty<string> VerseCountProperty =
         AvaloniaProperty.Register<SearchComponent, string>(
             nameof(VerseCount));
+
     private SearchComponent()
     {
         InitializeComponent();

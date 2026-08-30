@@ -13,13 +13,16 @@ public sealed class LocalTokenizer : ITokenizer, IDisposable
     public LocalTokenizer(string tokenizerPath)
     {
         if (!File.Exists(tokenizerPath))
-        {
             throw new FileNotFoundException(
                 "Tokenizer file was not found.",
                 tokenizerPath);
-        }
 
         _tokenizer = Tokenizer.FromFile(tokenizerPath);
+    }
+
+    public void Dispose()
+    {
+        _tokenizer.Dispose();
     }
 
     public TokenizedInput Encode(
@@ -29,7 +32,7 @@ public sealed class LocalTokenizer : ITokenizer, IDisposable
         var encoding = _tokenizer
             .Encode(
                 text,
-                addSpecialTokens: true,
+                true,
                 includeTypeIds: true,
                 includeAttentionMask: true)
             .First();
@@ -49,10 +52,5 @@ public sealed class LocalTokenizer : ITokenizer, IDisposable
             InputIds = inputIds,
             AttentionMask = attentionMask
         };
-    }
-
-    public void Dispose()
-    {
-        _tokenizer.Dispose();
     }
 }

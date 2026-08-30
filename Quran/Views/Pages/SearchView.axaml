@@ -62,7 +62,8 @@
             <Setter Property="Foreground" Value="White" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="5" />
-            <Setter Property="Watermark" Value="Search words (Jesus), verses (e.g. fati:1,2:2-5,112:), or ask a question using ? (e.g. ? Who will go to Heaven?)" />
+            <Setter Property="Watermark"
+                    Value="Search words (Jesus), verses (e.g. fati:1,2:2-5,112:), or ask a question using ? (e.g. ? Who will go to Heaven?)" />
         </Style>
 
         <!-- =============================== -->

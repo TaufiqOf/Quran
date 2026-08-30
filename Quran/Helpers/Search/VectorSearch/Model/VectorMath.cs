@@ -9,10 +9,8 @@ public static class VectorMath
         float[] vectorB)
     {
         if (vectorA.Length != vectorB.Length)
-        {
             throw new ArgumentException(
                 "Vectors must have the same dimensions.");
-        }
 
         double dotProduct = 0;
         double magnitudeA = 0;
@@ -32,13 +30,10 @@ public static class VectorMath
 
         if (magnitudeA == 0 ||
             magnitudeB == 0)
-        {
             return 0;
-        }
 
         return dotProduct /
                (Math.Sqrt(magnitudeA) *
                 Math.Sqrt(magnitudeB));
     }
-
 }

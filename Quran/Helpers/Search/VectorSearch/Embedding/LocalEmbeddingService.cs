@@ -13,10 +13,9 @@ public sealed class LocalEmbeddingService :
     IEmbeddingService,
     IDisposable
 {
+    private const int MaxLength = 512;
     private readonly InferenceSession _session;
     private readonly ITokenizer _tokenizer;
-
-    private const int MaxLength = 512;
 
     public LocalEmbeddingService(
         string modelPath,
@@ -25,6 +24,13 @@ public sealed class LocalEmbeddingService :
         _tokenizer = tokenizer;
 
         _session = new InferenceSession(modelPath);
+    }
+
+    public void Dispose()
+    {
+        _session.Dispose();
+
+        if (_tokenizer is IDisposable disposable) disposable.Dispose();
     }
 
     public Task<float[]> CreateEmbeddingAsync(
@@ -109,32 +115,23 @@ public sealed class LocalEmbeddingService :
              token < sequenceLength;
              token++)
         {
-            if (attentionMask[token] == 0)
-            {
-                continue;
-            }
+            if (attentionMask[token] == 0) continue;
 
             validTokenCount++;
 
             for (var dimension = 0;
                  dimension < hiddenSize;
                  dimension++)
-            {
                 embedding[dimension] +=
                     output[0, token, dimension];
-            }
         }
 
         if (validTokenCount > 0)
-        {
             for (var i = 0;
                  i < embedding.Length;
                  i++)
-            {
                 embedding[i] /=
                     (float)validTokenCount;
-            }
-        }
 
         return embedding;
     }
@@ -144,32 +141,14 @@ public sealed class LocalEmbeddingService :
     {
         double sum = 0;
 
-        foreach (var value in vector)
-        {
-            sum += value * value;
-        }
+        foreach (var value in vector) sum += value * value;
 
         var magnitude = Math.Sqrt(sum);
 
-        if (magnitude == 0)
-        {
-            return;
-        }
+        if (magnitude == 0) return;
 
         for (var i = 0; i < vector.Length; i++)
-        {
             vector[i] =
                 (float)(vector[i] / magnitude);
-        }
-    }
-
-    public void Dispose()
-    {
-        _session.Dispose();
-
-        if (_tokenizer is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
     }
 }

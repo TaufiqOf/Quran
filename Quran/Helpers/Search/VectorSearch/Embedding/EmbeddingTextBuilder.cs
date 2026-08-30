@@ -17,6 +17,7 @@ public static class EmbeddingTextBuilder
     {
         return $"query: {query}";
     }
+
     public static string Build(
         Surah surah,
         Verse verse)

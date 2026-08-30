@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Quran.Helpers.Search;
+using Quran.Helpers;
 using Quran.Views;
 
 namespace Quran;

@@ -2,20 +2,20 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using Quran.Models;
 
 namespace Quran.Views.Component;
 
 public partial class AudioComponent : UserControl
 {
-    public event Action? PlayAction;
-    public event Action? PauseAction;
-    public event Action<double>? SeekAction;
     public AudioComponent()
     {
         InitializeComponent();
     }
-    
+
+    public event Action? PlayAction;
+    public event Action? PauseAction;
+    public event Action<double>? SeekAction;
+
     private void PlayButton_OnClick(
         object? sender,
         RoutedEventArgs e)

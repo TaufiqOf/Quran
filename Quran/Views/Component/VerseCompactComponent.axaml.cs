@@ -16,7 +16,7 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
         TextBlockTransliteration.Text = verse.Transliteration;
         TextBlockBookmark.Text = "\uf02e";
         TextBlockBookmark.IsVisible = IsBookMarked;
-        TextBlockVerseNumber.Text = $"Verse {Verse.Id}";
+        TextBlockVerseNumber.Text = $"Verse {Verse?.Id}";
     }
 
     public override void Dispose()
@@ -54,7 +54,7 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
     {
         TextBlockBookmark.Text = "\uf02e";
         TextBlockBookmark.IsVisible = IsBookMarked;
-        TextBlockVerseNumber.Text = $"Verse {Verse.Id}";
+        TextBlockVerseNumber.Text = $"Verse {Verse?.Id}";
     }
 
     public override void UpdateUi()

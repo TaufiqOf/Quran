@@ -17,7 +17,7 @@ public partial class ReaderComponent : UserControl, IDisposable
 
     private readonly List<AVerseComponent> _verseComponents = new();
     private ReaderMode _mode;
-    private Surah _surah;
+    private Surah? _surah;
     private IEnumerable<Verse> _verses = Array.Empty<Verse>();
 
     public ReaderComponent()
@@ -60,6 +60,7 @@ public partial class ReaderComponent : UserControl, IDisposable
         {
             Dispatcher.UIThread.Post(() =>
             {
+                if (_surah == null) return;
                 var topLevel = TopLevel.GetTopLevel(this);
                 ClearVerses();
                 if (mode == ReaderMode.Quranic)

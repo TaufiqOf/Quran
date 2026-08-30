@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -130,8 +131,8 @@ public partial class BookmarksView : AView
             DataManager.AddBookmark(bookmark);
 
         var verseComponent = VerseComponents.FirstOrDefault(q =>
-            q.Surah.Id == surah.Id &&
-            q.Verse.Id == verse.Id);
+            q.Surah?.Id == surah.Id &&
+            q.Verse?.Id == verse.Id);
 
         if (verseComponent is null)
             return;
@@ -141,15 +142,16 @@ public partial class BookmarksView : AView
         // Reset scroll after changing the filter
         LinerScrollViewer.Offset = new Vector(0, 0);
         _lastScrollOffset = new Vector(0, 0);
-        if (VerseComponents.Count(q => q.Surah.Id == CurrentSurahId) == 0)
+        if (VerseComponents.Count(q => q.Surah?.Id == CurrentSurahId) == 0)
         {
             // If no more verses in the current Surah, reset to All Surahs
             SurahComboBox.Items.Remove(SurahComboBox.Items.OfType<ComboBoxItem>()
-                .FirstOrDefault(q => (int)q.Tag == surah.Id));
+                .FirstOrDefault(q => (int)(q.Tag ?? throw new InvalidOperationException()) == surah.Id));
 
             CurrentSurahId = -1;
             SurahComboBox.SelectedItem =
-                SurahComboBox.Items.OfType<ComboBoxItem>().FirstOrDefault(q => (int)q.Tag == -1);
+                SurahComboBox.Items.OfType<ComboBoxItem>()
+                    .FirstOrDefault(q => (int)(q.Tag ?? throw new InvalidOperationException()) == -1);
             ApplySurahFilter(CurrentSurahId);
         }
     }
@@ -164,12 +166,12 @@ public partial class BookmarksView : AView
         var surah = verseComponent.Surah;
 
         DataManager.CurrentSurah = surah;
-        DataManager.CurrentVerseId = verseComponent.Verse.Id;
+        DataManager.CurrentVerseId = verseComponent.Verse?.Id;
 
         RequestGotoPage(
             "Quran",
             surah,
-            verseComponent.Verse.Id);
+            verseComponent.Verse?.Id);
     }
 
     private async void SurahComboBoxOnSelectionChanged(
@@ -218,7 +220,7 @@ public partial class BookmarksView : AView
         LinerItemsControl.Items.Clear();
         foreach (var verseComponent in VerseComponents)
             if (surahId == -1 ||
-                verseComponent.Surah.Id == surahId)
+                verseComponent.Surah?.Id == surahId)
                 LinerItemsControl.Items.Add(verseComponent);
     }
 

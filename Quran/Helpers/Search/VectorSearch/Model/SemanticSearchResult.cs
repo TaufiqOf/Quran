@@ -10,5 +10,4 @@ public class SemanticSearchResult
 
     public string Reference =>
         $"{SurahId}:{VerseId}";
-
 }

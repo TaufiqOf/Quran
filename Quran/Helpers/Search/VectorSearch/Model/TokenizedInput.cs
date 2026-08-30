@@ -9,5 +9,4 @@ public sealed class TokenizedInput
 
     public long[] AttentionMask { get; init; }
         = Array.Empty<long>();
-
 }

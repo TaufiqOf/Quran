@@ -11,45 +11,36 @@ namespace Quran.Helpers.Search.VectorSearch;
 
 public class VectorSearch : ISearch
 {
-    private QuranSemanticSearchService _quranSemanticSearchService;
-
-    private readonly List<Surah> _surahs;
     private readonly string _embeddingDataPath;
     private readonly string _modelPath;
+
+    private readonly List<Surah> _surahs;
     private readonly string _tokenizerPath;
-    private IEmbeddingService _embeddingService;
+    private IEmbeddingService? _embeddingService;
+    private QuranSemanticSearchService? _quranSemanticSearchService;
 
     public VectorSearch()
     {
-
         _embeddingDataPath =
             Path.Combine(
                 AppContext.BaseDirectory,
                 "Storage",
                 "embeddings.json");
 
-        _modelPath =
-            Path.Combine(
-                AppContext.BaseDirectory,
-                "Storage",
-                "model1.onnx");
-        _tokenizerPath =
-            Path.Combine(
-                AppContext.BaseDirectory,
-                "Storage",
-                "tokenizer.json");
-        var tokenizer = new LocalTokenizer(_tokenizerPath);
+        _modelPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "Storage",
+            "model1.onnx");
+
+        _tokenizerPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "Storage",
+            "tokenizer.json");
 
         _surahs =
             DataManager.Surahs;
-        
-        _embeddingService =
-            new LocalEmbeddingService(
-                _modelPath,
-                tokenizer);
-
     }
-    
+
     public async Task InitializeAsync()
     {
         // if (!File.Exists(_embeddingDataPath))
@@ -60,6 +51,12 @@ public class VectorSearch : ISearch
         //         _tokenizerPath,
         //         _embeddingDataPath);
         // }
+        var tokenizer = new LocalTokenizer(_tokenizerPath);
+
+        _embeddingService =
+            new LocalEmbeddingService(
+                _modelPath,
+                tokenizer);
 
         var embeddings =
             await EmbeddingStorage.LoadAsync(
@@ -69,15 +66,12 @@ public class VectorSearch : ISearch
             new QuranSemanticSearchService(
                 _embeddingService,
                 embeddings);
-
     }
+
     public bool GetSearchMode(
         string searchText)
     {
-        if (string.IsNullOrWhiteSpace(searchText))
-        {
-            return false;
-        }
+        if (string.IsNullOrWhiteSpace(searchText)) return false;
 
         return searchText.StartsWith(
             "?",
@@ -87,12 +81,11 @@ public class VectorSearch : ISearch
     public List<Surah> PerformSearch(
         string searchText)
     {
+        if (_quranSemanticSearchService == null)
+            throw new InvalidOperationException("Search service is not initialized.");
         var query = searchText.Trim();
 
-        if (query.StartsWith("?"))
-        {
-            query = query[1..].Trim();
-        }
+        if (query.StartsWith("?")) query = query[1..].Trim();
 
         var results =
             _quranSemanticSearchService
@@ -114,18 +107,12 @@ public class VectorSearch : ISearch
             var originalSurah =
                 _surahs.FirstOrDefault(s => s.Id == result.SurahId);
 
-            if (originalSurah == null)
-            {
-                continue;
-            }
+            if (originalSurah == null) continue;
 
             var originalVerse =
                 originalSurah.Verses.FirstOrDefault(v => v.Id == result.VerseId);
 
-            if (originalVerse == null)
-            {
-                continue;
-            }
+            if (originalVerse == null) continue;
 
             if (!resultSurahs.TryGetValue(
                     originalSurah.Id,

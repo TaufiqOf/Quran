@@ -30,10 +30,7 @@ public static class EmbeddingStorage
     public static async Task<List<VerseEmbedding>> LoadAsync(
         string filePath)
     {
-        if (!File.Exists(filePath))
-        {
-            return new List<VerseEmbedding>();
-        }
+        if (!File.Exists(filePath)) return new List<VerseEmbedding>();
 
         var json =
             await File.ReadAllTextAsync(filePath);
@@ -42,5 +39,4 @@ public static class EmbeddingStorage
                    List<VerseEmbedding>>(json)
                ?? new List<VerseEmbedding>();
     }
-
 }

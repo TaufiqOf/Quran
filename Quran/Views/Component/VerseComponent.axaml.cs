@@ -61,9 +61,9 @@ public partial class VerseComponent : AVerseComponent, IDisposable
         TextBlockBookmark.Text = "\uf02e";
         TextBlockBookmark.IsVisible = IsBookMarked;
         if (_showSurah)
-            TextBlockVerseNumber.Text = $"{Surah.Id}. {Surah.Transliteration} Verse {Verse.Id}";
+            TextBlockVerseNumber.Text = $"{Surah?.Id}. {Surah?.Transliteration} Verse {Verse?.Id}";
         else
-            TextBlockVerseNumber.Text = $"Verse {Verse.Id}";
+            TextBlockVerseNumber.Text = $"Verse {Verse?.Id}";
     }
 
     public override void UpdateUi()

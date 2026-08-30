@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -100,10 +99,7 @@ public partial class QuranView : AView
         DataManager.CurrentVerseId = verseId;
         ScrollToVerse(verseId);
         UpdateSelectedVerse(verseId);
-        if(AudioHelper.IsPlaying)
-        {
-            AudioHelper.PlayAudio(DataManager.CurrentSurah?.Id ?? 1, verseId);
-        }
+        if (AudioHelper.IsPlaying) AudioHelper.PlayAudio(DataManager.CurrentSurah?.Id ?? 1, verseId);
     }
 
 
@@ -135,7 +131,10 @@ public partial class QuranView : AView
 
     private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        ReaderComponent.Mode = Enum.Parse<ReaderMode>(ModeComboBox.SelectionBoxItem.ToString());
+        var selectedItem = ModeComboBox?.SelectedItem?.ToString();
+        if (string.IsNullOrEmpty(selectedItem))
+            return;
+        ReaderComponent.Mode = Enum.Parse<ReaderMode>(selectedItem);
     }
 
 
@@ -176,7 +175,7 @@ public partial class QuranView : AView
                 GotoComponent.VerseSelectedIndex = nextVerseId;
                 ScrollToVerse(nextVerseId);
                 UpdateSelectedVerse(nextVerseId);
-                AudioHelper.PlayAudio(currentSurah.Id,nextVerseId);
+                AudioHelper.PlayAudio(currentSurah.Id, nextVerseId);
                 return;
             }
 
@@ -203,7 +202,7 @@ public partial class QuranView : AView
 
             GotoComponent.VerseSelectedIndex = 1;
 
-            ReaderComponent.LoadCard(nextSurah,_surahSynopsis.FirstOrDefault(s => s.SurahId == nextSurah.Id));
+            ReaderComponent.LoadCard(nextSurah, _surahSynopsis.FirstOrDefault(s => s.SurahId == nextSurah.Id));
             ReaderComponent.ClearVerses();
             ReaderComponent.AddVerses(nextSurah.Verses);
             ScrollToVerse(1);

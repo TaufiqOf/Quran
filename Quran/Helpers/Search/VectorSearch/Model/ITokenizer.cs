@@ -6,4 +6,3 @@ public interface ITokenizer
         string text,
         int maxLength);
 }
-

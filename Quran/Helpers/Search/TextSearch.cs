@@ -20,10 +20,7 @@ public class TextSearch : ISearch
 
     public List<Surah> PerformSearch(string searchText)
     {
-        if (string.IsNullOrWhiteSpace(searchText))
-        {
-            return new List<Surah>();
-        }
+        if (string.IsNullOrWhiteSpace(searchText)) return new List<Surah>();
 
         var words = searchText
             .Split(
@@ -60,5 +57,4 @@ public class TextSearch : ISearch
             .Where(s => s.Verses.Count > 0)
             .ToList();
     }
-
 }

@@ -148,7 +148,7 @@
                         Grid.Column="1"
                         Classes="surahName"
                         Text="{Binding Surah.Name, ElementName=Root}" />
-                    
+
                     <TextBlock
                         Grid.Column="2"
                         Classes="surahTranslation"

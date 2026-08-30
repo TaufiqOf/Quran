@@ -8,7 +8,6 @@ using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Quran.Helpers;
-using Quran.Helpers.Search;
 using Quran.Models;
 using Quran.Views.Component;
 

@@ -15,7 +15,14 @@ public abstract class AVerseComponent : UserControl, IDisposable
     public delegate void VerseContextMenuEventHandler(Verse verse);
 
     public delegate void VerseSelectedEventHandler(Verse verse);
-
+    
+    public event Action<Verse>? PlayVerseRequested;
+    public event Action<Verse, Surah>? BookmarkVerseRequested;
+    public event Action<Verse>? CopyVerseRequested;
+    public event Action<Verse>? CopyTranslationRequested;
+    public event Action<Verse>? CopyAllRequested;
+    public event Action<Verse>? CopyTransliterationRequested;
+    
     public static readonly StyledProperty<bool> IsSelectedProperty =
         AvaloniaProperty.Register<AVerseComponent, bool>(
             nameof(IsSelected));
@@ -219,14 +226,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
     }
 
 
-    public event Action<Verse>? PlayVerseRequested;
 
-    public event Action<Verse, Surah>? BookmarkVerseRequested;
-
-    public event Action<Verse>? CopyVerseRequested;
-    public event Action<Verse>? CopyTranslationRequested;
-    public event Action<Verse>? CopyAllRequested;
-    public event Action<Verse>? CopyTransliterationRequested;
 
     public abstract void VerseBookMark();
 

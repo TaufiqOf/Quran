@@ -21,6 +21,9 @@ public partial class QuranView : AView
     public QuranView()
     {
         InitializeComponent();
+        AudioComponent.PlayAction +=  PlayCurrentVerse;
+        AudioComponent.PauseAction +=  PauseCurrentVerse;
+        AudioComponent.SeekAction +=  SeekCurrentVerse;
         foreach (var value in Enum.GetValues(typeof(ReaderMode))) ModeComboBox.Items.Add(value.ToString());
         ModeComboBox.SelectedIndex = 0;
         AttachedToVisualTree += (_, _) =>
@@ -30,6 +33,8 @@ public partial class QuranView : AView
                 DispatcherPriority.Loaded);
         };
     }
+
+
 
     public override Task Load(params object?[] parameter)
     {
@@ -132,5 +137,20 @@ public partial class QuranView : AView
     private void ReaderComponent_OnKeyDown(object? sender, KeyEventArgs e)
     {
         GotoComponent.SetFocusOnVerse();
+    }
+    
+    private void SeekCurrentVerse(double position)
+    {
+        
+    }
+
+    private void PauseCurrentVerse()
+    {
+        
+    }
+
+    private void PlayCurrentVerse()
+    {
+        
     }
 }

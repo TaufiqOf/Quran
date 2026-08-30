@@ -22,7 +22,7 @@
         <!-- =============================== -->
 
         <Style Selector="ComboBox.modeSelector">
-            <Setter Property="MinWidth" Value="180" />
+            <Setter Property="MinWidth" Value="120" />
             <Setter Property="Height" Value="38" />
             <Setter Property="Margin" Value="0,5,10,0" />
         </Style>
@@ -51,22 +51,23 @@
             Grid.Row="0"
             Classes="topBar">
 
-            <Grid ColumnDefinitions="*,Auto">
+            <Grid ColumnDefinitions="Auto,*,Auto">
 
                 <!-- Reading Mode -->
 
-                <ComboBox
+                <ComboBox Grid.Column="0"
                     x:Name="ModeComboBox"
                     Classes="modeSelector"
                     HorizontalAlignment="Stretch"
                     SelectionChanged="SelectingItemsControl_OnSelectionChanged" />
-
+                
+                <component:AudioComponent x:Name="AudioComponent" Grid.Column="1" />
 
                 <!-- Go To -->
 
                 <component:GotoComponent
                     x:Name="GotoComponent"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Margin="10,0,0,0"
                     SurahSelected="GotoComponent_OnSurahSelected"
                     VerseSelected="GotoComponent_OnVerseSelected" />

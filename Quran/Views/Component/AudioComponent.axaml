@@ -1,0 +1,84 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="using:FluentIcons.Avalonia"
+    x:Class="Quran.Views.Component.AudioComponent">
+
+    <UserControl.Styles>
+
+        <Style Selector="Label.audioLabel">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="8,0,6,0" />
+        </Style>
+
+        <Style Selector="Button.audioButton">
+            <Setter Property="Width" Value="38" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Slider.progressSlider">
+            <Setter Property="Margin" Value="5,0,5,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <Grid
+        Height="48"
+        VerticalAlignment="Center"
+        ColumnDefinitions="38,38,*,Auto">
+
+        <!-- Play -->
+
+        <Button
+            Grid.Column="0"
+            x:Name="PlayButton"
+            Classes="audioButton"
+            ToolTip.Tip="Play"
+            Click="PlayButton_OnClick">
+
+            <avalonia:SymbolIcon
+                x:Name="PlayIcon"
+                Symbol="Play"
+                FontSize="18" />
+
+        </Button>
+
+
+        <!-- Pause -->
+
+        <Button
+            Grid.Column="1"
+            x:Name="PauseButton"
+            Classes="audioButton"
+            ToolTip.Tip="Pause"
+            IsEnabled="False"
+            Click="PauseButton_OnClick">
+
+            <avalonia:SymbolIcon
+                Symbol="Pause"
+                FontSize="18" />
+        </Button>
+
+        <Slider
+            Grid.Column="2"
+            x:Name="ProgressSlider"
+            Classes="progressSlider"
+            Minimum="0"
+            Maximum="100"
+            ValueChanged="ProgressSlider_OnValueChanged" />
+
+        <!-- Current Time -->
+
+        <Label
+            Grid.Column="3"
+            x:Name="CurrentTimeLabel"
+            Classes="audioLabel"
+            Content="00:00" />
+    </Grid>
+</UserControl>

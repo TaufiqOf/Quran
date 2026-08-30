@@ -23,9 +23,7 @@
         <AvaloniaResource Include="Assets\**" />
         <AvaloniaResource Include="Data\**" />
         <None Update="Storage\embeddings.json">
-            <CopyToOutputDirectory>
-                PreserveNewest
-            </CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Storage\model1.onnx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

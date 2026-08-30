@@ -14,7 +14,7 @@ public class QuranSemanticSearchService(
 {
     public async Task<List<SemanticSearchResult>> SearchAsync(
         string query,
-        int maxResults = 50,
+        int maxResults = 100,
         CancellationToken cancellationToken = default)
     {
         var queryText =

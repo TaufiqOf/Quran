@@ -12,7 +12,7 @@
         Title="Quran">
 
 
-    <Grid ColumnDefinitions="250,*" Background="#2e2e33">
+    <Grid ColumnDefinitions="200,*" Background="#2e2e33">
 
         <!-- ================= SIDEBAR ================= -->
 

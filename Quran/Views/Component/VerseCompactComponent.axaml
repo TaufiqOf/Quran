@@ -15,7 +15,7 @@
             <Setter Property="CornerRadius" Value="6,6,6,6" />
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="Padding" Value="5,5" />
-            <Setter Property="Margin" Value="2,2" />
+            <Setter Property="Margin" Value="2,0,2,0" />
         </Style>
 
         <!-- Selected verse -->

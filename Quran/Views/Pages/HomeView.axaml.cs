@@ -16,6 +16,7 @@ public partial class HomeView : AView
     private List<SurahSynopsis> _surahSynopsis = new();
     private IEnumerable<Surah> _surahs = new List<Surah>();
     private Dictionary<int, SurahSynopsis> _synopsisLookup = new();
+    private int? _selectedSurahId;
 
     public HomeView()
     {
@@ -55,7 +56,7 @@ public partial class HomeView : AView
                 }
 
                 _isLoaded = true;
-
+                if(_selectedSurahId == DataManager.CurrentVerseId) return;
                 if (DataManager.CurrentSurah is not null)
                 {
                     var index = _surahs.ToList().FindIndex(q => q.Id == DataManager.CurrentSurah.Id);
@@ -100,7 +101,9 @@ public partial class HomeView : AView
 
     private void SelectCard(CardComponent card)
     {
-        foreach (var c in Cards) c.IsSelected = c.Surah?.Id == card.Surah?.Id;
+        if (card?.Surah?.Id == _selectedSurahId) return;
+        _selectedSurahId = card?.Surah?.Id;
+        foreach (var c in Cards) c.IsSelected = c.Surah?.Id == card?.Surah?.Id;
         var index = Cards.IndexOf(card);
         Dispatcher.UIThread.Post(() => { SurahRepeater.ScrollIntoView(index); }, DispatcherPriority.Loaded);
     }

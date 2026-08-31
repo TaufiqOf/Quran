@@ -50,10 +50,15 @@ public partial class SearchView : AView
         _messageTimer.Elapsed += MessageTimerOnElapsed;
         SearchManager.SearcherRegistered += SearcherRegistered;
         if (SearchManager.IsSearcherRegistered)
+        {
+            MessageTimerOnElapsed(null, null);
             _messageTimer.Start();
+        }
         else
+        {
             MessageTextBlock.Text =
                 "Context Search is not initialized yet. You can still search for verses by keywords, or reference (Chapter:Verse). For example, you can search for '2:255' or 'Jesus'.";
+        }
     }
 
     private void MessageTimerOnElapsed(object? sender, ElapsedEventArgs e)

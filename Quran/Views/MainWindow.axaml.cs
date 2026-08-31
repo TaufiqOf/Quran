@@ -27,7 +27,7 @@ public partial class MainWindow : Window
     {
         base.OnInitialized();
 
-        //_ = Task.Run(async () => { await SearchManager.RegisterSearcher(); });
+        _ = Task.Run(async () => { await SearchManager.RegisterSearcher(); });
     }
 
     private void NavButton_OnClick(object? sender, RoutedEventArgs e)

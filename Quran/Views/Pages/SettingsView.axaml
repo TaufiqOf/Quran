@@ -82,6 +82,21 @@
                 <TextBlock Classes="sectionSubtitle"
                            Text="This updates surah translations across the app." />
 
+                <TextBlock Classes="fieldLabel"
+                           Text="Preferred Reader View" />
+
+                <ComboBox x:Name="ReaderModeComboBox"
+                          Classes="settingsInput"
+                          SelectedIndex="0">
+                    <ComboBoxItem Content="Quranic" Tag="Quranic" />
+                    <ComboBoxItem Content="Linear" Tag="Linear" />
+                    <ComboBoxItem Content="Compact" Tag="Compact" />
+                    <ComboBoxItem Content="Translation" Tag="Translation" />
+                </ComboBox>
+
+                <TextBlock Classes="sectionSubtitle"
+                           Text="Choose your default Quran reading view." />
+
                 <Button Classes="primaryAction"
                         Content="Save Preferences"
                         Click="Button_OnClick" />

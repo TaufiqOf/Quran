@@ -9,19 +9,28 @@ namespace Quran.Helpers;
 
 public static class DataManager
 {
-    private static readonly string bookmarkFilePath =
+    private static readonly string BookmarkFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");
+
     private static readonly string SettingsFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "quran_settings.json");
 
     static DataManager()
     {
-        if (!File.Exists(bookmarkFilePath)) File.WriteAllText(bookmarkFilePath, "[]");
+        if (!File.Exists(BookmarkFilePath)) File.WriteAllText(BookmarkFilePath, "[]");
         // Load Surahs and Surah Orders on initialization
         Bookmarks = GetBookmarks();
         LoadSurahs(LoadLanguagePreference());
     }
-    
+
+    public static List<Surah> Surahs { get; private set; } = new();
+    public static List<SurahOrder> SurahOrders { get; private set; } = new();
+    public static List<SurahSynopsis> SurahSynopses { get; private set; } = new();
+
+    public static Surah? CurrentSurah { get; set; }
+    public static int? CurrentVerseId { get; set; }
+
+    public static List<Bookmark> Bookmarks { get; }
 
     public static void LoadSurahs(string language = "en")
     {
@@ -47,26 +56,16 @@ public static class DataManager
         }
     }
 
-    public static List<Surah> Surahs { get; set; }
-    public static List<SurahOrder> SurahOrders { get; private set; }
-    public static List<SurahSynopsis> SurahSynopses { get; private set; }
-
-
-    public static Surah? CurrentSurah { get; set; }
-    public static int? CurrentVerseId { get; set; }
-
-    public static List<Bookmark> Bookmarks { get; }
-
     public static List<Surah> GetSurahs(string language)
     {
         var json = JsonReader.ReadStringFromResource($"quran_{language}.json");
-        return JsonReader.ReadJsonList<Surah>(json) ?? new List<Surah>();
+        return JsonReader.ReadJsonList<Surah>(json);
     }
 
     public static List<Surah> GetSurahTransliterations()
     {
         var json = JsonReader.ReadStringFromResource("quran_transliteration.json");
-        return JsonReader.ReadJsonList<Surah>(json) ?? new List<Surah>();
+        return JsonReader.ReadJsonList<Surah>(json);
     }
 
     public static Surah GetSurahById(int surahId)
@@ -89,8 +88,8 @@ public static class DataManager
 
     public static List<Bookmark> GetBookmarks()
     {
-        var json = File.ReadAllText(bookmarkFilePath);
-        return JsonReader.ReadJsonList<Bookmark>(json) ?? new List<Bookmark>();
+        var json = File.ReadAllText(BookmarkFilePath);
+        return JsonReader.ReadJsonList<Bookmark>(json);
     }
 
     public static bool IsBookmarked(int surahId, int verseId)
@@ -117,17 +116,14 @@ public static class DataManager
     public static void SaveBookmarks(List<Bookmark> bookmarks)
     {
         var json = JsonSerializer.Serialize(bookmarks);
-        File.WriteAllText(bookmarkFilePath, json);
+        File.WriteAllText(BookmarkFilePath, json);
     }
-    
+
     public static string LoadLanguagePreference()
     {
         try
         {
-            if (!File.Exists(SettingsFilePath))
-            {
-                return "en";
-            }
+            if (!File.Exists(SettingsFilePath)) return "en";
 
             var json = File.ReadAllText(SettingsFilePath);
             var settings = JsonSerializer.Deserialize<AppSettings>(json);
@@ -141,7 +137,50 @@ public static class DataManager
 
     public static void SaveLanguagePreference(string languageCode)
     {
-        var settings = new AppSettings { Language = languageCode };
+        var settings = LoadAppSettings();
+        settings.Language = languageCode;
+        SaveAppSettings(settings);
+    }
+
+    public static string LoadReaderModePreference()
+    {
+        try
+        {
+            if (!File.Exists(SettingsFilePath)) return "Compact";
+
+            var settings = LoadAppSettings();
+            return string.IsNullOrWhiteSpace(settings?.ReaderMode) ? "Compact" : settings.ReaderMode;
+        }
+        catch
+        {
+            return "Compact";
+        }
+    }
+
+    public static void SaveReaderModePreference(string readerMode)
+    {
+        var settings = LoadAppSettings();
+        settings.ReaderMode = readerMode;
+        SaveAppSettings(settings);
+    }
+
+    private static AppSettings LoadAppSettings()
+    {
+        try
+        {
+            if (!File.Exists(SettingsFilePath)) return new AppSettings();
+
+            var json = File.ReadAllText(SettingsFilePath);
+            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+        }
+        catch
+        {
+            return new AppSettings();
+        }
+    }
+
+    private static void SaveAppSettings(AppSettings settings)
+    {
         var json = JsonSerializer.Serialize(settings);
         File.WriteAllText(SettingsFilePath, json);
     }

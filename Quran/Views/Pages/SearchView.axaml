@@ -29,6 +29,7 @@
 
         <Style Selector="TextBlock.messageTextBlock">
             <Setter Property="Foreground" Value="LightCoral" />
+            <Setter Property="Height" Value="20" />
             <Setter Property="FontSize" Value="10" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Opacity" Value="1" />
@@ -162,6 +163,8 @@
         <ScrollViewer
             Grid.Row="2"
             x:Name="SearchScrollViewer"
+            BorderBrush="#3A3A3A"
+            BorderThickness="2"
             ScrollChanged="LinerScrollViewerOnScrollChanged"
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">

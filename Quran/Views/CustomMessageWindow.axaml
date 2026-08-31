@@ -39,7 +39,7 @@
 
     </Window.Styles>
 
-    <Border Margin="5" >
+    <Border Margin="5">
         <Grid RowDefinitions="*,Auto"
               RowSpacing="14">
 

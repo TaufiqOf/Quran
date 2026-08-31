@@ -53,6 +53,14 @@ public partial class QuranView : AView
             _isLoaded = true;
         }
 
+        // Load preferred reader mode
+        var preferredReaderMode = DataManager.LoadReaderModePreference();
+        if (Enum.TryParse<ReaderMode>(preferredReaderMode, out var readerMode))
+        {
+            ModeComboBox.SelectedIndex = (int)readerMode;
+            ReaderComponent.Mode = readerMode;
+        }
+
         if (parameter.Length == 0 || parameter[0] is null)
         {
             if (DataManager.CurrentSurah is not null)

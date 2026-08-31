@@ -13,11 +13,11 @@ public class VectorSearch : ISearch
 {
     private readonly string _embeddingDataPath;
     private readonly string _modelPath;
-
-    private List<Surah> _surahs;
     private readonly string _tokenizerPath;
     private IEmbeddingService? _embeddingService;
     private QuranSemanticSearchService? _quranSemanticSearchService;
+
+    private List<Surah> _surahs;
 
     public VectorSearch()
     {
@@ -37,8 +37,6 @@ public class VectorSearch : ISearch
             AppContext.BaseDirectory,
             "Storage",
             "tokenizer.json");
-
-
     }
 
     public async Task InitializeAsync()

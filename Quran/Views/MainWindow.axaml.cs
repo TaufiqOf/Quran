@@ -73,10 +73,7 @@ public partial class MainWindow : Window
 
     private void ReloadRequested()
     {
-        foreach (var keyValuePair in Pages)
-        {
-            keyValuePair.Value.Reload();
-        }
+        foreach (var keyValuePair in Pages) keyValuePair.Value.Reload();
     }
 
     private void EnableNavButtons(string pageName = "")

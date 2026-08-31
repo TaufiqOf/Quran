@@ -31,10 +31,7 @@ public partial class HomeView : AView
             // Detach source first; mutating the same List while it's still bound can break repeater bookkeeping.
             SurahRepeater.ItemsSource = null;
 
-            foreach (var existingCard in Cards)
-            {
-                existingCard.CardClick -= Card_CardClick;
-            }
+            foreach (var existingCard in Cards) existingCard.CardClick -= Card_CardClick;
 
             Cards.Clear();
             _surahs = DataManager.Surahs;
@@ -92,10 +89,7 @@ public partial class HomeView : AView
     private void GotoComponent_OnSurahSelected(Surah surah)
     {
         var card = Cards.FirstOrDefault(c => c.Surah?.Id == surah.Id);
-        if (card != null)
-        {
-            Application.Current?.Dispatcher.Invoke(() => { SelectCard(card); });
-        }
+        if (card != null) Application.Current?.Dispatcher.Invoke(() => { SelectCard(card); });
     }
 
     private void SelectCard(CardComponent card)

@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -10,7 +8,6 @@ namespace Quran.Views.Pages;
 
 public partial class SettingsView : AView
 {
-  
     public SettingsView()
     {
         InitializeComponent();
@@ -20,6 +17,9 @@ public partial class SettingsView : AView
     {
         var languageCode = DataManager.LoadLanguagePreference();
         SelectLanguage(languageCode);
+
+        var readerMode = DataManager.LoadReaderModePreference();
+        SelectReaderMode(readerMode);
         await Task.CompletedTask;
     }
 
@@ -38,18 +38,24 @@ public partial class SettingsView : AView
             return;
         }
 
+        var selectedReaderMode = GetSelectedReaderMode();
+        if (string.IsNullOrWhiteSpace(selectedReaderMode))
+        {
+            MessageHelper.ShowMessage("Settings", "Please select a reader view.");
+            return;
+        }
+
         DataManager.SaveLanguagePreference(selectedLanguage);
+        DataManager.SaveReaderModePreference(selectedReaderMode);
         DataManager.LoadSurahs(selectedLanguage);
         ReloadRequested?.Invoke();
-        MessageHelper.ShowMessage("Settings Saved", "Your language preference has been saved.");
+        MessageHelper.ShowMessage("Settings Saved", "Your preferences have been saved.");
     }
 
     private string GetSelectedLanguageCode()
     {
         if (LanguageComboBox.SelectedItem is ComboBoxItem comboBoxItem && comboBoxItem.Tag is string languageCode)
-        {
             return languageCode;
-        }
 
         return "en";
     }
@@ -57,19 +63,34 @@ public partial class SettingsView : AView
     private void SelectLanguage(string languageCode)
     {
         for (var i = 0; i < LanguageComboBox.ItemCount; i++)
-        {
             if (LanguageComboBox.Items[i] is ComboBoxItem item && item.Tag is string code &&
                 string.Equals(code, languageCode, StringComparison.OrdinalIgnoreCase))
             {
                 LanguageComboBox.SelectedIndex = i;
                 return;
             }
-        }
 
         LanguageComboBox.SelectedIndex = 0;
     }
 
-    
+    private string GetSelectedReaderMode()
+    {
+        if (ReaderModeComboBox.SelectedItem is ComboBoxItem comboBoxItem && comboBoxItem.Tag is string readerMode)
+            return readerMode;
 
-  
+        return "Compact";
+    }
+
+    private void SelectReaderMode(string readerMode)
+    {
+        for (var i = 0; i < ReaderModeComboBox.ItemCount; i++)
+            if (ReaderModeComboBox.Items[i] is ComboBoxItem item && item.Tag is string mode &&
+                string.Equals(mode, readerMode, StringComparison.OrdinalIgnoreCase))
+            {
+                ReaderModeComboBox.SelectedIndex = i;
+                return;
+            }
+
+        ReaderModeComboBox.SelectedIndex = 0;
+    }
 }

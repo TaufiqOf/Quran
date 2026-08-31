@@ -40,6 +40,6 @@ public static class SearchManager
         var searcher = Searcher?.FirstOrDefault(s => s.GetSearchMode(searchText));
         if (searcher == null)
             searcher = new TextSearch();
-        return searcher?.PerformSearch(searchText) ?? new List<Surah>();
+        return searcher.PerformSearch(searchText);
     }
 }

@@ -11,14 +11,17 @@ public static class DownloadHelper
     public static async Task DownloadFileAsync(string url, string destinationPath)
     {
         var directoryPath = Path.GetDirectoryName(destinationPath);
-        if(!Directory.Exists(directoryPath))
+        if (directoryPath == null)
+            throw new DirectoryNotFoundException(
+                $"The directory for the destination path '{destinationPath}' could not be determined.");
+        if (!Directory.Exists(directoryPath))
             Directory.CreateDirectory(directoryPath);
-            
+
         using var response = await HttpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
         await using var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
-        
+
         await response.Content.CopyToAsync(fileStream);
     }
 }

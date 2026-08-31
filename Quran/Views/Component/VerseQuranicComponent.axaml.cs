@@ -1,4 +1,5 @@
 using System;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Quran.Models;
@@ -16,6 +17,7 @@ public partial class VerseQuranicComponent : AVerseComponent, IDisposable
         TextBlockVerseNumber.Foreground =
             IsBookMarked ? new SolidColorBrush(Colors.Yellow) : new SolidColorBrush(Colors.White);
         TextBlockArabic.Text = $"{verse.Text} ";
+        ToolTip.SetTip(TextBlockArabic, verse.Translation);
     }
 
     public override void Dispose()

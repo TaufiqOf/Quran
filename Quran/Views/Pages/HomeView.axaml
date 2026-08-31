@@ -76,18 +76,17 @@
             x:Name="ScrollViewer"
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
-            <ItemsRepeater
+            <ItemsControl
                 x:Name="SurahRepeater"
-                HorizontalAlignment="Stretch">
-                <ItemsRepeater.Layout>
-                    <UniformGridLayout
-                        MinItemWidth="400"
-                        MinItemHeight="235"
-                        MinColumnSpacing="12"
-                        MinRowSpacing="12"
-                        ItemsStretch="Fill" />
-                </ItemsRepeater.Layout>
-            </ItemsRepeater>
+                HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel
+                            Orientation="Horizontal"
+                            ItemWidth="400" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
 
         </ScrollViewer>
 

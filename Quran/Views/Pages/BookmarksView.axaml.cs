@@ -115,6 +115,12 @@ public partial class BookmarksView : AView
         }
     }
 
+    public override async Task Reload(params object?[] parameter)
+    {
+        _isLoaded = false;
+        await Load(parameter);
+    }
+
     private void VerseComponentBookmarkVerseRequested(
         Verse verse,
         Surah surah)

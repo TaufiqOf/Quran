@@ -2,34 +2,91 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Quran.Views.Pages.SettingsView">
 
-    <Grid>
+    <UserControl.Styles>
+        <Style Selector="Border.settingsCard">
+            <Setter Property="Background" Value="#232323" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="BorderBrush" Value="#3A3A3A" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="24" />
+            <Setter Property="MaxWidth" Value="520" />
+        </Style>
 
-        <Grid
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
+        <Style Selector="TextBlock.sectionTitle">
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#F2F2F2" />
+        </Style>
 
-            <StackPanel
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Spacing="12">
+        <Style Selector="TextBlock.sectionSubtitle">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#BEBEBE" />
+        </Style>
 
-                <TextBlock
-                    Text="Settings"
-                    FontSize="32"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Center" />
+        <Style Selector="TextBlock.fieldLabel">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#E8E8E8" />
+        </Style>
 
-                <TextBlock
-                    Text="Welcome to the Quran application."
-                    FontSize="16"
-                    HorizontalAlignment="Center" />
-                <Button Click="Button_OnClick" />
+        <Style Selector="ComboBox.settingsInput">
+            <Setter Property="MinHeight" Value="38" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
 
+        <Style Selector="Button.primaryAction">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+
+    </UserControl.Styles>
+
+    <Grid Margin="20"
+          RowDefinitions="*,Auto,*"
+          ColumnDefinitions="*">
+
+        <Border Grid.Row="1"
+                Classes="settingsCard"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <StackPanel Spacing="14">
+                <TextBlock Classes="sectionTitle"
+                           Text="Settings" />
+
+                <TextBlock Classes="sectionSubtitle"
+                           Text="Personalize your reading experience." />
+
+                <Separator Margin="0,2,0,4" />
+
+                <TextBlock Classes="fieldLabel"
+                           Text="Quran Translation Language" />
+
+                <ComboBox x:Name="LanguageComboBox"
+                          Classes="settingsInput"
+                          SelectedIndex="0">
+                    <ComboBoxItem Content="English" Tag="en" />
+                    <ComboBoxItem Content="Bangla" Tag="bn" />
+                    <ComboBoxItem Content="Spanish" Tag="es" />
+                    <ComboBoxItem Content="French" Tag="fr" />
+                    <ComboBoxItem Content="Indonesian" Tag="id" />
+                    <ComboBoxItem Content="Russian" Tag="ru" />
+                    <ComboBoxItem Content="Swedish" Tag="sv" />
+                    <ComboBoxItem Content="Turkish" Tag="tr" />
+                    <ComboBoxItem Content="Urdu" Tag="ur" />
+                    <ComboBoxItem Content="Chinese" Tag="zh" />
+                </ComboBox>
+
+                <TextBlock Classes="sectionSubtitle"
+                           Text="This updates surah translations across the app." />
+
+                <Button Classes="primaryAction"
+                        Content="Save Preferences"
+                        Click="Button_OnClick" />
             </StackPanel>
-
-        </Grid>
-
-
+        </Border>
     </Grid>
 
 </UserControl>

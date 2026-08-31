@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 
@@ -8,6 +9,8 @@ public abstract class AView : UserControl
     public delegate void GoToEventHandler(string pageName, params object?[] parameter);
 
     public abstract Task Load(params object?[] parameter);
+    
+    public abstract Task Reload(params object?[] parameter);
 
     public event GoToEventHandler? GotoPageRequested;
 
@@ -15,4 +18,6 @@ public abstract class AView : UserControl
     {
         GotoPageRequested?.Invoke(pageName, parameter);
     }
+    
+    public Action? ReloadRequested { get; set; }
 }

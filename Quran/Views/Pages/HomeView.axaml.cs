@@ -24,15 +24,24 @@ public partial class HomeView : AView
     private List<CardComponent> Cards { get; } = new();
 
 
-    public override Task Load(params object?[] parameter)
+    public override async Task Load(params object?[] parameter)
     {
         if (!_isLoaded)
         {
+            // Detach source first; mutating the same List while it's still bound can break repeater bookkeeping.
+            SurahRepeater.ItemsSource = null;
+
+            foreach (var existingCard in Cards)
+            {
+                existingCard.CardClick -= Card_CardClick;
+            }
+
+            Cards.Clear();
             _surahs = DataManager.Surahs;
             _surahOrder = DataManager.SurahOrders;
             _surahSynopsis = DataManager.SurahSynopses;
             _synopsisLookup = DataManager.SurahSynopses.ToDictionary(x => x.SurahId);
-            GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
+            await GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
             foreach (var surah in _surahs)
             {
                 _synopsisLookup.TryGetValue(surah.Id, out var synopsis);
@@ -58,8 +67,12 @@ public partial class HomeView : AView
 
         if (DataManager.CurrentVerseId is not null)
             GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseId.Value;
+    }
 
-        return Task.CompletedTask;
+    public override async Task Reload(params object?[] parameter)
+    {
+        _isLoaded = false;
+        await Load(parameter);
     }
 
     private void Card_CardClick(Surah surah)
@@ -78,8 +91,11 @@ public partial class HomeView : AView
 
     private void GotoComponent_OnSurahSelected(Surah surah)
     {
-        var card = Cards.FirstOrDefault(c => c.Surah!.Id == surah.Id);
-        if (card != null) Application.Current.Dispatcher.Invoke(() => { SelectCard(card); });
+        var card = Cards.FirstOrDefault(c => c.Surah?.Id == surah.Id);
+        if (card != null)
+        {
+            Application.Current?.Dispatcher.Invoke(() => { SelectCard(card); });
+        }
     }
 
     private void SelectCard(CardComponent card)

@@ -11,15 +11,23 @@ public static class DataManager
 {
     private static readonly string bookmarkFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");
+    private static readonly string SettingsFilePath =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "quran_settings.json");
 
     static DataManager()
     {
         if (!File.Exists(bookmarkFilePath)) File.WriteAllText(bookmarkFilePath, "[]");
         // Load Surahs and Surah Orders on initialization
-        Surahs = GetSurahs();
+        Bookmarks = GetBookmarks();
+        LoadSurahs(LoadLanguagePreference());
+    }
+    
+
+    public static void LoadSurahs(string language = "en")
+    {
+        Surahs = GetSurahs(language);
         SurahOrders = SurahOrder();
         SurahSynopses = SurahSynopsis();
-        Bookmarks = GetBookmarks();
 
         // Add transliterations to verses.
         foreach (var surahTransliteration in GetSurahTransliterations())
@@ -39,7 +47,7 @@ public static class DataManager
         }
     }
 
-    public static List<Surah> Surahs { get; }
+    public static List<Surah> Surahs { get; set; }
     public static List<SurahOrder> SurahOrders { get; private set; }
     public static List<SurahSynopsis> SurahSynopses { get; private set; }
 
@@ -49,9 +57,9 @@ public static class DataManager
 
     public static List<Bookmark> Bookmarks { get; }
 
-    public static List<Surah> GetSurahs()
+    public static List<Surah> GetSurahs(string language)
     {
-        var json = JsonReader.ReadStringFromResource("quran_en.json");
+        var json = JsonReader.ReadStringFromResource($"quran_{language}.json");
         return JsonReader.ReadJsonList<Surah>(json) ?? new List<Surah>();
     }
 
@@ -110,5 +118,31 @@ public static class DataManager
     {
         var json = JsonSerializer.Serialize(bookmarks);
         File.WriteAllText(bookmarkFilePath, json);
+    }
+    
+    public static string LoadLanguagePreference()
+    {
+        try
+        {
+            if (!File.Exists(SettingsFilePath))
+            {
+                return "en";
+            }
+
+            var json = File.ReadAllText(SettingsFilePath);
+            var settings = JsonSerializer.Deserialize<AppSettings>(json);
+            return string.IsNullOrWhiteSpace(settings?.Language) ? "en" : settings.Language;
+        }
+        catch
+        {
+            return "en";
+        }
+    }
+
+    public static void SaveLanguagePreference(string languageCode)
+    {
+        var settings = new AppSettings { Language = languageCode };
+        var json = JsonSerializer.Serialize(settings);
+        File.WriteAllText(SettingsFilePath, json);
     }
 }

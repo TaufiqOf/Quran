@@ -80,9 +80,13 @@ public partial class SearchView : AView
     }
 
 
-    public override Task Load(params object?[] parameter)
+    public override async Task Load(params object?[] parameter)
     {
-        return Task.CompletedTask;
+    }
+
+    public override async Task Reload(params object?[] parameter)
+    {
+        await Load(parameter);
     }
 
     private void LinerScrollViewerOnScrollChanged(object? sender, ScrollChangedEventArgs e)

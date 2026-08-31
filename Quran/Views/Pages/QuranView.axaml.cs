@@ -81,6 +81,12 @@ public partial class QuranView : AView
         return Task.CompletedTask;
     }
 
+    public override async Task Reload(params object?[] parameter)
+    {
+        _isLoaded = false;
+        await Load(parameter);
+    }
+
     private void GotoComponent_OnSurahSelected(Surah surah)
     {
         if (_currentSurahIndex == surah.Id) return;

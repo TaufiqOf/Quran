@@ -3,30 +3,56 @@
         x:Class="Quran.Views.CustomMessageWindow"
         x:Name="Root"
         Title="Message"
-        Width="500"
-        Height="300"
+        Width="520"
+        Height="320"
         MinWidth="500"
         CanMaximize="False"
         CanMinimize="False"
+        Background="#2e2e33"
         MinHeight="300">
 
-    <Grid RowDefinitions="*,Auto"
-          RowSpacing="16">
+    <Window.Styles>
+        <Style Selector="Border.dialogShell">
+            <Setter Property="Background" Value="#1E1E1E" />
+            <Setter Property="BorderBrush" Value="#3C3C3C" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="18" />
+        </Style>
 
-        <Border Grid.Row="0"
-                Background="#252525"
-                BorderBrush="#4b4b4b"
-                BorderThickness="1"
-                CornerRadius="8"
-                Padding="8">
-            <ContentControl x:Name="ContentControl" />
+        <Style Selector="Border.dialogContent">
+            <Setter Property="Background" Value="#252525" />
+            <Setter Property="BorderBrush" Value="#4B4B4B" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="12" />
+        </Style>
 
-        </Border>
+        <Style Selector="Button.dialogAction">
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="BorderBrush" Value="#5B7CFA" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
 
-        <Button Grid.Row="1"
-                Content="Close"
-                Click="CloseButton_OnClick"
-                HorizontalAlignment="Right"
-                MinWidth="110" />
-    </Grid>
+    </Window.Styles>
+
+    <Border Margin="5" >
+        <Grid RowDefinitions="*,Auto"
+              RowSpacing="14">
+
+            <Border Grid.Row="0"
+                    Classes="dialogContent">
+                <ContentControl x:Name="ContentControl" />
+            </Border>
+
+            <Button Grid.Row="1"
+                    Classes="dialogAction"
+                    Content="Close"
+                    Click="CloseButton_OnClick"
+                    HorizontalAlignment="Right" />
+        </Grid>
+    </Border>
 </Window>

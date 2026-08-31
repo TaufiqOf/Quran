@@ -61,6 +61,7 @@ public partial class MainWindow : Window
 
                 _ => new HomeView()
             };
+            CurrentPage.ReloadRequested += ReloadRequested;
             Pages.Add(pageName, CurrentPage);
         }
 
@@ -68,6 +69,14 @@ public partial class MainWindow : Window
         MainContent.Content = CurrentPage;
         CurrentPage.GotoPageRequested += ShowPage;
         EnableNavButtons(pageName);
+    }
+
+    private void ReloadRequested()
+    {
+        foreach (var keyValuePair in Pages)
+        {
+            keyValuePair.Value.Reload();
+        }
     }
 
     private void EnableNavButtons(string pageName = "")

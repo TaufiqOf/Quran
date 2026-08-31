@@ -9,6 +9,8 @@ namespace Quran.Helpers;
 
 public static class DataManager
 {
+    public static string DataPath => Path.Combine(AppContext.BaseDirectory,"Data");
+
     private static readonly string BookmarkFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");
 
@@ -58,31 +60,31 @@ public static class DataManager
 
     public static List<Surah> GetSurahs(string language)
     {
-        var json = JsonReader.ReadStringFromResource($"quran_{language}.json");
+        var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, $"quran_{language}.json"));
         return JsonReader.ReadJsonList<Surah>(json);
     }
 
     public static List<Surah> GetSurahTransliterations()
     {
-        var json = JsonReader.ReadStringFromResource("quran_transliteration.json");
+        var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, "quran_transliteration.json"));
         return JsonReader.ReadJsonList<Surah>(json);
     }
 
     public static Surah GetSurahById(int surahId)
     {
-        var json = JsonReader.ReadStringFromResource("quran_en.json");
+        var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, "quran_en.json"));
         return JsonReader.ReadJson<Surah>(json) ?? new Surah();
     }
 
     public static List<SurahOrder> SurahOrder()
     {
-        var json = JsonReader.ReadStringFromResource("surah_order.json");
+        var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, "surah_order.json"));
         return JsonReader.ReadJsonList<SurahOrder>(json);
     }
 
     public static List<SurahSynopsis> SurahSynopsis()
     {
-        var json = JsonReader.ReadStringFromResource("surah_synopsis.json");
+        var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, "surah_synopsis.json"));
         return JsonReader.ReadJsonList<SurahSynopsis>(json);
     }
 

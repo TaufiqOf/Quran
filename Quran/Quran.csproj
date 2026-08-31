@@ -27,8 +27,10 @@
     <ItemGroup>
 
         <AvaloniaResource Include="Assets\**"/>
-        <AvaloniaResource Include="Data\**"/>
-
+        <None Update="Data\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
         <None Update="Storage\**\*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

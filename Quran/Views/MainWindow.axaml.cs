@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Quran.Helpers;
@@ -24,7 +26,8 @@ public partial class MainWindow : Window
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        SearchManager.RegisterSearcher();
+
+        //_ = Task.Run(async () => { await SearchManager.RegisterSearcher(); });
     }
 
     private void NavButton_OnClick(object? sender, RoutedEventArgs e)

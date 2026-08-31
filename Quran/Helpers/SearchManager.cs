@@ -23,7 +23,7 @@ public static class SearchManager
     public static bool IsSearcherRegistered { get; private set; }
     private static List<ISearch>? Searcher { get; }
 
-    public static async void RegisterSearcher()
+    public static async Task RegisterSearcher()
     {
         var searcher = new VectorSearch();
         await searcher.InitializeAsync();

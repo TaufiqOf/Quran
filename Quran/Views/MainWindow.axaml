@@ -10,10 +10,8 @@
         MinWidth="1200"
         x:Class="Quran.Views.MainWindow"
         Title="Quran">
-
-
+    
     <Grid ColumnDefinitions="200,*" Background="#2e2e33">
-
         <!-- ================= SIDEBAR ================= -->
 
         <Border Grid.Column="0"
@@ -61,9 +59,7 @@
                                        FontWeight="SemiBold"
                                        VerticalAlignment="Center" />
                         </StackPanel>
-
                     </Button>
-
 
                     <!-- Quran -->
                     <Button x:Name="NavQuranButton"
@@ -85,9 +81,7 @@
                                        FontSize="16"
                                        VerticalAlignment="Center" />
                         </StackPanel>
-
                     </Button>
-
 
                     <!-- Bookmarks -->
                     <Button x:Name="NavBookmarksButton"
@@ -104,14 +98,11 @@
                                 Icon="Bookmark"
                                 FontSize="24"
                                 VerticalAlignment="Center" />
-
                             <TextBlock Text="Bookmarks"
                                        FontSize="16"
                                        VerticalAlignment="Center" />
                         </StackPanel>
-
                     </Button>
-
 
                     <!-- Search -->
                     <Button x:Name="NavSearchButton"
@@ -133,9 +124,7 @@
                                        FontSize="16"
                                        VerticalAlignment="Center" />
                         </StackPanel>
-
                     </Button>
-
                 </StackPanel>
 
                 <!-- Settings -->
@@ -154,22 +143,16 @@
                             Icon="Settings"
                             FontSize="24"
                             VerticalAlignment="Center" />
-
+                        
                         <TextBlock Text="Settings"
                                    FontSize="16"
                                    VerticalAlignment="Center" />
-
                     </StackPanel>
-
                 </Button>
-
             </Grid>
-
         </Border>
 
-
         <!-- ================= MAIN CONTENT ================= -->
-
         <Border Grid.Column="1"
                 Background="#1b1b1b"
                 CornerRadius="12"
@@ -178,7 +161,5 @@
             <ContentControl x:Name="MainContent" />
 
         </Border>
-
     </Grid>
-
 </Window>

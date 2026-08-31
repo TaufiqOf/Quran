@@ -5,6 +5,7 @@ using Avalonia;
 using Quran.Helpers;
 using Quran.Models;
 using Quran.Views.Component;
+using Avalonia.Threading;
 
 namespace Quran.Views.Pages;
 
@@ -26,44 +27,49 @@ public partial class HomeView : AView
 
     public override async Task Load(params object?[] parameter)
     {
-        if (!_isLoaded)
+        Task.Factory.StartNew(() =>
         {
-            // Detach source first; mutating the same List while it's still bound can break repeater bookkeeping.
-            SurahRepeater.ItemsSource = null;
-
-            foreach (var existingCard in Cards) existingCard.CardClick -= Card_CardClick;
-
-            Cards.Clear();
-            _surahs = DataManager.Surahs;
-            _surahOrder = DataManager.SurahOrders;
-            _surahSynopsis = DataManager.SurahSynopses;
-            _synopsisLookup = DataManager.SurahSynopses.ToDictionary(x => x.SurahId);
-            await GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
-            foreach (var surah in _surahs)
+            Dispatcher.UIThread.Post(async () =>
             {
-                _synopsisLookup.TryGetValue(surah.Id, out var synopsis);
-                var card = new CardComponent(surah, synopsis);
-                card.CardClick += Card_CardClick;
-                Cards.Add(card);
-            }
+                if (!_isLoaded)
+                {
+                    // Detach source first; mutating the same List while it's still bound can break repeater bookkeeping.
+                    SurahRepeater.ItemsSource = null;
+                    foreach (var existingCard in Cards) existingCard.CardClick -= Card_CardClick;
+                    Cards.Clear();
 
-            SurahRepeater.ItemsSource = Cards;
-        }
+                    _surahs = DataManager.Surahs;
+                    _surahOrder = DataManager.SurahOrders;
+                    _surahSynopsis = DataManager.SurahSynopses;
+                    _synopsisLookup = DataManager.SurahSynopses.ToDictionary(x => x.SurahId);
+                    await GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
+                    foreach (var surah in _surahs)
+                    {
+                        _synopsisLookup.TryGetValue(surah.Id, out var synopsis);
+                        var card = new CardComponent(surah, synopsis);
+                        card.CardClick += Card_CardClick;
+                        Cards.Add(card);
+                    }
 
-        _isLoaded = true;
+                    SurahRepeater.ItemsSource = Cards;
+                }
 
-        if (DataManager.CurrentSurah is not null)
-        {
-            var index = _surahs.ToList().FindIndex(q => q.Id == DataManager.CurrentSurah.Id);
-            if (index >= 0) GotoComponent.SurahSelectedIndex = index;
-        }
-        else
-        {
-            GotoComponent.SurahSelectedIndex = 0;
-        }
+                _isLoaded = true;
 
-        if (DataManager.CurrentVerseId is not null)
-            GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseId.Value;
+                if (DataManager.CurrentSurah is not null)
+                {
+                    var index = _surahs.ToList().FindIndex(q => q.Id == DataManager.CurrentSurah.Id);
+                    if (index >= 0) GotoComponent.SurahSelectedIndex = index;
+                }
+                else
+                {
+                    GotoComponent.SurahSelectedIndex = 0;
+                }
+
+                if (DataManager.CurrentVerseId is not null)
+                    GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseId.Value;
+            });
+        });
     }
 
     public override async Task Reload(params object?[] parameter)
@@ -95,5 +101,7 @@ public partial class HomeView : AView
     private void SelectCard(CardComponent card)
     {
         foreach (var c in Cards) c.IsSelected = c.Surah?.Id == card.Surah?.Id;
+        var index = Cards.IndexOf(card);
+        Dispatcher.UIThread.Post(() => { SurahRepeater.ScrollIntoView(index); }, DispatcherPriority.Loaded);
     }
 }

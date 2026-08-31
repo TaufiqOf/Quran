@@ -50,16 +50,18 @@ public partial class QuranView : AView
             _surahSynopsis = DataManager.SurahSynopses;
 
             GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
+            
+            // Load preferred reader mode
+            var preferredReaderMode = DataManager.LoadReaderModePreference();
+            if (Enum.TryParse<ReaderMode>(preferredReaderMode, out var readerMode))
+            {
+                ModeComboBox.SelectedIndex = (int)readerMode;
+                ReaderComponent.Mode = readerMode;
+            }
+            
             _isLoaded = true;
         }
 
-        // Load preferred reader mode
-        var preferredReaderMode = DataManager.LoadReaderModePreference();
-        if (Enum.TryParse<ReaderMode>(preferredReaderMode, out var readerMode))
-        {
-            ModeComboBox.SelectedIndex = (int)readerMode;
-            ReaderComponent.Mode = readerMode;
-        }
 
         if (parameter.Length == 0 || parameter[0] is null)
         {

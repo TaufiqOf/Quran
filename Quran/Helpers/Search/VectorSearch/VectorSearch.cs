@@ -14,7 +14,7 @@ public class VectorSearch : ISearch
     private readonly string _embeddingDataPath;
     private readonly string _modelPath;
 
-    private readonly List<Surah> _surahs;
+    private List<Surah> _surahs;
     private readonly string _tokenizerPath;
     private IEmbeddingService? _embeddingService;
     private QuranSemanticSearchService? _quranSemanticSearchService;
@@ -38,8 +38,7 @@ public class VectorSearch : ISearch
             "Storage",
             "tokenizer.json");
 
-        _surahs =
-            DataManager.Surahs;
+
     }
 
     public async Task InitializeAsync()
@@ -79,6 +78,8 @@ public class VectorSearch : ISearch
     public List<Surah> PerformSearch(
         string searchText)
     {
+        _surahs =
+            DataManager.Surahs;
         if (_quranSemanticSearchService == null)
             throw new InvalidOperationException("Search service is not initialized.");
         var query = searchText.Trim();

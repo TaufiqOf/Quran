@@ -19,7 +19,6 @@ CONFIGURATION="Release"
 FRAMEWORK="net10.0"
 
 # Application icon
-ICON_NAME="quran"
 ICON_FILE="Assets/Icons/quran.ico"
 
 OUTPUT_DIR="dist/windows"
@@ -156,6 +155,8 @@ rm -f "$LIBVLC_ZIP"
 # ------------------------------------------------------------
 
 echo "==> Creating Windows shortcut installer script..."
+
+cp -f "$ICON_FILE" "$PUBLISH_DIR/quran.ico"
 
 cat > "$OUTPUT_DIR/Create-Shortcut.vbs" <<'EOF'
 Set WshShell = CreateObject("WScript.Shell")

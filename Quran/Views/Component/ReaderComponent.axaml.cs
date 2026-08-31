@@ -47,7 +47,6 @@ public partial class ReaderComponent : UserControl, IDisposable
             verseComponent.Dispose();
         }
 
-        CardComponent.Dispose();
     }
 
     public event VerseSelectedEventHandler? VerseSelected;

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
 using Quran.Views.Component;
-using Avalonia.Threading;
 
 namespace Quran.Views.Pages;
 
@@ -21,42 +21,41 @@ public partial class HomeView : AView
     public HomeView()
     {
         InitializeComponent();
+        CardComponent.CardClick += Card_CardClick;
     }
 
-    private List<CardComponent> Cards { get; } = new();
-
+    private List<SurahCardViewModel> Cards { get; } = new();
 
     public override async Task Load(params object?[] parameter)
     {
-        Task.Factory.StartNew(() =>
+        await Task.Run(async () =>
         {
-            Dispatcher.UIThread.Post(async () =>
+            _surahs = DataManager.Surahs;
+            _surahOrder = DataManager.SurahOrders;
+            _surahSynopsis = DataManager.SurahSynopses;
+            _synopsisLookup = DataManager.SurahSynopses.ToDictionary(x => x.SurahId);
+
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 if (!_isLoaded)
                 {
-                    // Detach source first; mutating the same List while it's still bound can break repeater bookkeeping.
                     SurahRepeater.ItemsSource = null;
-                    foreach (var existingCard in Cards) existingCard.CardClick -= Card_CardClick;
                     Cards.Clear();
 
-                    _surahs = DataManager.Surahs;
-                    _surahOrder = DataManager.SurahOrders;
-                    _surahSynopsis = DataManager.SurahSynopses;
-                    _synopsisLookup = DataManager.SurahSynopses.ToDictionary(x => x.SurahId);
                     await GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
+
                     foreach (var surah in _surahs)
                     {
                         _synopsisLookup.TryGetValue(surah.Id, out var synopsis);
-                        var card = new CardComponent(surah, synopsis);
-                        card.CardClick += Card_CardClick;
-                        Cards.Add(card);
+                        Cards.Add(new SurahCardViewModel(surah, synopsis));
                     }
 
                     SurahRepeater.ItemsSource = Cards;
                 }
 
                 _isLoaded = true;
-                if(_selectedSurahId == DataManager.CurrentVerseId) return;
+                //if (_selectedSurahId is not null && _selectedSurahId == DataManager.CurrentVerseId) return;
+
                 if (DataManager.CurrentSurah is not null)
                 {
                     var index = _surahs.ToList().FindIndex(q => q.Id == DataManager.CurrentSurah.Id);
@@ -95,16 +94,30 @@ public partial class HomeView : AView
 
     private void GotoComponent_OnSurahSelected(Surah surah)
     {
-        var card = Cards.FirstOrDefault(c => c.Surah?.Id == surah.Id);
-        if (card != null) Application.Current?.Dispatcher.Invoke(() => { SelectCard(card); });
+        var cardVm = Cards.FirstOrDefault(c => c.Surah?.Id == surah.Id);
+        if (cardVm != null)
+        {
+            SelectCard(cardVm);
+        }
     }
 
-    private void SelectCard(CardComponent card)
+    private void SelectCard(SurahCardViewModel cardVm)
     {
-        if (card?.Surah?.Id == _selectedSurahId) return;
-        _selectedSurahId = card?.Surah?.Id;
-        foreach (var c in Cards) c.IsSelected = c.Surah?.Id == card?.Surah?.Id;
-        var index = Cards.IndexOf(card);
-        Dispatcher.UIThread.Post(() => { SurahRepeater.ScrollIntoView(index); }, DispatcherPriority.Loaded);
+        if (cardVm?.Surah?.Id == _selectedSurahId) return;
+        _selectedSurahId = cardVm?.Surah?.Id;
+
+        foreach (var c in Cards)
+        {
+            c.IsSelected = c.Surah?.Id == cardVm?.Surah?.Id;
+        }
+
+        var index = Cards.IndexOf(cardVm);
+        if (index < 0) return;
+
+        Dispatcher.UIThread.Post(() => 
+        {
+            var element = SurahRepeater.TryGetElement(index);
+            element?.BringIntoView();
+        }, DispatcherPriority.Loaded);
     }
 }

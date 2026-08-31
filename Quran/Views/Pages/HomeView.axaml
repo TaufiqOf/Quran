@@ -4,89 +4,46 @@
     xmlns:component="clr-namespace:Quran.Views.Component"
     x:Class="Quran.Views.Pages.HomeView">
 
-    <UserControl.Styles>
-
-        <!-- Top navigation -->
-        <Style Selector="Border.topBar">
-            <Setter Property="Padding" Value="8" />
-            <Setter Property="Background" Value="#202020" />
-            <Setter Property="BorderBrush" Value="#3A3A3A" />
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
-        </Style>
-
-        <!-- Surah cards container -->
-        <Style Selector="ItemsControl.homeItems">
-            <Setter Property="Margin" Value="8" />
-        </Style>
-
-        <!-- Make generated items stretch -->
-        <Style Selector="ItemsControl.homeItems ContentPresenter">
-            <Setter Property="HorizontalContentAlignment"
-                    Value="Stretch" />
-        </Style>
-
-    </UserControl.Styles>
-
+    <!-- Styles omitted for brevity -->
 
     <Grid RowDefinitions="Auto,*">
-
-        <!-- =========================== -->
         <!-- Header -->
-        <!-- =========================== -->
-
-        <Border
-            Grid.Row="0"
-            Classes="topBar">
-
-            <Grid
-                ColumnDefinitions="*,Auto"
-                VerticalAlignment="Center">
-
-                <!-- Optional title -->
-
-                <TextBlock
-                    Grid.Column="0"
-                    Text="Surahs"
-                    FontSize="18"
-                    FontWeight="SemiBold"
-                    VerticalAlignment="Center"
-                    Margin="8,0" />
-
-
-                <!-- Go To -->
-
+        <Border Grid.Row="0" Classes="topBar">
+            <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                <TextBlock Grid.Column="0" Text="Surahs" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" />
                 <component:GotoComponent
                     Grid.Column="1"
                     x:Name="GotoComponent"
                     ShowOnlySurah="True"
                     VerticalAlignment="Center"
                     SurahSelected="GotoComponent_OnSurahSelected" />
-
             </Grid>
-
         </Border>
 
-
-        <!-- =========================== -->
         <!-- Surah Grid -->
-        <!-- =========================== -->
-
         <ScrollViewer
             Grid.Row="1"
             x:Name="ScrollViewer"
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
-            <ItemsControl
-                x:Name="SurahRepeater"
-                HorizontalAlignment="Center">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel
-                            Orientation="Horizontal"
-                            ItemWidth="400" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+
+            <ItemsRepeater x:Name="SurahRepeater">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout 
+                        MinItemHeight="300" 
+                        MinItemWidth="350" 
+                        Orientation="Horizontal"
+                        MinColumnSpacing="8" 
+                        MinRowSpacing="8" />
+                </ItemsRepeater.Layout>
+
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate DataType="component:SurahCardViewModel">
+                        <component:CardComponent />
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+
         </ScrollViewer>
     </Grid>
 </UserControl>

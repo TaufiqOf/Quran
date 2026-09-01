@@ -125,6 +125,28 @@
                                        VerticalAlignment="Center" />
                         </StackPanel>
                     </Button>
+                    
+                    <!-- Ask -->
+                    <Button x:Name="NavAskButton"
+                            CornerRadius="10"
+                            Tag="Ask"
+                            Click="NavButton_OnClick"
+                            HorizontalAlignment="Stretch">
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5,0,5"
+                                    Spacing="16">
+
+                            <icon:FluentIcon
+                                Icon="Send"
+                                FontSize="24"
+                                VerticalAlignment="Center" />
+
+                            <TextBlock Text="Ask AI"
+                                       FontSize="16"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <!-- Settings -->

@@ -316,7 +316,7 @@ public partial class SearchView : AView
                     string.Empty
                 };
 
-                foreach (var verse in surah.Verses)
+                foreach (var verse in surah.VerseResults)
                 {
                     lines.Add($"Verse {verse.Id}");
                     lines.Add(verse.Text);

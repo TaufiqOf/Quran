@@ -37,9 +37,9 @@ public static class SearchManager
         await vectorSearch.InitializeAsync();
         Searcher?.Add(vectorSearch);
 
-        var client = AiClientFactory.Create(AiProvider.Ollama, "http://localhost:11434", "qwen2.5:14b");
+        var client = AiClientFactory.Create(AiProvider.Ollama, "http://localhost:11434", "llama3.2");
         var aiSearch = new AiSearch(client, new TextSearch(), vectorSearch);
-        if (await AiClientFactory.IsClientAvailableAsync(AiProvider.Ollama, client, "qwen2.5:14b"))
+        if (await AiClientFactory.IsClientAvailableAsync(AiProvider.Ollama, client, "llama3.2"))
         {
             await aiSearch.InitializeAsync();
             Searcher?.Add(aiSearch);

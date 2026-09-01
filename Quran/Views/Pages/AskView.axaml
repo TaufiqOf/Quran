@@ -2,7 +2,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
-    x:Class="Quran.Views.Pages.SearchView">
+    x:Class="Quran.Views.Pages.AskView">
 
     <UserControl.Styles>
 
@@ -77,7 +77,7 @@
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Height" Value="48" />
             <Setter Property="Padding" Value="5" />
-            <Setter Property="Margin" Value="8,8,8,0" />
+            <Setter Property="Margin" Value="8,0,8,0" />
         </Style>
 
         <!-- =============================== -->
@@ -104,7 +104,7 @@
             <Setter Property="Padding" Value="5" />
             <Setter Property="FontFamily" Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
             <Setter Property="Watermark"
-                    Value="Search words e.g (Jesus), verses (e.g. fati:1,2:2-5,112:), or ask a question using ? (e.g. ? Who will go to Heaven?)" />
+                    Value="Ask a question..." />
         </Style>
 
         <!-- =============================== -->
@@ -124,14 +124,31 @@
     <!-- =============================== -->
     <!-- Main Layout -->
     <!-- =============================== -->
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="*,Auto,Auto,Auto">
 
-        <!-- =========================== -->
-        <!-- Search Bar -->
-        <!-- =========================== -->
 
         <Border
             Grid.Row="0"
+            BorderBrush="#3A3A3A"
+            BorderThickness="2"
+            CornerRadius="4"
+            Margin="8,0,8,8">
+            
+        </Border>
+      
+        <!-- =========================== -->
+        <!-- Message -->
+        <!-- =========================== -->
+        <TextBlock
+            Grid.Row="1"
+            x:Name="MessageTextBlock"
+            Classes="messageTextBlock" />
+
+        <ProgressBar x:Name="ProgressBar" Grid.Row="2" IsIndeterminate="False" Height="2" Margin="9,0,9,0" />
+
+    
+        <Border
+            Grid.Row="3"
             Classes="searchBox">
 
             <Grid ColumnDefinitions="Auto,*,Auto,Auto">
@@ -142,7 +159,7 @@
                     Grid.Column="1"
                     x:Name="SearchTextBox"
                     Classes="searchTextBox"
-                    KeyDown="SearchTextBox_OnKeyDown">
+                    KeyDown="SearchTextBoxOnKeyDown">
 
                 </TextBox>
 
@@ -152,10 +169,10 @@
                     Grid.Column="2"
                     x:Name="SearchButton"
                     Classes="searchButton"
-                    ToolTip.Tip="Search"
-                    Click="SearchButton_OnClick">
+                    ToolTip.Tip="Send"
+                    Click="SearchButtonOnClick">
                     <avalonia:FluentIcon
-                        Icon="Search"
+                        Icon="Send"
                         FontSize="18" />
                 </Button>
 
@@ -165,63 +182,13 @@
                     Grid.Column="3"
                     Classes="copyButton"
                     ToolTip.Tip="Copy search results"
-                    Click="CopyButton_OnClick">
+                    Click="CopyButtonOnClick">
 
                     <avalonia:FluentIcon
                         Icon="Copy"
                         FontSize="18" />
                 </Button>
             </Grid>
-        </Border>
-
-        <ProgressBar x:Name="ProgressBar" Grid.Row="1" IsIndeterminate="False" Height="2" Margin="9,0,9,0" />
-
-        <!-- =========================== -->
-        <!-- Message -->
-        <!-- =========================== -->
-        <TextBlock
-            Grid.Row="2"
-            x:Name="MessageTextBlock"
-            Classes="messageTextBlock" />
-
-        <!-- =========================== -->
-        <!-- Search Results -->
-        <!-- =========================== -->
-        <!-- =========================== -->
-        <!-- Search Results -->
-        <!-- =========================== -->
-        <!-- =========================== -->
-        <!-- Search Results -->
-        <!-- =========================== -->
-        <Border
-            Grid.Row="3"
-            BorderBrush="#3A3A3A"
-            BorderThickness="2"
-            CornerRadius="4"
-            Margin="8,0,8,8">
-
-            <ScrollViewer
-                x:Name="SearchScrollViewer"
-                Background="Transparent"
-                VerticalAlignment="Stretch"
-                HorizontalAlignment="Stretch"
-                ScrollChanged="LinerScrollViewerOnScrollChanged"
-                HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Auto">
-
-                <ItemsControl
-                    x:Name="SearchItemsControl"
-                    Classes="searchResults"
-                    HorizontalAlignment="Stretch">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel
-                                Orientation="Vertical"
-                                HorizontalAlignment="Stretch" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
         </Border>
     </Grid>
 </UserControl>

@@ -61,6 +61,7 @@ public partial class MainWindow : Window
                 "Bookmarks" => new BookmarksView(),
                 "Search" => new SearchView(),
                 "Settings" => new SettingsView(),
+                "Ask" => new AskView(),
 
                 _ => new HomeView()
             };
@@ -88,7 +89,7 @@ public partial class MainWindow : Window
             "Bookmarks" => NavBookmarksButton,
             "Search" => NavSearchButton,
             "Settings" => NavSettingsButton,
-
+            "Ask" => NavAskButton,
             _ => NavHomeButton
         };
 
@@ -97,6 +98,7 @@ public partial class MainWindow : Window
         NavBookmarksButton.IsEnabled = true;
         NavSearchButton.IsEnabled = true;
         NavSettingsButton.IsEnabled = true;
+        NavAskButton.IsEnabled = true;
         currentButton.IsEnabled = false;
     }
 }

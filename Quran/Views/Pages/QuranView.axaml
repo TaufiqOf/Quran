@@ -59,7 +59,7 @@
                           x:Name="ModeComboBox"
                           Classes="modeSelector"
                           HorizontalAlignment="Stretch"
-                          SelectionChanged="SelectingItemsControl_OnSelectionChanged" />
+                          SelectionChanged="SelectingItemsControlOnSelectionChanged" />
 
                 <component:AudioComponent x:Name="AudioComponent" Grid.Column="1" />
 
@@ -69,8 +69,8 @@
                     x:Name="GotoComponent"
                     Grid.Column="2"
                     Margin="10,0,0,0"
-                    SurahSelected="GotoComponent_OnSurahSelected"
-                    VerseSelected="GotoComponent_OnVerseSelected" />
+                    SurahSelected="GotoComponentOnSurahSelected"
+                    VerseSelected="GotoComponentOnVerseSelected" />
 
             </Grid>
 
@@ -87,9 +87,9 @@
             Margin="8"
             Focusable="True"
             IsTabStop="True"
-            KeyDown="ReaderComponent_OnKeyDown"
-            VerseSelected="ReaderComponent_OnVerseSelected"
-            VersesLoaded="ReaderComponent_OnVersesLoaded" />
+            KeyDown="ReaderComponentOnKeyDown"
+            VerseSelected="ReaderComponentOnVerseSelected"
+            VersesLoaded="ReaderComponentOnVersesLoaded" />
 
     </Grid>
 

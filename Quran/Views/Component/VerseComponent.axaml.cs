@@ -70,4 +70,9 @@ public partial class VerseComponent : AVerseComponent, IDisposable
     {
         VerseBookMark();
     }
+
+    public void DontShowPlay()
+    {
+        PlayItemManuMenuItem?.IsVisible = false;
+    }
 }

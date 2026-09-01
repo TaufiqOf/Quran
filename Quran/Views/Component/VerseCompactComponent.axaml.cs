@@ -47,7 +47,12 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
 
     private void VerseCard_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        OnVerseSelected(Verse);
+        var point = e.GetCurrentPoint(this);
+
+        if (point.Properties.IsLeftButtonPressed)
+        {
+            OnVerseSelected(Verse);
+        }
     }
 
     public override void VerseBookMark()

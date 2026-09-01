@@ -8,37 +8,28 @@ using Quran.Models;
 
 namespace Quran.Helpers.Search.VectorSearch;
 
-public class QuranSemanticSearchService(
-    IEmbeddingService embeddingService,
-    List<VerseEmbedding> embeddings)
+public class QuranSemanticSearchService(IEmbeddingService embeddingService, List<VerseEmbedding> embeddings)
+    : ASemanticSearchService(embeddingService, embeddings)
 {
-    public async Task<List<SemanticSearchResult>> SearchAsync(
-        string query,
+    public override async Task<List<SemanticSearchResult>> SearchAsync(List<SurahResult> surahs, string rawQuery,
         int maxResults = 100,
         CancellationToken cancellationToken = default)
     {
-        var queryText =
-            EmbeddingTextBuilder.BuildQuery(query);
+        // Apply the 'query: ' prefix ONCE here
+        var queryText = EmbeddingTextBuilder.BuildQuery(rawQuery);
 
-        var queryVector =
-            await embeddingService
-                .CreateEmbeddingAsync(
-                    queryText,
-                    cancellationToken);
+        var queryVector = await embeddingService
+            .CreateEmbeddingAsync(queryText, cancellationToken);
 
         var results = embeddings
-            .Select(embedding =>
-                new SemanticSearchResult
-                {
-                    SurahId = embedding.SurahId,
-                    VerseId = embedding.VerseId,
-
-                    Score =
-                        VectorMath.CosineSimilarity(
-                            queryVector,
-                            embedding.Vector)
-                })
-            .Where(x => x.Score > .8) // Filter out results with non-positive scores
+            .Select(embedding => new SemanticSearchResult
+            {
+                SurahId = embedding.SurahId,
+                VerseId = embedding.VerseId,
+                Score = VectorMath.CosineSimilarity(queryVector, embedding.Vector)
+            })
+            // E5 cosine similarity scores for relevant matches typically range between 0.68 - 0.78
+            .Where(x => x.Score >= 0.82f)
             .OrderByDescending(x => x.Score)
             .Take(maxResults)
             .ToList();

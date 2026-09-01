@@ -240,11 +240,7 @@
                         Margin="0,5,0,0" />
 
                 </Grid>
-
             </Grid>
-
         </Button>
-
     </Border>
-
 </UserControl>

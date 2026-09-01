@@ -26,6 +26,7 @@ public partial class QuranView : AView
         AudioComponent.SeekAction += SeekCurrentVerse;
         foreach (var value in Enum.GetValues(typeof(ReaderMode))) ModeComboBox.Items.Add(value.ToString());
         ModeComboBox.SelectedIndex = 0;
+        ReaderComponent.PlayVerseRequested += PlayVerseRequested;
         AttachedToVisualTree += (_, _) =>
         {
             Dispatcher.UIThread.Post(
@@ -36,6 +37,13 @@ public partial class QuranView : AView
             AudioHelper.AudioEnded += AudioEnded;
         else
             AudioComponent.IsVisible = false;
+    }
+
+    private void PlayVerseRequested(Verse verse)
+    {
+        GotoComponent.VerseSelectedIndex = verse.Id;
+        AudioComponent.PlayMode(true);
+        PlayCurrentVerse();
     }
 
 
@@ -50,7 +58,7 @@ public partial class QuranView : AView
             _surahSynopsis = DataManager.SurahSynopses;
 
             GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
-            
+
             // Load preferred reader mode
             var preferredReaderMode = DataManager.LoadReaderModePreference();
             if (Enum.TryParse<ReaderMode>(preferredReaderMode, out var readerMode))
@@ -58,7 +66,7 @@ public partial class QuranView : AView
                 ModeComboBox.SelectedIndex = (int)readerMode;
                 ReaderComponent.Mode = readerMode;
             }
-            
+
             _isLoaded = true;
         }
 
@@ -97,7 +105,7 @@ public partial class QuranView : AView
         await Load(parameter);
     }
 
-    private void GotoComponent_OnSurahSelected(Surah surah)
+    private void GotoComponentOnSurahSelected(Surah surah)
     {
         if (_currentSurahIndex == surah.Id) return;
 
@@ -113,7 +121,7 @@ public partial class QuranView : AView
     }
 
 
-    private void GotoComponent_OnVerseSelected(int verseId)
+    private void GotoComponentOnVerseSelected(int verseId)
     {
         DataManager.CurrentVerseId = verseId;
         ScrollToVerse(verseId);
@@ -132,12 +140,12 @@ public partial class QuranView : AView
         ReaderComponent.UpdateSelectedVerse(verseIndex);
     }
 
-    private void ReaderComponent_OnVerseSelected(Verse verse)
+    private void ReaderComponentOnVerseSelected(Verse verse)
     {
         GotoComponent.VerseSelectedIndex = verse.Id;
     }
 
-    private void ReaderComponent_OnVersesLoaded()
+    private void ReaderComponentOnVersesLoaded()
     {
         GotoComponent.VerseSelectedIndex = DataManager.CurrentVerseId is null
             ? 1
@@ -148,7 +156,7 @@ public partial class QuranView : AView
         UpdateSelectedVerse(GotoComponent.VerseSelectedIndex);
     }
 
-    private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    private void SelectingItemsControlOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         var selectedItem = ModeComboBox?.SelectedItem?.ToString();
         if (string.IsNullOrEmpty(selectedItem))
@@ -157,7 +165,7 @@ public partial class QuranView : AView
     }
 
 
-    private void ReaderComponent_OnKeyDown(object? sender, KeyEventArgs e)
+    private void ReaderComponentOnKeyDown(object? sender, KeyEventArgs e)
     {
         GotoComponent.SetFocusOnVerse();
     }

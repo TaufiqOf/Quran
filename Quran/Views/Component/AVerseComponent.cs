@@ -21,6 +21,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
             nameof(IsSelected));
 
     private MenuItem? _copyVerseMenuItem;
+    protected MenuItem? PlayItemManuMenuItem;
 
     protected AVerseComponent(Surah surah, Verse verse)
     {
@@ -154,8 +155,8 @@ public abstract class AVerseComponent : UserControl, IDisposable
                 FontSize = 18
             }
         };
-
-        var playItem = new MenuItem
+        
+        PlayItemManuMenuItem = new MenuItem
         {
             Header = "Play",
             Icon = new SymbolIcon
@@ -186,7 +187,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
             if (Verse != null && Surah != null) BookmarkVerseRequested?.Invoke(Verse, Surah);
         };
 
-        playItem.Click += (_, _) =>
+        PlayItemManuMenuItem.Click += (_, _) =>
         {
             if (Verse != null) PlayVerseRequested?.Invoke(Verse);
         };
@@ -194,7 +195,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
         menu.Items.Add(copyItem);
         menu.Items.Add(_copyVerseMenuItem);
-        menu.Items.Add(playItem);
+        menu.Items.Add(PlayItemManuMenuItem);
 
         return menu;
     }
@@ -220,7 +221,6 @@ public abstract class AVerseComponent : UserControl, IDisposable
             _copyVerseMenuItem.Header = IsBookMarked ? "Remove Bookmark" : "Bookmark";
         }
 
-        IsSelected = true;
 
         VerseContextMenuRequested?.Invoke(Verse);
     }

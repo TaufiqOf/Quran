@@ -15,14 +15,27 @@ public partial class AudioComponent : UserControl
     public event Action? PlayAction;
     public event Action? PauseAction;
     public event Action<double>? SeekAction;
+    public void PlayMode(bool play)
+    {
+        if (play)
+        {
+            PlayButton.IsEnabled = false;
+            PauseButton.IsEnabled = true;
+        }
+        else
+        {
+            PlayButton.IsEnabled = true;
+            PauseButton.IsEnabled = false;
+        }
+    }
+    
 
     private void PlayButton_OnClick(
         object? sender,
         RoutedEventArgs e)
     {
         PlayAction?.Invoke();
-        PlayButton.IsEnabled = false;
-        PauseButton.IsEnabled = true;
+        PlayMode(true);
     }
 
     private void PauseButton_OnClick(
@@ -30,8 +43,7 @@ public partial class AudioComponent : UserControl
         RoutedEventArgs e)
     {
         PauseAction?.Invoke();
-        PlayButton.IsEnabled = true;
-        PauseButton.IsEnabled = false;
+        PlayMode(false);
     }
 
     private void ProgressSlider_OnValueChanged(

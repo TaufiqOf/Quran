@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Quran.Helpers.Search.VectorSearch.Model;
 
 public class SemanticSearchResult
@@ -10,4 +12,6 @@ public class SemanticSearchResult
 
     public string Reference =>
         $"{SurahId}:{VerseId}";
+
+    public List<WordMappingResult> Impacts { get; set; }
 }

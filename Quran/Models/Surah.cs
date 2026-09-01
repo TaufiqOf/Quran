@@ -19,3 +19,9 @@ public class Surah
 
     [JsonPropertyName("verses")] public List<Verse> Verses { get; set; } = new();
 }
+
+public class SurahResult :Surah
+{
+    public double? SimilarityScore { get; set; }
+    public List<VerseResult> VerseResults { get; set; } = new();
+}

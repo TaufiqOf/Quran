@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Quran.Helpers;
+using Quran.Helpers.Search.VectorSearch;
 using Quran.Models;
 
 namespace Quran.Views.Component;
@@ -18,13 +21,19 @@ public partial class SearchComponent : UserControl
 {
     private static readonly IBrush SearchHighlightBrush = new SolidColorBrush(Color.FromArgb(96, 54, 120, 212));
 
-    private static readonly StyledProperty<Surah> SurahProperty =
-        AvaloniaProperty.Register<SearchComponent, Surah>(
+    private static readonly StyledProperty<SurahResult> SurahProperty =
+        AvaloniaProperty.Register<SearchComponent, SurahResult>(
             nameof(Surah));
 
     private static readonly StyledProperty<string> VerseCountProperty =
         AvaloniaProperty.Register<SearchComponent, string>(
             nameof(VerseCount));
+
+    private static readonly StyledProperty<string> FormattedScoreProperty =
+        AvaloniaProperty.Register<SearchComponent, string>(nameof(FormattedScore));
+
+    private static readonly StyledProperty<bool> HasScoreProperty =
+        AvaloniaProperty.Register<SearchComponent, bool>(nameof(HasScore));
 
     private readonly string[] _searchTerms = [];
 
@@ -33,15 +42,20 @@ public partial class SearchComponent : UserControl
         InitializeComponent();
     }
 
-    public SearchComponent(Surah surah, string? searchText = null)
+    public SearchComponent(SurahResult surah, string? searchText = null)
         : this()
     {
         _searchTerms = CreateSearchTerms(searchText);
         Surah = surah;
-        VerseCount = $" Verses({surah.Verses.Count})";
+        HasScore = surah.SimilarityScore.HasValue;
+        FormattedScore = surah.SimilarityScore.HasValue
+            ? $"Score: {surah.SimilarityScore.Value * 100.0:F2}"
+            : string.Empty;
+
+        VerseCount = $" Verses({surah.VerseResults.Count})";
     }
 
-    public Surah Surah
+    public SurahResult Surah
     {
         get => GetValue(SurahProperty);
         set => SetValue(SurahProperty, value);
@@ -51,6 +65,18 @@ public partial class SearchComponent : UserControl
     {
         get => GetValue(VerseCountProperty);
         set => SetValue(VerseCountProperty, value);
+    }
+
+    public string FormattedScore
+    {
+        get => GetValue(FormattedScoreProperty);
+        set => SetValue(FormattedScoreProperty, value);
+    }
+
+    public bool HasScore
+    {
+        get => GetValue(HasScoreProperty);
+        set => SetValue(HasScoreProperty, value);
     }
 
     public event Action<Surah, Verse>? GoToVerseRequested;
@@ -69,12 +95,8 @@ public partial class SearchComponent : UserControl
             .ToArray();
     }
 
-
     private void ApplyVerseHighlighting(Border border, Verse verse)
     {
-        if (_searchTerms.Length == 0)
-            return;
-
         if (border.Child is not Grid grid)
             return;
 
@@ -82,18 +104,37 @@ public partial class SearchComponent : UserControl
         if (textBlocks.Length < 3)
             return;
 
-        SetHighlightedText(textBlocks[0], verse.Text);
-        SetHighlightedText(textBlocks[1], verse.Translation);
-        SetHighlightedText(textBlocks[2], verse.Transliteration);
-    }
+        // 1. Extract impact words from semantic search (if present)
+        List<WordMappingResult>? impacts = (verse as VerseResult)?.Impacts;
+        var impactTerms = Array.Empty<string>();
 
+        if (impacts != null && impacts.Count > 0)
+        {
+            impactTerms = impacts
+                .Where(i => !string.IsNullOrWhiteSpace(i.VerseWord))
+                .Select(i => i.VerseWord.Trim('.', ',', ';', ':', '?', '!', '"', '[', ']', '(', ')', '{', '}'))
+                .Where(t => t.Length > 0)
+                .ToArray();
+        }
 
-    private void SetHighlightedText(TextBlock? textBlock, string? text)
-    {
-        if (textBlock is null)
+        // 2. Combine impact terms with explicit raw search terms to guarantee exact matches are never missed
+        var combinedTerms = impactTerms
+            .Concat(_searchTerms)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (combinedTerms.Length == 0)
             return;
 
-        if (string.IsNullOrEmpty(text))
+        // 3. Apply highlights to Arabic (0), Translation (1), and Transliteration (2)
+        SetHighlightedText(textBlocks[0], verse.Text, combinedTerms);
+        SetHighlightedText(textBlocks[1], verse.Translation, combinedTerms);
+        SetHighlightedText(textBlocks[2], verse.Transliteration, combinedTerms);
+    }
+
+    private void SetHighlightedText(TextBlock? textBlock, string? text, string[] terms)
+    {
+        if (textBlock is null || string.IsNullOrEmpty(text))
             return;
 
         var inlines = textBlock.Inlines;
@@ -103,14 +144,13 @@ public partial class SearchComponent : UserControl
         inlines.Clear();
         textBlock.Text = string.Empty;
 
-        foreach (var inline in CreateHighlightedInlines(text))
+        foreach (var inline in CreateHighlightedInlines(text, terms))
             inlines.Add(inline);
     }
 
-
-    private IEnumerable<Inline> CreateHighlightedInlines(string text)
+    private IEnumerable<Inline> CreateHighlightedInlines(string text, string[] terms)
     {
-        if (_searchTerms.Length == 0)
+        if (terms.Length == 0)
         {
             yield return new Run { Text = text };
             yield break;
@@ -118,13 +158,22 @@ public partial class SearchComponent : UserControl
 
         var ranges = new List<(int Start, int Length)>();
 
-        foreach (var term in _searchTerms)
+        foreach (var term in terms)
         {
             var index = 0;
 
             while ((index = text.IndexOf(term, index, StringComparison.OrdinalIgnoreCase)) >= 0)
             {
-                ranges.Add((index, term.Length));
+                // Match whole word boundaries so shorter tokens (e.g. "it") don't partially match inside words ("spirit")
+                bool startBoundary = index == 0 || !char.IsLetterOrDigit(text[index - 1]);
+                bool endBoundary = (index + term.Length >= text.Length) ||
+                                   !char.IsLetterOrDigit(text[index + term.Length]);
+
+                if (startBoundary && endBoundary)
+                {
+                    ranges.Add((index, term.Length));
+                }
+
                 index += Math.Max(term.Length, 1);
             }
         }
@@ -135,6 +184,7 @@ public partial class SearchComponent : UserControl
             yield break;
         }
 
+        // Sort ranges by start position, then by length descending
         ranges.Sort((left, right) =>
         {
             var comparison = left.Start.CompareTo(right.Start);
@@ -143,6 +193,7 @@ public partial class SearchComponent : UserControl
                 : right.Length.CompareTo(left.Length);
         });
 
+        // Merge overlapping highlight intervals
         var mergedRanges = new List<(int Start, int Length)>();
 
         foreach (var range in ranges)
@@ -169,15 +220,18 @@ public partial class SearchComponent : UserControl
                 Math.Max(lastEnd, currentEnd) - lastRange.Start);
         }
 
+        // Generate output inlines
         var position = 0;
 
         foreach (var range in mergedRanges)
         {
             if (range.Start > position)
+            {
                 yield return new Run
                 {
                     Text = text.Substring(position, range.Start - position)
                 };
+            }
 
             var highlight = new Span
             {
@@ -195,10 +249,12 @@ public partial class SearchComponent : UserControl
         }
 
         if (position < text.Length)
+        {
             yield return new Run
             {
                 Text = text.Substring(position)
             };
+        }
     }
 
 
@@ -330,31 +386,12 @@ public partial class SearchComponent : UserControl
                 Surah);
         };
 
-
-        // =============================
-        // Play
-        // =============================
-
-        var playItem = new MenuItem
-        {
-            Header = "Play",
-            Icon = new SymbolIcon
-            {
-                Symbol = Symbol.Play,
-                FontSize = 18
-            }
-        };
-
-        playItem.Click += (_, _) => { PlayVerseRequested?.Invoke(verse); };
-
-
         // =============================
         // Add Items
         // =============================
 
         menu.Items.Add(copyItem);
         menu.Items.Add(bookmarkItem);
-        menu.Items.Add(playItem);
 
         return menu;
     }
@@ -414,5 +451,20 @@ public partial class SearchComponent : UserControl
             return;
 
         ApplyVerseHighlighting(border, verse);
+    }
+
+    private async void CopyButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+
+        if (clipboard != null)
+        {
+            foreach (var verse in Surah.VerseResults)
+            {
+                var text =
+                    $"{(Surah.Id)}-{Surah.Transliteration}\n({verse.Id}){verse.Text}\n{verse.Transliteration}\n{verse.Translation}";
+                await clipboard.SetTextAsync(text);
+            }
+        }
     }
 }

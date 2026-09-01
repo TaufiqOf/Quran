@@ -14,6 +14,8 @@ public partial class ReaderComponent : UserControl, IDisposable
     public delegate void VerseSelectedEventHandler(Verse verse);
 
     public delegate void VersesLoadedEventHandler();
+    
+    public Action<Verse>? PlayVerseRequested { get; set; }
 
     private readonly List<AVerseComponent> _verseComponents = new();
     private ReaderMode _mode;
@@ -43,7 +45,7 @@ public partial class ReaderComponent : UserControl, IDisposable
     {
         foreach (var verseComponent in _verseComponents)
         {
-            verseComponent.VerseSelected -= VerseComponent_OnVerseSelected;
+            verseComponent.VerseSelected -= VerseComponentOnVerseSelected;
             verseComponent.Dispose();
         }
 
@@ -70,7 +72,7 @@ public partial class ReaderComponent : UserControl, IDisposable
                     {
                         var verseComponent = new VerseQuranicComponent(_surah, verse);
                         _verseComponents.Add(verseComponent);
-                        verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
+                        verseComponent.VerseSelected += VerseComponentOnVerseSelected;
                         verseComponent.CopyTranslationRequested += async v =>
                             await ContextMenuHelper.CopyTranslationRequested(topLevel, v);
                         verseComponent.CopyTransliterationRequested += async v =>
@@ -97,7 +99,7 @@ public partial class ReaderComponent : UserControl, IDisposable
                             _ => throw new ArgumentOutOfRangeException()
                         };
                         _verseComponents.Add(verseComponent);
-                        verseComponent.VerseSelected += VerseComponent_OnVerseSelected;
+                        verseComponent.VerseSelected += VerseComponentOnVerseSelected;
                         verseComponent.CopyTranslationRequested += async v =>
                             await ContextMenuHelper.CopyTranslationRequested(topLevel, v);
                         verseComponent.CopyTransliterationRequested += async v =>
@@ -107,6 +109,7 @@ public partial class ReaderComponent : UserControl, IDisposable
                         verseComponent.CopyAllRequested += async v =>
                             await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
                         verseComponent.BookmarkVerseRequested += VerseComponentOnBookmarkVerseRequested;
+                        verseComponent.PlayVerseRequested += VerseComponentOnPlayVerseRequested;
                         LinerItemsControl.Items.Add(verseComponent);
                     }
                 }
@@ -114,6 +117,11 @@ public partial class ReaderComponent : UserControl, IDisposable
                 VersesLoaded?.Invoke();
             });
         });
+    }
+
+    private void VerseComponentOnPlayVerseRequested(Verse verse)
+    {
+        PlayVerseRequested?.Invoke(verse);
     }
 
     private void VerseComponentOnBookmarkVerseRequested(Verse verse, Surah surah)
@@ -134,7 +142,7 @@ public partial class ReaderComponent : UserControl, IDisposable
     {
         foreach (var verseComponent in _verseComponents)
         {
-            verseComponent.VerseSelected -= VerseComponent_OnVerseSelected;
+            verseComponent.VerseSelected -= VerseComponentOnVerseSelected;
             verseComponent.Dispose();
         }
 
@@ -149,7 +157,7 @@ public partial class ReaderComponent : UserControl, IDisposable
         UpdateMode(Mode);
     }
 
-    private void VerseComponent_OnVerseSelected(Verse verse)
+    private void VerseComponentOnVerseSelected(Verse verse)
     {
         VerseSelected?.Invoke(verse);
     }

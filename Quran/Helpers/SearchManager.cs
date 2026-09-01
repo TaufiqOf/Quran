@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Quran.Helpers.Search;
 using Quran.Helpers.Search.VectorSearch;
@@ -32,14 +33,14 @@ public static class SearchManager
         SearcherRegistered?.Invoke();
     }
 
-    public static async Task<List<Surah>> PerformSearch(string? searchText)
+    public static async Task<List<SurahResult>> PerformSearch(string? searchText,CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(searchText))
-            return new List<Surah>();
-
+            return new List<SurahResult>();
+        searchText = searchText.Trim();
         var searcher = Searcher?.FirstOrDefault(s => s.GetSearchMode(searchText));
         if (searcher == null)
             searcher = new TextSearch();
-        return searcher.PerformSearch(searchText);
+        return await searcher.PerformSearch(searchText, cancellationToken);
     }
 }

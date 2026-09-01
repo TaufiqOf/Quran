@@ -9,7 +9,7 @@ namespace Quran.Helpers;
 
 public static class DataManager
 {
-    public static string DataPath => Path.Combine(AppContext.BaseDirectory,"Data");
+    private static string DataPath => Path.Combine(AppContext.BaseDirectory,"Data");
 
     private static readonly string BookmarkFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");

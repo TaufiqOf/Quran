@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Quran.Models;
 
@@ -8,5 +9,5 @@ public interface ISearch
 {
     bool GetSearchMode(string searchText);
     Task InitializeAsync();
-    List<Surah> PerformSearch(string searchText);
+    Task<List<SurahResult>> PerformSearch(string searchText,CancellationToken cancellationToken = default);
 }

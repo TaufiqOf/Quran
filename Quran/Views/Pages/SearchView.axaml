@@ -58,7 +58,7 @@
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Height" Value="48" />
             <Setter Property="Padding" Value="5" />
-            <Setter Property="Margin" Value="8" />
+            <Setter Property="Margin" Value="8,8,8,0" />
         </Style>
 
         <!-- =============================== -->
@@ -83,6 +83,9 @@
             <Setter Property="Foreground" Value="White" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="5" />
+            <Setter
+                Property="FontFamily"
+                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
             <Setter Property="Watermark"
                     Value="Search words e.g (Jesus), verses (e.g. fati:1,2:2-5,112:), or ask a question using ? (e.g. ? Who will go to Heaven?)" />
         </Style>
@@ -104,7 +107,7 @@
     <!-- =============================== -->
     <!-- Main Layout -->
     <!-- =============================== -->
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- =========================== -->
         <!-- Search Bar -->
@@ -148,12 +151,12 @@
                 </Button>
             </Grid>
         </Border>
-
+        <ProgressBar x:Name="ProgressBar"  Grid.Row="1" IsIndeterminate="False" Height="2" Margin="9,0,9,0"/>
         <!-- =========================== -->
         <!-- Message -->
         <!-- =========================== -->
         <TextBlock
-            Grid.Row="1"
+            Grid.Row="2"
             x:Name="MessageTextBlock"
             Classes="messageTextBlock" />
         <!-- =========================== -->
@@ -161,7 +164,7 @@
         <!-- =========================== -->
 
         <ScrollViewer
-            Grid.Row="2"
+            Grid.Row="3"
             x:Name="SearchScrollViewer"
             BorderBrush="#3A3A3A"
             BorderThickness="2"

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Quran.Models;
 
@@ -11,25 +12,10 @@ public class StructuredSearch : ISearch
 {
     public bool GetSearchMode(string searchText)
     {
-        return Regex.IsMatch(
-            searchText,
-            @"^\s*
-          [\p{L}\d]+
-          (?:\s+[\p{L}\d]+)*
-          (?:
-              :
-              (?:\d+(?:-\d+)?)?
-          )
-          (?:\s*,\s*
-              [\p{L}\d]+
-              (?:\s+[\p{L}\d]+)*
-              (?:
-                  :
-                  (?:\d+(?:-\d+)?)?
-              )
-          )*
-          \s*$",
-            RegexOptions.IgnorePatternWhitespace);
+        if (string.IsNullOrWhiteSpace(searchText))
+            return false;
+
+        return searchText.StartsWith(">", StringComparison.OrdinalIgnoreCase);
     }
 
     public Task InitializeAsync()
@@ -37,14 +23,27 @@ public class StructuredSearch : ISearch
         return Task.CompletedTask;
     }
 
-    public List<Surah> PerformSearch(string searchText)
+    public Task<List<SurahResult>> PerformSearch(string searchText, CancellationToken cancellationToken = default)
     {
-        var list = new List<Surah>();
+        // 1. Initial cancellation check
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var list = new List<SurahResult>();
 
         if (string.IsNullOrWhiteSpace(searchText))
-            return list;
+            return Task.FromResult(list);
 
-        var searches = searchText.Split(
+        // Remove the leading '>' character and trim surrounding whitespace
+        string cleanSearchText = searchText.Trim();
+        if (cleanSearchText.StartsWith(">"))
+        {
+            cleanSearchText = cleanSearchText[1..].Trim();
+        }
+
+        if (string.IsNullOrWhiteSpace(cleanSearchText))
+            return Task.FromResult(list);
+
+        var searches = cleanSearchText.Split(
             ',',
             StringSplitOptions.RemoveEmptyEntries |
             StringSplitOptions.TrimEntries);
@@ -55,6 +54,9 @@ public class StructuredSearch : ISearch
 
         foreach (var search in searches)
         {
+            // 2. Cancellation check inside the loop for multi-part queries
+            cancellationToken.ThrowIfCancellationRequested();
+
             var match = regex.Match(search);
 
             if (!match.Success)
@@ -76,13 +78,16 @@ public class StructuredSearch : ISearch
             // Find Surah by ID or Name
             // =====================================
 
-            Surah? surah;
+            SurahResult? surah;
+            Surah? baseSurah = null;
 
             if (int.TryParse(surahSearch, out var surahId))
-                surah = DataManager.Surahs
-                    .FirstOrDefault(s => s.Id == surahId);
+            {
+                baseSurah = DataManager.Surahs.FirstOrDefault(s => s.Id == surahId);
+            }
             else
-                surah = DataManager.Surahs
+            {
+                baseSurah = DataManager.Surahs
                     .FirstOrDefault(s =>
                         s.Name.Contains(
                             surahSearch,
@@ -95,13 +100,34 @@ public class StructuredSearch : ISearch
                         s.Translation.Contains(
                             surahSearch,
                             StringComparison.OrdinalIgnoreCase));
+                
+            }
 
-            if (surah is null)
+            if (baseSurah is null)
                 continue;
+
+            surah = new SurahResult
+            {
+                Id = baseSurah.Id,
+                Name = baseSurah.Name,
+                Translation = baseSurah.Translation,
+                Transliteration = baseSurah.Transliteration,
+                Type = baseSurah.Type,
+                TotalVerses = baseSurah.TotalVerses,
+                VerseResults = baseSurah.Verses?.Select(v => new VerseResult
+                {
+                    Id = v.Id,
+                    Text = v.Text,
+                    Translation = v.Translation,
+                    Transliteration = v.Transliteration,
+                    SimilarityScore = 1.0
+                }).ToList() ?? new List<VerseResult>(),
+                SimilarityScore = 1.0
+            };
 
             // =====================================
             // Entire Surah
-            // Example: Fatihah
+            // Example: >Fatihah
             // =====================================
 
             if (!startVerse.HasValue)
@@ -115,7 +141,6 @@ public class StructuredSearch : ISearch
             // =====================================
 
             var start = startVerse.Value;
-
             var end = endVerse ?? start;
 
             var min = Math.Min(start, end);
@@ -125,7 +150,7 @@ public class StructuredSearch : ISearch
             // Find verses
             // =====================================
 
-            var verses = surah.Verses
+            var verses = surah.VerseResults
                 .Where(v =>
                     v.Id >= min &&
                     v.Id <= max)
@@ -138,16 +163,17 @@ public class StructuredSearch : ISearch
             // Add filtered Surah
             // =====================================
 
-            list.Add(new Surah
+            list.Add(new SurahResult
             {
                 Id = surah.Id,
                 Name = surah.Name,
                 Translation = surah.Translation,
                 Transliteration = surah.Transliteration,
-                Verses = verses
+                SimilarityScore = 1.0,
+                VerseResults = verses
             });
         }
 
-        return list;
+        return Task.FromResult(list);
     }
 }

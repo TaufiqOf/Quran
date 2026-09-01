@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
+using Quran.Helpers.Search.VectorSearch;
 
 namespace Quran.Models;
 
@@ -11,4 +14,11 @@ public class Verse
     [JsonPropertyName("translation")] public string Translation { get; set; } = string.Empty;
 
     [JsonPropertyName("transliteration")] public string Transliteration { get; set; } = string.Empty;
+}
+
+public class VerseResult : Verse
+{
+    public double? SimilarityScore { get; set; }
+    public List<WordMappingResult> Impacts { get; set; }
+    
 }

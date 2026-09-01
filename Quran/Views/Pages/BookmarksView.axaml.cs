@@ -30,6 +30,7 @@ public partial class BookmarksView : AView
 
     public override async Task Load(params object?[] parameter)
     {
+        var topLevel = TopLevel.GetTopLevel(MessageHelper.MainWindow);
         _isLoading = true;
 
         try
@@ -74,7 +75,15 @@ public partial class BookmarksView : AView
 
                 verseComponent.PointerReleased += VerseComponentPointerReleased;
                 verseComponent.BookmarkVerseRequested += VerseComponentBookmarkVerseRequested;
-
+                verseComponent.CopyTranslationRequested += async v =>
+                    await ContextMenuHelper.CopyTranslationRequested(topLevel, v);
+                verseComponent.CopyTransliterationRequested += async v =>
+                    await ContextMenuHelper.CopyTransliterationRequested(topLevel, v);
+                verseComponent.CopyVerseRequested += async v =>
+                    await ContextMenuHelper.CopyVerseRequested(topLevel, v);
+                verseComponent.CopyAllRequested += async v =>
+                    await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
+                verseComponent.DontShowPlay();
                 VerseComponents.Add(verseComponent);
 
                 if (!SurahComboBox.Items
@@ -114,6 +123,7 @@ public partial class BookmarksView : AView
             _isLoading = false;
         }
     }
+
 
     public override async Task Reload(params object?[] parameter)
     {

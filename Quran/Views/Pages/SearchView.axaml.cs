@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
 using Quran.Views.Component;
+using Timer = System.Timers.Timer;
 
 namespace Quran.Views.Pages;
 
@@ -18,23 +22,41 @@ public partial class SearchView : AView
     private readonly Timer _messageTimer;
 
     private readonly Random _random = new();
-
+    private CancellationTokenSource? _searchCts;
+    
     private readonly List<string> _searchTips = new()
     {
         "💡 Search Tips",
         "🔍 Search for a word Example: Jesus",
-        "📖 Open a specific verse Example: 2:255",
-        "📚 Open a range of verses Example: 2:2-5",
-        "📖 Open an entire chapter Example: 112:",
+        "📖 Open a specific verse Example: >2:255",
+        "📚 Open a range of verses Example: >2:2-5",
+        "📖 Open an entire chapter Example: >112:",
         "❓ Ask a question using ? Example: ? Who will go to Heaven?",
         "🔎 Use multiple words to narrow your search Example: Jesus Mary",
         "💡 Try different or simpler keywords if you don't find what you need.",
-        "📖 Verse format: Chapter:Verse Example: 2:255",
-        "📚 Verse range format: Chapter:Start-End Example: 2:2-5"
+        "📖 Verse format: Chapter:Verse Example: >2:255",
+        "📚 Verse range format: Chapter:Start-End Example: >2:2-5",
+
+        // Semantic Vector Search Options
+        "🤖 Perform semantic AI search with ? Example: ? >paradise:10. Here 10 is the number of results to return.",
+        "🎯 Limit semantic results count using :N Example: ? >mercy:5, Here 5 is the number of results to return.",
+        "🧠 Search concepts, not just words Example: ? reward for good deeds",
+        "🌐 Ask semantic questions in any language Example: ? What is the night of decree?",
+
+        // Exact Text / Keyword Search Options
+        "🔤 Search exact English translation words Example: Paradise",
+        "🔤 Search case-sensitive sky vs. heaven Example: Heaven",
+        "🔀 Find verses with all terms Example: Moses Pharaoh",
+        "💬 Search by transliteration text Example: >Al-Jannah",
+        "🕌 Search Arabic text directly Example: >الجنة",
+
+        // Navigation & Bookmarks
+        "🔖 Search by Surah name Example: >Baqarah:",
+        "🔢 Quick jump by Surah number Example: >114:"
     };
 
     private readonly Timer _timer;
-    private List<Surah> _results = new();
+    private List<SurahResult> _results = new();
 
     public SearchView()
     {
@@ -63,8 +85,19 @@ public partial class SearchView : AView
 
     private void MessageTimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
-        var tip = _searchTips[_random.Next(_searchTips.Count)];
-        Application.Current?.Dispatcher.Invoke(() => { ShowMessage(tip); });
+        if (SearchManager.IsSearcherRegistered)
+        {
+            var tip = _searchTips[_random.Next(_searchTips.Count)];
+            Application.Current?.Dispatcher.Invoke(() => { ShowMessage(tip); });
+        }
+        else
+        {
+            Application.Current?.Dispatcher.Invoke(() =>
+            {
+                ShowMessage(
+                    "Context Search is not initialized yet. You can still search for verses by keywords, or reference (Chapter:Verse). For example, you can search for '2:255' or 'Jesus'.");
+            });
+        }
     }
 
     private void ShowMessage(string text)
@@ -107,35 +140,95 @@ public partial class SearchView : AView
     private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
         _timer.Stop();
-        Application.Current?.Dispatcher.Invoke(async () =>
+
+        // 1. Cancel any existing in-flight search task
+        _searchCts?.Cancel();
+        _searchCts?.Dispose();
+        _searchCts = new CancellationTokenSource();
+        var token = _searchCts.Token;
+
+        // 2. Read input parameters on the UI thread
+        string text = string.Empty;
+        Application.Current?.Dispatcher.Invoke(() =>
         {
-            var text = SearchTextBox.Text;
-            var searchText = text;
-            var results = await SearchManager.PerformSearch(searchText);
+            // Detach old UI events
             foreach (var item in SearchItemsControl.Items)
+            {
                 if (item is SearchComponent searchComponent)
                     DetachSearchComponentEvents(searchComponent);
-            _messageTimer.Stop();
-            ShowMessage("Search completed. Found " + results.Count + " results.");
-            _messageTimer.Start();
-            _results = results;
-            SearchItemsControl.Items.Clear();
-
-            foreach (var surah in results)
-            {
-                var sText = text.Replace("?", string.Empty).Trim();
-                var searchComponent = new SearchComponent(surah, sText);
-
-                searchComponent.GoToVerseRequested += SearchComponentOnGoToVerseRequested;
-                searchComponent.CopyTranslationRequested += SearchComponentOnCopyTranslationRequested;
-                searchComponent.CopyTransliterationRequested += SearchComponentOnCopyTransliterationRequested;
-                searchComponent.CopyVerseRequested += SearchComponentOnCopyVerseRequested;
-                searchComponent.CopyAllRequested += SearchComponentOnCopyAllRequested;
-                searchComponent.BookmarkVerseRequested += ContextMenuHelper.OnBookmarkVerseRequested;
-
-                SearchItemsControl.Items.Add(searchComponent);
             }
+
+            SearchItemsControl.Items.Clear();
+            ProgressBar.IsIndeterminate = true;
+            text = SearchTextBox.Text ?? string.Empty;
         });
+
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            Application.Current?.Dispatcher.Invoke(() => ProgressBar.IsIndeterminate = false);
+            return;
+        }
+
+        // 3. Offload HEAVY SEARCH logic to a background ThreadPool thread
+        Task.Run(async () =>
+        {
+            try
+            {
+                var st = Stopwatch.StartNew();
+
+                // Pass the cancellation token to the search service
+                var results = await SearchManager.PerformSearch(text, token);
+
+                st.Stop();
+
+                // Throw if cancellation was requested while searching
+                token.ThrowIfCancellationRequested();
+
+                // Prepare string formatting off the UI thread
+                var totalVerses = results.Sum(s => s.VerseResults.Count);
+                string surahText = results.Count == 1 ? "surah" : "surahs";
+                string verseText = totalVerses == 1 ? "verse" : "verses";
+                string durationText =
+                    $"Search completed in {st.Elapsed.TotalSeconds:F2} s. Found {totalVerses} {verseText} in {results.Count} {surahText}.";
+
+                var sText = text.Replace("?", string.Empty).Split(':')[0].Trim();
+
+                // 4. Switch to the UI thread ONLY if not cancelled
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    // Double check token inside dispatcher in case cancellation happened during thread dispatch
+                    if (token.IsCancellationRequested)
+                        return;
+
+                    _messageTimer.Stop();
+                    ShowMessage(durationText);
+                    _messageTimer.Start();
+
+                    _results = results;
+
+                    // Populate Controls on UI Thread
+                    foreach (var surah in results)
+                    {
+                        var searchComponent = new SearchComponent(surah, sText);
+
+                        searchComponent.GoToVerseRequested += SearchComponentOnGoToVerseRequested;
+                        searchComponent.CopyTranslationRequested += SearchComponentOnCopyTranslationRequested;
+                        searchComponent.CopyTransliterationRequested += SearchComponentOnCopyTransliterationRequested;
+                        searchComponent.CopyVerseRequested += SearchComponentOnCopyVerseRequested;
+                        searchComponent.CopyAllRequested += SearchComponentOnCopyAllRequested;
+                        searchComponent.BookmarkVerseRequested += ContextMenuHelper.OnBookmarkVerseRequested;
+
+                        SearchItemsControl.Items.Add(searchComponent);
+                    }
+
+                    ProgressBar.IsIndeterminate = false;
+                }, DispatcherPriority.Normal, token);
+            }
+            catch (OperationCanceledException)
+            {
+                // Search was cancelled by a newer typing event - safely ignore
+            }
+        }, token);
     }
 
     private void DetachSearchComponentEvents(SearchComponent searchComponent)

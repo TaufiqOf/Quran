@@ -2,124 +2,171 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="clr-namespace:Quran.Models"
+    xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
+    xmlns:helpers="clr-namespace:Quran.Helpers.Search.VectorSearch"
     x:Class="Quran.Views.Component.SearchComponent"
     x:Name="Root">
 
     <UserControl.Styles>
 
-        <!-- =============================== -->
         <!-- Surah Expander -->
-        <!-- =============================== -->
-
         <Style Selector="Expander.surah">
             <Setter Property="Margin" Value="4" />
+            <Setter Property="Background" Value="Transparent" />
         </Style>
 
-        <!-- =============================== -->
         <!-- Surah Header -->
-        <!-- =============================== -->
-
         <Style Selector="Border.surahHeader">
-            <Setter Property="Background" Value="#2a2a2a" />
+            <Setter Property="Background" Value="#222222" />
             <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Padding" Value="12,10" />
         </Style>
 
         <Style Selector="TextBlock.surahId">
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="15" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="#3678D4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
         <Style Selector="TextBlock.surahName">
-            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+
         <Style Selector="TextBlock.surahTranslation">
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="Foreground" Value="#CCCCCC" />
-            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#AAAAAA" />
             <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
         <Style Selector="TextBlock.surahTransliteration">
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="Foreground" Value="#CCCCCC" />
-            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="FontStyle" Value="Italic" />
             <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
+        <!-- Surah Score Badge -->
+        <Style Selector="Border.surahScoreBadge">
+            <Setter Property="Background" Value="#1E3A5F" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="8,3" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
 
-        <!-- =============================== -->
-        <!-- Verse -->
-        <!-- =============================== -->
+        <Style Selector="TextBlock.surahScoreText">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#64B5F6" />
+        </Style>
 
+        <!-- Verse Score Badge -->
+        <Style Selector="Border.verseScoreBadge">
+            <Setter Property="Background" Value="#1A2D42" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.verseScoreText">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#4FC3F7" />
+        </Style>
+        <Style Selector="Border.verseWordScoreBadge">
+            <Setter Property="Background" Value="#1A2D42" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBlock.verseWordScoreText">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#4FC3F7" />
+        </Style>
+
+        <Style Selector="TextBlock.verseCount">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Verse Container & Hover Interaction -->
         <Style Selector="Border.verse">
-            <Setter Property="Background" Value="#2a2a2a" />
+            <Setter Property="Background" Value="#2A2A2A" />
             <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="Padding" Value="10" />
-            <Setter Property="Margin" Value="4,2" />
+            <Setter Property="BorderBrush" Value="#333333" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="Margin" Value="4,4" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
         </Style>
 
+        <Style Selector="Border.verse:pointerover">
+            <Setter Property="Background" Value="#323232" />
+            <Setter Property="BorderBrush" Value="#3678D4" />
+        </Style>
 
-        <!-- =============================== -->
-        <!-- Arabic -->
-        <!-- =============================== -->
-
+        <!-- Typography -->
         <Style Selector="TextBlock.arabic">
-            <Setter
-                Property="FontFamily"
-                Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
-            <Setter Property="FontSize" Value="32" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontFamily" Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="Foreground" Value="#F5F5F5" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="FlowDirection" Value="RightToLeft" />
             <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,4,0,12" />
         </Style>
-
-
-        <!-- =============================== -->
-        <!-- Translation -->
-        <!-- =============================== -->
 
         <Style Selector="TextBlock.translation">
-            <Setter Property="FontSize" Value="17" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="#E0E0E0" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="LineHeight" Value="27" />
-            <Setter Property="Margin" Value="20,8,20,0" />
+            <Setter Property="LineHeight" Value="24" />
+            <Setter Property="Margin" Value="16,0,16,6" />
         </Style>
-
-
-        <!-- =============================== -->
-        <!-- Transliteration -->
-        <!-- =============================== -->
 
         <Style Selector="TextBlock.transliteration">
-            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontSize" Value="13.5" />
             <Setter Property="FontStyle" Value="Italic" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="#B0B0B0" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="Margin" Value="20,4,20,0" />
+            <Setter Property="Margin" Value="16,0,16,4" />
         </Style>
-
-
-        <!-- =============================== -->
-        <!-- Verse Number -->
-        <!-- =============================== -->
 
         <Style Selector="TextBlock.verseNumber">
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="Foreground" Value="#777777" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#666666" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="HorizontalAlignment" Value="Right" />
-            <Setter Property="Margin" Value="5,5,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <Style Selector="Button.copyButton">
+            <Setter Property="Width" Value="38" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
     </UserControl.Styles>
 
 
@@ -138,7 +185,7 @@
 
         <Expander.Header>
             <Border Classes="surahHeader">
-                <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+                <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto">
                     <TextBlock
                         Grid.Column="0"
                         Classes="surahId"
@@ -151,21 +198,38 @@
 
                     <TextBlock
                         Grid.Column="2"
-                        Classes="surahTranslation"
-                        Text="{Binding Surah.Translation, ElementName=Root}" />
-
-                    <TextBlock
-                        Grid.Column="3"
                         Classes="surahTransliteration"
                         Text="{Binding Surah.Transliteration, ElementName=Root}" />
 
                     <TextBlock
-                        x:Name="TextBlockVerseCount"
+                        Grid.Column="3"
+                        Classes="surahTranslation"
+                        Text="{Binding Surah.Translation, ElementName=Root}" />
+
+                    <Border
                         Grid.Column="5"
-                        Classes="surahTransliteration"
+                        Classes="surahScoreBadge"
+                        IsVisible="{Binding HasScore, ElementName=Root}">
+                        <TextBlock
+                            Classes="surahScoreText"
+                            Text="{Binding FormattedScore, ElementName=Root}" />
+                    </Border>
+
+                    <TextBlock
+                        Grid.Column="6"
+                        Classes="verseCount"
+                        Margin="12,0,0,0"
                         Text="{Binding VerseCount, ElementName=Root}" />
+                    <Button
+                        Grid.Column="7"
+                        Classes="copyButton"
+                        ToolTip.Tip="Copy search results"
+                        Click="CopyButton_OnClick">
 
-
+                        <avalonia:FluentIcon
+                            Icon="Copy"
+                            FontSize="18" />
+                    </Button>
                 </Grid>
             </Border>
         </Expander.Header>
@@ -175,14 +239,14 @@
         <!-- =========================== -->
 
         <ItemsControl
-            ItemsSource="{Binding Surah.Verses, ElementName=Root}">
+            ItemsSource="{Binding Surah.VerseResults, ElementName=Root}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="models:Verse">
+                <DataTemplate x:DataType="models:VerseResult">
                     <Border
                         Classes="verse"
                         Loaded="VerseBorder_OnLoaded"
@@ -200,10 +264,44 @@
                                 Grid.Row="2"
                                 Classes="transliteration"
                                 Text="{Binding Transliteration}" />
-                            <TextBlock
-                                Grid.Row="3"
-                                Classes="verseNumber"
-                                Text="{Binding Id}" />
+
+                            <!-- Bottom Bar: Score Badge & Verse Number -->
+                            <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto" Margin="0,6,0,0">
+                                <Border
+                                    Grid.Column="0"
+                                    Classes="verseScoreBadge"
+                                    IsVisible="{Binding SimilarityScore, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                    <TextBlock
+                                        Classes="verseScoreText"
+                                        Text="{Binding SimilarityScore, StringFormat='Match {0:P0}'}" />
+                                </Border>
+                                
+                                <ItemsControl 
+                                    Grid.Column="1" 
+                                    Margin="8,0"
+                                    ItemsSource="{Binding Impacts}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="helpers:WordMappingResult">
+                                            <Border Classes="verseWordScoreBadge" Margin="2">
+                                                <TextBlock Classes="verseWordScoreText">
+                                                    <Run Text="{Binding VerseWord}" />
+                                                    <Run Text=":" />
+                                                    <Run Text="{Binding CorrelationScore, StringFormat='{}{0:F3}'}" />
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Classes="verseNumber"
+                                    Text="{Binding Id, StringFormat='Verse {0}'}" />
+                            </Grid>
                         </Grid>
                     </Border>
                 </DataTemplate>

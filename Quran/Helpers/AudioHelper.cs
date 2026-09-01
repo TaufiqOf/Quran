@@ -7,6 +7,7 @@ namespace Quran.Helpers;
 
 public static class AudioHelper
 {
+    private static string DataPath => Path.Combine(AppContext.BaseDirectory,"Data");
     private static readonly LibVLC? LibVlc;
     private static readonly MediaPlayer? MediaPlayer;
     private static Media? _currentMedia;
@@ -69,8 +70,8 @@ public static class AudioHelper
 
         StopAudio();
 
-        var resourceName = $"{surahId:D3}{verseId:D3}.mp3";
-        var audioPath = GetAudioFile(resourceName, reciterName);
+        var fileName = $"{surahId:D3}{verseId:D3}.mp3";
+        var audioPath = GetAudioFile(fileName, reciterName);
 
         _currentMedia = new Media(LibVlc!, audioPath);
         MediaPlayer!.Play(_currentMedia);
@@ -105,21 +106,10 @@ public static class AudioHelper
         MediaPlayer!.Position = (float)(position / 100.0);
     }
 
-    private static string GetAudioFile(string resourceName, string reciterName)
+    private static string GetAudioFile(string fileName, string reciterName)
     {
-        var assemblyName = typeof(AudioHelper).Assembly.GetName().Name;
-        if (string.IsNullOrWhiteSpace(assemblyName))
-            throw new InvalidOperationException("Could not determine assembly name.");
-
-        var resourceUri = new Uri($"avares://{assemblyName}/Data/Audio/{reciterName}/{resourceName}");
-        var cacheDirectory = Path.Combine(Path.GetTempPath(), "Quran", "Audio", reciterName);
-        Directory.CreateDirectory(cacheDirectory);
-        var audioPath = Path.Combine(cacheDirectory, resourceName);
-        if (File.Exists(audioPath)) return audioPath;
-
-        using var sourceStream = AssetLoader.Open(resourceUri);
-        using var destinationStream = File.Create(audioPath);
-        sourceStream.CopyTo(destinationStream);
-        return audioPath;
+        var filePath = Path.Combine(DataPath, "Audio", reciterName, fileName);
+        if (File.Exists(filePath)) return filePath;
+        throw new FileNotFoundException("Audio file not found.", filePath);
     }
 }

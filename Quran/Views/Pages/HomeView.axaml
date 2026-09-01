@@ -34,12 +34,13 @@
                         MinItemWidth="350" 
                         Orientation="Horizontal"
                         MinColumnSpacing="8" 
+                        ItemsJustification="Center"
                         MinRowSpacing="8" />
                 </ItemsRepeater.Layout>
 
                 <ItemsRepeater.ItemTemplate>
-                    <DataTemplate DataType="component:SurahCardViewModel">
-                        <component:CardComponent />
+                    <DataTemplate DataType="component:SurahCardViewModel" >
+                        <component:CardComponent  />
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>

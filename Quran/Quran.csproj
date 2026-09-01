@@ -105,6 +105,7 @@
 
 
     <ItemGroup>
+        <PackageReference Include="Humanizer" Version="3.0.10" />
         <PackageReference Include="LibVLCSharp" Version="3.10.1"/>
     </ItemGroup>
 

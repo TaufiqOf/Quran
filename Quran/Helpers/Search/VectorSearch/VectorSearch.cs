@@ -100,22 +100,7 @@ public class VectorSearch : ISearch
         // 1. Initial cancellation check
         cancellationToken.ThrowIfCancellationRequested();
         var fastSearch = false;
-        var surahs = DataManager.Surahs.Select(q => new SurahResult
-        {
-            Id = q.Id,
-            Name = q.Name,
-            Transliteration = q.Transliteration,
-            Translation = q.Translation,
-            Type = q.Type,
-            TotalVerses = q.TotalVerses,
-            VerseResults = q.Verses.Select(v => new VerseResult
-            {
-                Id = v.Id,
-                Text = v.Text,
-                Transliteration = v.Transliteration,
-                Translation = v.Translation
-            }).ToList()
-        }).ToList();
+        var surahs = DataManager.SurahResults;
 
         if (_semanticSearchService == null)
             throw new InvalidOperationException("Search service is not initialized.");

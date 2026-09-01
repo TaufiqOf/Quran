@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Quran.Helpers.Search.VectorSearch.Embedding;
@@ -80,9 +79,7 @@ public class HybridQuranSearchService(
         foreach (var docId in allDocIds)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
             double rrfScore = 0;
-
             if (vectorRankings.TryGetValue(docId, out var vec))
             {
                 rrfScore += 1.0 / (k + vec.Rank);
@@ -126,30 +123,7 @@ public class HybridQuranSearchService(
         return result;
     }
 
-    private static List<string> ExtractEntityKeywords(string query)
-    {
-        var keywords = new List<string>();
-        var tokens = Regex.Split(query.ToLowerInvariant(), @"\W+");
-
-        foreach (var token in tokens)
-        {
-            if (EntityAliases.TryGetValue(token, out var aliases))
-            {
-                keywords.AddRange(aliases);
-            }
-        }
-
-        return keywords.Distinct().ToList();
-    }
-
-    private static bool MatchesAnyKeyword(Surah surah, Verse verse, List<string> keywords)
-    {
-        string combinedText = $"{surah.Translation} {verse.Translation} {verse.Transliteration} {verse.Text}"
-            .ToLowerInvariant();
-        return keywords.Any(keyword => combinedText.Contains(keyword));
-    }
-
-    public async Task<List<WordMappingResult>> GetWordImpactByOcclusionAsync(
+    private async Task<List<WordMappingResult>> GetWordImpactByOcclusionAsync(
         string queryText,
         Verse verse,
         CancellationToken cancellationToken = default)
@@ -228,58 +202,5 @@ public class HybridQuranSearchService(
         float dynamicCutoff = Math.Max(0.0015f, maxScore * 0.25f);
 
         return aggregated.Where(x => x.CorrelationScore > 0.001).ToList();
-    }
-
-    public async Task<List<WordMappingResult>> MapQueryToVerseAsync(
-        string rawQuery,
-        Verse verse,
-        CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        string[] queryWords = rawQuery.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        string[] verseWords = verse.Translation.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        var baseQueryVec =
-            await embeddingService.CreateEmbeddingAsync(EmbeddingTextBuilder.BuildQuery(rawQuery), cancellationToken);
-        var baseVerseVec = await embeddingService.CreateEmbeddingAsync(verse.Translation, cancellationToken);
-        float baseScore = (float)VectorMath.CosineSimilarity(baseQueryVec, baseVerseVec);
-
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var occludedVerseTasks = verseWords.Select((_, j) =>
-        {
-            string textWithoutVerseWord = string.Join(" ", verseWords.Where((_, idx) => idx != j));
-            return embeddingService.CreateEmbeddingAsync(textWithoutVerseWord, cancellationToken);
-        });
-
-        var occludedVerseVecs = await Task.WhenAll(occludedVerseTasks);
-
-        var mappings = new List<WordMappingResult>();
-
-        for (int i = 0; i < queryWords.Length; i++)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            string textWithoutQueryWord = string.Join(" ", queryWords.Where((_, idx) => idx != i));
-            var occludedQueryVec = await embeddingService.CreateEmbeddingAsync(
-                EmbeddingTextBuilder.BuildQuery(textWithoutQueryWord),
-                cancellationToken);
-
-            for (int j = 0; j < verseWords.Length; j++)
-            {
-                float doubleOccludedScore = (float)VectorMath.CosineSimilarity(occludedQueryVec, occludedVerseVecs[j]);
-                float impactScore = baseScore - doubleOccludedScore;
-
-                mappings.Add(new WordMappingResult
-                {
-                    QueryWord = queryWords[i],
-                    VerseWord = verseWords[j].Trim('.', ',', ';', ':', '?', '!'),
-                    CorrelationScore = impactScore
-                });
-            }
-        }
-
-        return mappings.ToList();
     }
 }

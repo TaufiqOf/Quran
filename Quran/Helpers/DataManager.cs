@@ -9,7 +9,7 @@ namespace Quran.Helpers;
 
 public static class DataManager
 {
-    private static string DataPath => Path.Combine(AppContext.BaseDirectory,"Data");
+    private static string DataPath => Path.Combine(AppContext.BaseDirectory, "Data");
 
     private static readonly string BookmarkFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");
@@ -23,6 +23,31 @@ public static class DataManager
         // Load Surahs and Surah Orders on initialization
         Bookmarks = GetBookmarks();
         LoadSurahs(LoadLanguagePreference());
+    }
+
+    public static List<SurahResult> SurahResults
+    {
+        get
+        {
+            var surahResults = Surahs.Select(originalSurah => new SurahResult
+            {
+                Id = originalSurah.Id,
+                Name = originalSurah.Name,
+                Transliteration = originalSurah.Transliteration,
+                Translation = originalSurah.Translation,
+                Type = originalSurah.Type,
+                TotalVerses = originalSurah.TotalVerses,
+                Verses = originalSurah.Verses,
+                VerseResults = originalSurah.Verses.Select(q=> new VerseResult()
+                {
+                    Id = q.Id,
+                    Text = q.Text,
+                    Translation = q.Translation,
+                    Transliteration = q.Transliteration,
+                }).ToList()
+            });
+            return surahResults.ToList();
+        }
     }
 
     public static List<Surah> Surahs { get; private set; } = new();

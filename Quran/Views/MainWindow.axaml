@@ -162,7 +162,7 @@
                                 Spacing="16">
 
                         <icon:FluentIcon
-                            Icon="Settings"
+                            Icon="Chat"
                             FontSize="24"
                             VerticalAlignment="Center" />
                         

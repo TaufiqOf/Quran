@@ -63,11 +63,12 @@ public class AiSearch : ISearch
 
             var messages = new List<ChatMessage>
             {
-                new ChatMessage(ChatRole.System, @"You are a strict Quranic search tool router.
-Select the correct search tool for the query.
-When calling FindExactWordMatchesAsync, populate parameter 'term'.
-When calling FindTopicOrNarrativeAsync, populate parameter 'topic'.
-Do NOT reply with conversational text."),
+                new ChatMessage(ChatRole.System, 
+        @"You are a strict Quranic search tool router.
+        Select the correct search tool for the query.
+        When calling FindExactWordMatchesAsync, populate parameter 'term'.
+        When calling FindTopicOrNarrativeAsync, populate parameter 'topic'.
+        Do NOT reply with conversational text."),
                 new ChatMessage(ChatRole.User, cleanQuery)
             };
 

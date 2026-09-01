@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -20,10 +21,9 @@ namespace Quran.Views.Pages;
 public partial class SearchView : AView
 {
     private readonly Timer _messageTimer;
-
     private readonly Random _random = new();
     private CancellationTokenSource? _searchCts;
-    
+
     private readonly List<string> _searchTips = new()
     {
         "💡 Search Tips",
@@ -55,17 +55,13 @@ public partial class SearchView : AView
         "🔢 Quick jump by Surah number Example: >114:"
     };
 
-    private readonly Timer _timer;
     private List<SurahResult> _results = new();
+    private bool _isSearching = false;
 
     public SearchView()
     {
         InitializeComponent();
 
-        _timer = new Timer();
-        _timer.Interval = 1000;
-        _timer.Stop();
-        _timer.Elapsed += TimerOnElapsed;
         _messageTimer = new Timer();
         _messageTimer.Interval = 10000;
         _messageTimer.Stop();
@@ -117,7 +113,6 @@ public partial class SearchView : AView
         _messageTimer.Start();
     }
 
-
     public override async Task Load(params object?[] parameter)
     {
     }
@@ -131,21 +126,31 @@ public partial class SearchView : AView
     {
     }
 
-    private void SearchTextBoxOnTextChanged(object? sender, TextChangedEventArgs e)
+    private void SearchButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        _timer.Stop();
-        _timer.Start();
+        if (!_isSearching)
+        {
+            ExecuteSearch();
+            SearchButton.Focus();
+        }
+        else
+        {
+            _searchCts?.Cancel();
+            _searchCts?.Dispose();
+            _searchCts = null;
+            _isSearching = false;
+            
+        }
     }
 
-    private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
+    private void ExecuteSearch()
     {
-        _timer.Stop();
-
         // 1. Cancel any existing in-flight search task
         _searchCts?.Cancel();
         _searchCts?.Dispose();
         _searchCts = new CancellationTokenSource();
         var token = _searchCts.Token;
+        _isSearching = true;
 
         // 2. Read input parameters on the UI thread
         string text = string.Empty;
@@ -158,6 +163,13 @@ public partial class SearchView : AView
                     DetachSearchComponentEvents(searchComponent);
             }
 
+            SearchTextBox.IsEnabled = false;
+            SearchButton.Content = new FluentIcons.Avalonia.SymbolIcon
+            {
+                Symbol = FluentIcons.Common.Symbol.Stop,
+                FontSize = 16
+            };
+            ToolTip.SetTip(SearchButton, "Stop Search");
             SearchItemsControl.Items.Clear();
             ProgressBar.IsIndeterminate = true;
             text = SearchTextBox.Text ?? string.Empty;
@@ -221,12 +233,29 @@ public partial class SearchView : AView
                         SearchItemsControl.Items.Add(searchComponent);
                     }
 
+
                     ProgressBar.IsIndeterminate = false;
                 }, DispatcherPriority.Normal, token);
             }
             catch (OperationCanceledException)
             {
-                // Search was cancelled by a newer typing event - safely ignore
+                // Search was cancelled by a newer search event - safely ignore
+            }
+            finally
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    SearchTextBox.IsEnabled = true;
+                    ProgressBar.IsIndeterminate = false;
+                    SearchButton.Content = new FluentIcons.Avalonia.SymbolIcon
+                    {
+                        Symbol = FluentIcons.Common.Symbol.Search,
+                        FontSize = 16
+                    };
+                    ToolTip.SetTip(SearchButton, "Search");
+                    _isSearching = false;
+                    SearchTextBox.Focus();
+                });
             }
         }, token);
     }
@@ -269,7 +298,6 @@ public partial class SearchView : AView
     {
         RequestGotoPage("Quran", surah, verse.Id);
     }
-
 
     private async void CopyButton_OnClick(
         object? sender,
@@ -317,5 +345,14 @@ public partial class SearchView : AView
             return;
 
         await clipboard.SetTextAsync(text);
+    }
+
+    private void SearchTextBox_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            ExecuteSearch();
+            e.Handled = true;
+        }
     }
 }

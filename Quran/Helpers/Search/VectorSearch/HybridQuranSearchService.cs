@@ -33,10 +33,10 @@ public class HybridQuranSearchService(
         { "joseph", new[] { "joseph", "yusuf", "يوسف" } }
     };
 
-    public override async Task<List<SemanticSearchResult>> SearchAsync(
-        List<SurahResult> surahs,
+    public override async Task<List<SemanticSearchResult>> SearchAsync(List<SurahResult> surahs,
         string rawQuery,
         int maxResults = 100,
+        bool fastSearch = false,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -111,17 +111,18 @@ public class HybridQuranSearchService(
             .OrderByDescending(x => x.Score)
             .Take(maxResults)
             .ToList();
-
-        foreach (var semanticSearchResult in result)
+        if (!fastSearch)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            foreach (var semanticSearchResult in result)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            var verse = surahs.First(s => s.Id == semanticSearchResult.SurahId).VerseResults
-                .First(v => v.Id == semanticSearchResult.VerseId);
+                var verse = surahs.First(s => s.Id == semanticSearchResult.SurahId).VerseResults
+                    .First(v => v.Id == semanticSearchResult.VerseId);
 
-            semanticSearchResult.Impacts = await GetWordImpactByOcclusionAsync(rawQuery, verse, cancellationToken);
+                semanticSearchResult.Impacts = await GetWordImpactByOcclusionAsync(rawQuery, verse, cancellationToken);
+            }
         }
-
         return result;
     }
 

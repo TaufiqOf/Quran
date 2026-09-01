@@ -99,7 +99,7 @@ public class VectorSearch : ISearch
     {
         // 1. Initial cancellation check
         cancellationToken.ThrowIfCancellationRequested();
-
+        var fastSearch = false;
         var surahs = DataManager.Surahs.Select(q => new SurahResult
         {
             Id = q.Id,
@@ -126,23 +126,32 @@ public class VectorSearch : ISearch
             query = query[1..].Trim();
 
         // Default top-k result count
-        int topK = 100;
+        int topK = 10;
 
         // Extract :N limit modifier if present
-        var match = Regex.Match(query, @":(\d+)$");
+        var match = Regex.Match(query, @":(-?\d+)$");
         if (match.Success)
         {
             topK = int.Parse(match.Groups[1].Value);
             // Strip the :N part so the embedding model gets clean text ("heaven")
             query = query[..match.Index].Trim();
         }
-        if(topK <= 0 || topK > 100)
+        
+        if (topK == -1)
+        {
+            topK = 50;
+            fastSearch = true;
+        }
+
+        if (topK <= 0 || topK > 100)
             topK = 100;
+
+
         if (string.IsNullOrWhiteSpace(query))
             return new List<SurahResult>();
 
         // 2. Pass cancellation token down to the semantic vector search service
-        var results = await _semanticSearchService.SearchAsync(surahs, query, topK, cancellationToken);
+        var results = await _semanticSearchService.SearchAsync(surahs, query, topK,fastSearch, cancellationToken);
 
         return ConvertResultsToSurahs(surahs, results, topK, cancellationToken);
     }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Quran.Models;
@@ -25,7 +27,10 @@ public class QuranSearchTools
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var results = await _exactSearch.PerformSearch(term, cancellationToken);
+        string cleanTerm = StripExistingLimit(term);
+        string formattedTerm = $"{cleanTerm}:-1";
+
+        var results = await _exactSearch.PerformSearch(formattedTerm, cancellationToken);
         return FlattenSurahResults(results);
     }
 
@@ -37,26 +42,47 @@ public class QuranSearchTools
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var results = await _semanticSearch.PerformSearch(topic, cancellationToken);
+        string cleanTopic = StripExistingLimit(topic);
+        string formattedTopic = $"{cleanTopic}:-1";
+
+        var results = await _semanticSearch.PerformSearch(formattedTopic, cancellationToken);
         return FlattenSurahResults(results);
     }
 
-    private static List<VerseReference> FlattenSurahResults(List<SurahResult> surahs)
+    private static string StripExistingLimit(string text)
     {
-        var references = new List<VerseReference>();
-        foreach (var surah in surahs)
+        if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+        var match = Regex.Match(text.Trim(), @":(-?\d+)$");
+        return match.Success ? text.Substring(0, match.Index).Trim() : text.Trim();
+    }
+
+    private static List<VerseReference> FlattenSurahResults(List<SurahResult>? results)
+    {
+        if (results == null || results.Count == 0)
+            return new List<VerseReference>();
+
+        var list = new List<VerseReference>();
+
+        foreach (var surah in results)
         {
+            if (surah?.VerseResults == null) 
+                continue;
+
             foreach (var verse in surah.VerseResults)
             {
-                references.Add(new VerseReference
+                if (verse == null) 
+                    continue;
+
+                list.Add(new VerseReference
                 {
                     SurahId = surah.Id,
                     VerseId = verse.Id,
-                    Score = verse.SimilarityScore ?? 1.0
+                    Score = verse.SimilarityScore ?? surah.SimilarityScore ?? 0.0
                 });
             }
         }
-        return references;
+
+        return list;
     }
 }
 

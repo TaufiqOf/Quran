@@ -18,8 +18,9 @@ public abstract class ASemanticSearchService
     }
 
     public abstract Task<List<SemanticSearchResult>> SearchAsync(
-        List<SurahResult> surahs, 
+        List<SurahResult> surahs,
         string rawQuery,
         int maxResults = 100,
+        bool fastSearch = false,
         CancellationToken cancellationToken = default);
 }

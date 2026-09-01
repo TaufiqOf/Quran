@@ -136,7 +136,8 @@ public class VectorSearch : ISearch
             // Strip the :N part so the embedding model gets clean text ("heaven")
             query = query[..match.Index].Trim();
         }
-
+        if(topK <= 0 || topK > 100)
+            topK = 100;
         if (string.IsNullOrWhiteSpace(query))
             return new List<SurahResult>();
 
@@ -187,7 +188,8 @@ public class VectorSearch : ISearch
                 Text = originalVerse.Text,
                 Transliteration = originalVerse.Transliteration,
                 Translation = originalVerse.Translation,
-                SimilarityScore = result.Score
+                SimilarityScore = result.Score,
+                Impacts = result.Impacts
             };
             resultSurah.VerseResults.Add(resultVerse);
 

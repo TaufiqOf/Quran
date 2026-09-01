@@ -48,8 +48,10 @@ public partial class SearchComponent : UserControl
         _searchTerms = CreateSearchTerms(searchText);
         Surah = surah;
         HasScore = surah.SimilarityScore.HasValue;
+    
+        // Scale score to 0-100 and format strictly to 2 decimal places
         FormattedScore = surah.SimilarityScore.HasValue
-            ? $"Score: {surah.SimilarityScore.Value * 100.0:F2}"
+            ? $"Score: {(surah.SimilarityScore):P2}"
             : string.Empty;
 
         VerseCount = $" Verses({surah.VerseResults.Count})";

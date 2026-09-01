@@ -39,22 +39,32 @@ public class TextSearch : ISearch
             query = query[..match.Index].Trim();
         }
 
+        if (topK <= 0 || topK > 100)
+            topK = 100;
+
         if (string.IsNullOrWhiteSpace(query))
             return Task.FromResult(new List<SurahResult>());
 
         string rawPhrase = query.Trim();
         string normalizedQueryPhrase = StripPunctuation(rawPhrase);
 
-        // 2. Tokenize and clean search terms
+        // 2. Tokenize search terms
         var rawWords = Regex.Split(rawPhrase, @"\W+")
             .Where(w => !string.IsNullOrWhiteSpace(w))
             .ToList();
 
+        if (rawWords.Count == 0)
+            return Task.FromResult(new List<SurahResult>());
+
+        // Only filter stop-words if non-stop-words remain in query
         var searchTerms = rawWords
             .Where(w => !StopWords.Contains(w))
             .ToList();
 
-        if (searchTerms.Count == 0) searchTerms = rawWords;
+        if (searchTerms.Count == 0)
+            searchTerms = rawWords;
+
+        int totalQueryTerms = searchTerms.Count;
 
         // Flat collection to store every matching verse across all Surahs
         var flatVerseResults = new List<(Surah Surah, VerseResult VerseResult)>();
@@ -62,32 +72,29 @@ public class TextSearch : ISearch
         // 3. Process Surahs & Verses
         foreach (var surah in DataManager.Surahs)
         {
-            // Cancellation check per Surah
             cancellationToken.ThrowIfCancellationRequested();
 
             foreach (var verse in surah.Verses)
             {
-                // Cancellation check per Verse during string evaluation
                 cancellationToken.ThrowIfCancellationRequested();
 
                 string rawCombinedText = $"{verse.Translation} {verse.Transliteration} {verse.Text}";
                 string normalizedCombinedText = StripPunctuation(rawCombinedText);
 
-                // Exact phrase match ignoring punctuation & case -> 100% match (1.0)
+                // Exact full phrase match -> 100% (1.0)
                 if (normalizedCombinedText.Contains(normalizedQueryPhrase, StringComparison.OrdinalIgnoreCase))
                 {
-                    double exactScore = 1.0;
-                    flatVerseResults.Add((surah, CreateVerseResult(verse, exactScore)));
+                    flatVerseResults.Add((surah, CreateVerseResult(verse, 1.0)));
                     continue;
                 }
 
-                // Extract words from the target verse for word-by-word comparison
+                // Tokenize target verse
                 var verseWords = Regex.Split(rawCombinedText, @"\W+")
                     .Where(w => !string.IsNullOrWhiteSpace(w))
                     .ToList();
 
                 double verseTotalScore = 0;
-                bool hasMatch = false;
+                int matchedTermsCount = 0;
 
                 foreach (var term in searchTerms)
                 {
@@ -111,23 +118,31 @@ public class TextSearch : ISearch
 
                     if (maxTermScore >= 0.75)
                     {
-                        hasMatch = true;
+                        matchedTermsCount++;
 
                         if (exactMatches > 1)
                         {
-                            maxTermScore += 0.25 * (exactMatches - 1);
+                            maxTermScore += 0.1 * (exactMatches - 1);
                         }
 
                         verseTotalScore += maxTermScore;
                     }
                 }
 
-                if (hasMatch)
+                if (matchedTermsCount > 0)
                 {
-                    // Calculate individual verse score
-                    double baseScore = verseTotalScore / searchTerms.Count;
-                    double finalVerseScore = Math.Min(0.99, Math.Round(baseScore, 4));
+                    // Ratio of matched terms relative to total search terms (e.g., 1/2 = 0.5)
+                    double coverageRatio = (double)matchedTermsCount / totalQueryTerms;
 
+                    // Base quality score of matched terms
+                    double averageTermScore = verseTotalScore / matchedTermsCount;
+
+                    // Final score scales directly by coverage ratio (e.g., 2/3 words matched capped at ~66%)
+                    double rawScore = averageTermScore * coverageRatio;
+
+                    //double finalVerseScore = Math.Min(0.99, Math.Round(rawScore, 4));
+                    // Change Math.Min(0.99, ...) to Math.Min(1.0, ...)
+                    double finalVerseScore = Math.Min(1.0, Math.Round(rawScore, 4));
                     flatVerseResults.Add((surah, CreateVerseResult(verse, finalVerseScore)));
                 }
             }
@@ -135,7 +150,7 @@ public class TextSearch : ISearch
 
         // 4. Sort globally by verse score, apply topK limit to total VERSES, then group back by Surah
         var topVerses = flatVerseResults
-            .Where(q => q.VerseResult.SimilarityScore >= 0.50)
+            .Where(q => q.VerseResult.SimilarityScore >= 0.20)
             .OrderByDescending(item => item.VerseResult.SimilarityScore);
 
         IEnumerable<(Surah Surah, VerseResult VerseResult)> limitedVerses = topK.HasValue
@@ -185,7 +200,6 @@ public class TextSearch : ISearch
     {
         if (string.IsNullOrEmpty(text)) return string.Empty;
 
-        // Remove common punctuation marks while normalizing multiple spaces into single spaces
         var clean = Regex.Replace(text, @"[^\w\s]", " ");
         return Regex.Replace(clean, @"\s+", " ").Trim();
     }
@@ -195,14 +209,12 @@ public class TextSearch : ISearch
         if (string.Equals(source, target, StringComparison.OrdinalIgnoreCase))
             return 1.0;
 
-        // Substring Match (e.g. "gon" inside "dragon")
         if (target.Contains(source, StringComparison.OrdinalIgnoreCase))
         {
             double subRatio = (double)source.Length / target.Length;
             return subRatio >= 0.5 ? subRatio : 0.0;
         }
 
-        // Require terms to be at least 5 letters for fuzzy edit-distance matching
         if (source.Length < 5) return 0.0;
 
         int distance = LevenshteinDistance(source.ToLowerInvariant(), target.ToLowerInvariant());
@@ -212,7 +224,6 @@ public class TextSearch : ISearch
 
         double similarity = 1.0 - ((double)distance / maxLength);
 
-        // Strict cutoff for fuzzy non-substring matches to prevent false positives like "jasus" ~ "sayran"
         return similarity >= 0.75 ? similarity : 0.0;
     }
 

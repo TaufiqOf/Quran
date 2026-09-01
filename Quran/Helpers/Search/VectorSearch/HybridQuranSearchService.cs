@@ -34,7 +34,7 @@ public class HybridQuranSearchService(
     };
 
     public override async Task<List<SemanticSearchResult>> SearchAsync(
-        List<SurahResult> surahs, 
+        List<SurahResult> surahs,
         string rawQuery,
         int maxResults = 100,
         CancellationToken cancellationToken = default)
@@ -60,7 +60,7 @@ public class HybridQuranSearchService(
 
         // 2. Get BM25 Scores
         var bm25Scorer = new SimpleBm25Scorer(surahs);
-        
+
         var bm25Scores = bm25Scorer.ScoreQuery(rawQuery);
         var bm25Rankings = bm25Scores
             .OrderByDescending(x => x.Value)
@@ -69,6 +69,10 @@ public class HybridQuranSearchService(
 
         // 3. Perform Reciprocal Rank Fusion (RRF)
         const int k = 60; // Standard RRF constant
+
+        // Theoretical maximum RRF score for rank #1 in both models (1/61 + 1/61)
+        const double maxPossibleRrfScore = (1.0 / (k + 1)) * 2.0;
+
         var allDocIds = vectorRankings.Keys.Union(bm25Rankings.Keys);
 
         var fusedResults = new List<SemanticSearchResult>();
@@ -92,11 +96,14 @@ public class HybridQuranSearchService(
             int surahId = docId >> 16;
             int verseId = docId & 0xFFFF;
 
+            // Normalize RRF score to 0.0 - 1.0 scale relative to maximum possible score
+            double normalizedScore = Math.Min(1.0, rrfScore / maxPossibleRrfScore);
+
             fusedResults.Add(new SemanticSearchResult
             {
                 SurahId = surahId,
                 VerseId = verseId,
-                Score = (float)rrfScore
+                Score = (float)normalizedScore
             });
         }
 

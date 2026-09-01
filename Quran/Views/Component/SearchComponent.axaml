@@ -273,7 +273,7 @@
                                     IsVisible="{Binding SimilarityScore, Converter={x:Static ObjectConverters.IsNotNull}}">
                                     <TextBlock
                                         Classes="verseScoreText"
-                                        Text="{Binding SimilarityScore, StringFormat='Match {0:P0}'}" />
+                                        Text="{Binding SimilarityScore, StringFormat='Match {0:P2}'}" />
                                 </Border>
                                 
                                 <ItemsControl 

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using Quran.Helpers.Search.AiSearch;
+using Quran.Models;
 
 namespace Quran.Helpers;
 
@@ -36,19 +37,26 @@ public static class AskAiManager
         ReadyToAskAi?.Invoke();
     }
 
-    public static async Task<string> Ask(string query, CancellationToken cancellationToken = default)
+    public static async Task<MessageResult> Ask(string query, CancellationToken cancellationToken = default)
     {
-        var context = await SearchManager.PerformSearch(query);
-        
+        var formattedQuery = $"@{query.Trim()}:50";
+        var context = await SearchManager.PerformSearch(formattedQuery, cancellationToken);
+
         // Guard against empty search results before invoking LLM
-        if (context == null || !context.Any())
+        if (!context.Any())
         {
-            return "I cannot answer this query based on the provided context.";
+            return new MessageResult
+            {
+                IsSuccess = false,
+                Message = "I cannot answer this query based on the provided context.",
+                Context = context
+            };
         }
 
-        var contextText = string.Join("\n", context.Select(q => $"{q.Translation}"));
+        var contextText = string.Join("\n",
+            context.Select(q => string.Join("\n", q.VerseResults.Select(r => $"{r.Translation}"))));
         var systemPrompt = string.Format(PromptTemplate, contextText);
-        
+
         var messages = new List<ChatMessage>
         {
             new ChatMessage(ChatRole.System, systemPrompt),
@@ -57,8 +65,20 @@ public static class AskAiManager
 
         // Execute LLM call using Microsoft.Extensions.AI
         var response = await _chatClient.GetResponseAsync(messages, null, cancellationToken);
-        
+
         // Extract plain text response from the message contents
-        return response.Text ?? string.Empty;
+        return new MessageResult
+        {
+            IsSuccess = true,
+            Message = response.Text ?? string.Empty,
+            Context = context
+        };
+    }
+
+    public class MessageResult
+    {
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public List<SurahResult> Context { get; set; } = new List<SurahResult>();
     }
 }

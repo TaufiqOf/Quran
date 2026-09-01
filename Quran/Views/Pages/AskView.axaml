@@ -2,14 +2,12 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
+    xmlns:pages="clr-namespace:Quran.Views.Pages"
     x:Class="Quran.Views.Pages.AskView">
 
     <UserControl.Styles>
 
-        <!-- =============================== -->
         <!-- Copy & Action Buttons -->
-        <!-- =============================== -->
-
         <Style Selector="Button.copyButton">
             <Setter Property="Width" Value="38" />
             <Setter Property="Height" Value="38" />
@@ -44,32 +42,14 @@
             <Setter Property="Background" Value="#444444" />
         </Style>
 
-
         <Style Selector="TextBlock.messageTextBlock">
             <Setter Property="Foreground" Value="LightCoral" />
             <Setter Property="Height" Value="20" />
-            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontSize" Value="11" />
             <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Opacity" Value="1" />
-        </Style>
-        <Style Selector="TextBlock.messageTextBlock.fade-in">
-            <Setter Property="Foreground" Value="White" />
-            <Style.Animations>
-                <Animation Duration="0:0:0.4">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Opacity" Value="0" />
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Opacity" Value="1" />
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
         </Style>
 
-        <!-- =============================== -->
         <!-- Search Container -->
-        <!-- =============================== -->
-
         <Style Selector="Border.searchBox">
             <Setter Property="Background" Value="#202020" />
             <Setter Property="BorderBrush" Value="#3A3A3A" />
@@ -80,115 +60,130 @@
             <Setter Property="Margin" Value="8,0,8,0" />
         </Style>
 
-        <!-- =============================== -->
-        <!-- Search Icon -->
-        <!-- =============================== -->
-
-        <Style Selector="avalonia|FluentIcon.searchIcon">
-            <Setter Property="Foreground" Value="#AAAAAA" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="Margin" Value="6,0,6,0" />
-        </Style>
-
-        <!-- =============================== -->
         <!-- Search TextBox -->
-        <!-- =============================== -->
-
         <Style Selector="TextBox.searchTextBox">
             <Setter Property="Height" Value="46" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="15" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="5" />
             <Setter Property="FontFamily" Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
-            <Setter Property="Watermark"
-                    Value="Ask a question..." />
-        </Style>
-
-        <!-- =============================== -->
-        <!-- Results -->
-        <!-- =============================== -->
-
-        <Style Selector="ItemsControl.searchResults">
-            <Setter Property="Margin" Value="8,0,8,8" />
-        </Style>
-
-        <Style Selector="ItemsControl.searchResults ContentPresenter">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Watermark" Value="Ask a question..." />
         </Style>
     </UserControl.Styles>
 
-
-    <!-- =============================== -->
     <!-- Main Layout -->
-    <!-- =============================== -->
     <Grid RowDefinitions="*,Auto,Auto,Auto">
 
-
+        <!-- Chat Container -->
         <Border
-            x:Name="MainBorder"
             Grid.Row="0"
+            Background="#141414"
             BorderBrush="#3A3A3A"
-            BorderThickness="2"
-            CornerRadius="4"
+            BorderThickness="1"
+            CornerRadius="6"
             Margin="8,0,8,8">
-            
+
+            <ScrollViewer
+                x:Name="ChatScrollViewer"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+
+                <ItemsControl x:Name="ChatItemsControl" Margin="12">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="pages:ChatMessageModel">
+                            <Grid Margin="0,4,0,8">
+
+                                <!-- User Message Bubble (Right Aligned) -->
+                                <Border
+                                    HorizontalAlignment="Right"
+                                    MaxWidth="600"
+                                    Background="#2B4C7E"
+                                    CornerRadius="12,12,2,12"
+                                    Padding="12,8"
+                                    IsVisible="{Binding IsUser}">
+                                    <SelectableTextBlock
+                                        Text="{Binding Content}"
+                                        Foreground="White"
+                                        FontSize="15"
+                                        TextWrapping="Wrap" />
+                                </Border>
+
+                                <!-- Assistant Message Bubble (Left Aligned) -->
+                                <Border
+                                    HorizontalAlignment="Left"
+                                    MaxWidth="650"
+                                    Background="#222222"
+                                    BorderBrush="#333333"
+                                    BorderThickness="1"
+                                    CornerRadius="12,12,12,2"
+                                    Padding="12,10"
+                                    IsVisible="{Binding !IsUser}">
+                                    <SelectableTextBlock
+                                        Text="{Binding Content}"
+                                        Foreground="#E0E0E0"
+                                        FontSize="15"
+                                        LineHeight="24"
+                                        TextWrapping="Wrap" />
+                                </Border>
+
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </ScrollViewer>
         </Border>
-      
-        <!-- =========================== -->
-        <!-- Message -->
-        <!-- =========================== -->
+
+        <!-- Message/Status -->
         <TextBlock
             Grid.Row="1"
             x:Name="MessageTextBlock"
             Classes="messageTextBlock" />
 
-        <ProgressBar x:Name="ProgressBar" Grid.Row="2" IsIndeterminate="False" Height="2" Margin="9,0,9,0" />
+        <!-- Progress Bar -->
+        <ProgressBar
+            Grid.Row="2"
+            x:Name="ProgressBar"
+            Height="2"
+            Margin="9,0,9,0"
+            IsIndeterminate="False" />
 
-    
+        <!-- Input Bar -->
         <Border
             Grid.Row="3"
             Classes="searchBox">
 
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
-
-                <!-- Search Text -->
+            <Grid ColumnDefinitions="*,Auto,Auto">
 
                 <TextBox
-                    Grid.Column="1"
+                    Grid.Column="0"
                     x:Name="SendTextBox"
                     Classes="searchTextBox"
-                    KeyDown="SendTextBoxOnKeyDown">
+                    KeyDown="SendTextBoxOnKeyDown" />
 
-                </TextBox>
-
-                <!-- Search Button -->
+                <Button
+                    Grid.Column="1"
+                    x:Name="SendButton"
+                    Classes="searchButton"
+                    Click="SendButtonOnClick"
+                    ToolTip.Tip="Send">
+                    <avalonia:FluentIcon
+                        FontSize="18"
+                        Icon="Send" />
+                </Button>
 
                 <Button
                     Grid.Column="2"
-                    x:Name="SendButton"
-                    Classes="searchButton"
-                    ToolTip.Tip="Send"
-                    Click="SendButtonOnClick">
-                    <avalonia:FluentIcon
-                        Icon="Send"
-                        FontSize="18" />
-                </Button>
-
-                <!-- Copy Button -->
-
-                <Button
-                    Grid.Column="3"
                     x:Name="CopyButton"
                     Classes="copyButton"
-                    ToolTip.Tip="Copy search results"
-                    Click="CopyButtonOnClick">
-
+                    Click="CopyButtonOnClick"
+                    ToolTip.Tip="Copy last response">
                     <avalonia:FluentIcon
-                        Icon="Copy"
-                        FontSize="18" />
+                        FontSize="18"
+                        Icon="Copy" />
                 </Button>
             </Grid>
         </Border>

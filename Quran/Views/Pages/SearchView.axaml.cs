@@ -163,7 +163,6 @@ public partial class SearchView : AView
                     DetachSearchComponentEvents(searchComponent);
             }
 
-            SearchTextBox.IsEnabled = false;
             SearchButton.Content = new FluentIcons.Avalonia.SymbolIcon
             {
                 Symbol = FluentIcons.Common.Symbol.Stop,
@@ -245,7 +244,6 @@ public partial class SearchView : AView
             {
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    SearchTextBox.IsEnabled = true;
                     ProgressBar.IsIndeterminate = false;
                     SearchButton.Content = new FluentIcons.Avalonia.SymbolIcon
                     {

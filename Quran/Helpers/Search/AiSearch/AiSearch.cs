@@ -163,34 +163,40 @@ public class AiSearch : ISearch
 
     private static List<SurahResult> ApplyVerseLimit(List<SurahResult> results, int maxVerses)
     {
-        var limitedSurahs = new List<SurahResult>();
-        int totalVersesCount = 0;
+        if (results == null || !results.Any() || maxVerses <= 0)
+            return new List<SurahResult>();
 
-        foreach (var surah in results)
-        {
-            if (totalVersesCount >= maxVerses)
-                break;
+        // 1. Flatten all verses with their parent Surah reference, then pick top 'maxVerses' by score
+        var topVersesWithSurahs = results
+            .SelectMany(surah => surah.VerseResults.Select(verse => new { Surah = surah, Verse = verse }))
+            .OrderByDescending(x => x.Verse.SimilarityScore)
+            .Take(maxVerses)
+            .ToList();
 
-            int remainingQuota = maxVerses - totalVersesCount;
-            var takenVerses = surah.VerseResults.Take(remainingQuota).ToList();
-
-            if (takenVerses.Count > 0)
+        // 2. Regroup the selected top verses back into their respective Surahs
+        var limitedSurahs = topVersesWithSurahs
+            .GroupBy(x => x.Surah.Id)
+            .Select(group =>
             {
-                limitedSurahs.Add(new SurahResult
-                {
-                    Id = surah.Id,
-                    Name = surah.Name,
-                    Translation = surah.Translation,
-                    Transliteration = surah.Transliteration,
-                    Type = surah.Type,
-                    TotalVerses = surah.TotalVerses,
-                    VerseResults = takenVerses,
-                    SimilarityScore = surah.SimilarityScore
-                });
+                var originalSurah = group.First().Surah;
 
-                totalVersesCount += takenVerses.Count;
-            }
-        }
+                return new SurahResult
+                {
+                    Id = originalSurah.Id,
+                    Name = originalSurah.Name,
+                    Translation = originalSurah.Translation,
+                    Transliteration = originalSurah.Transliteration,
+                    Type = originalSurah.Type,
+                    TotalVerses = originalSurah.TotalVerses,
+                    SimilarityScore = originalSurah.SimilarityScore,
+                    // Order selected verses by their original position or score
+                    VerseResults = group.Select(x => x.Verse)
+                        .OrderByDescending(v => v.SimilarityScore)
+                        .ToList()
+                };
+            })
+            .OrderByDescending(s => s.SimilarityScore)
+            .ToList();
 
         return limitedSurahs;
     }

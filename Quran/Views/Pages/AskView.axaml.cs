@@ -20,19 +20,42 @@ namespace Quran.Views.Pages;
 
 public partial class AskView : AView
 {
+    private CancellationTokenSource? _searchCts;
+
     public AskView()
     {
         InitializeComponent();
     }
 
-    private void SearchTextBoxOnKeyDown(object? sender, KeyEventArgs e)
+    private void SendTextBoxOnKeyDown(object? sender, KeyEventArgs e)
     {
-        throw new NotImplementedException();
+        if (e.Key == Key.Enter)
+        {
+            var message = SendTextBox.Text ?? "";
+            Send(message);
+            e.Handled = true;
+        }
     }
 
-    private void SearchButtonOnClick(object? sender, RoutedEventArgs e)
+    private void SendButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        var message = SendTextBox.Text ?? "";
+        Send(message);
+    }
+
+    private async void Send(string message)
+    {
+        if(_searchCts != null)
+        {
+            await _searchCts.CancelAsync();
+            _searchCts.Dispose();
+        }
+        _searchCts = new CancellationTokenSource();
+        SendButton.IsEnabled = false;
+        SendTextBox.Text = "";
+        var token = _searchCts.Token;
+        await AskAiManager.Ask(message, token);
+        SendButton.IsEnabled = true;
     }
 
     private void CopyButtonOnClick(object? sender, RoutedEventArgs e)

@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Quran.Models;
 
-namespace Quran.Helpers.Search;
+namespace Quran.Helpers.Search.TextSearch;
 
 public class TextSearch : ISearch
 {

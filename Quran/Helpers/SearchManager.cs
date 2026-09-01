@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Quran.Helpers.Search;
+using Quran.Helpers.Search.StructuredSearch;
+using Quran.Helpers.Search.TextSearch;
 using Quran.Helpers.Search.VectorSearch;
 using Quran.Models;
 

@@ -20,7 +20,7 @@
         <!--     <Setter Property="Background" Value="#303A52"/> -->
         <!-- </Style> -->
 
-        <Style Selector="TextBlock.arabic">
+        <Style Selector="SelectableTextBlock.arabic">
             <Setter
                 Property="FontFamily"
                 Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
@@ -32,7 +32,7 @@
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
-        <Style Selector="TextBlock.arabic.selected">
+        <Style Selector="SelectableTextBlock.arabic.selected">
             <Setter Property="Foreground" Value="#3678D4" />
         </Style>
     </UserControl.Styles>
@@ -43,7 +43,7 @@
         HorizontalAlignment="Left"
         PointerPressed="VerseCard_OnPointerPressed">
         <WrapPanel HorizontalAlignment="Center">
-            <TextBlock x:Name="TextBlockArabic" Classes="arabic" TextWrapping="Wrap" />
+            <SelectableTextBlock x:Name="TextBlockArabic" Classes="arabic" TextWrapping="Wrap" />
             <TextBlock x:Name="TextBlockVerseNumber" Classes="arabic" Margin="4,0" />
         </WrapPanel>
     </Border>

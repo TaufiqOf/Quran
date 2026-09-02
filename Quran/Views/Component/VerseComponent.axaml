@@ -47,7 +47,7 @@
         <!-- Arabic -->
         <!-- ========================================= -->
 
-        <Style Selector="TextBlock.arabic">
+        <Style Selector="SelectableTextBlock.arabic">
             <Setter
                 Property="FontFamily"
                 Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
@@ -64,7 +64,7 @@
         <!-- Transliteration -->
         <!-- ========================================= -->
 
-        <Style Selector="TextBlock.transliteration">
+        <Style Selector="SelectableTextBlock.transliteration">
             <Setter Property="FontSize" Value="15" />
             <Setter Property="FontStyle" Value="Italic" />
             <Setter Property="Foreground" Value="#BDBDBD" />
@@ -76,7 +76,7 @@
         <!-- Translation -->
         <!-- ========================================= -->
 
-        <Style Selector="TextBlock.translation">
+        <Style Selector="SelectableTextBlock.translation">
             <Setter Property="FontSize" Value="16" />
             <Setter Property="Foreground" Value="#D8D8D8" />
             <Setter Property="LineHeight" Value="26" />
@@ -109,17 +109,11 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-
-            <!-- ===================================== -->
-            <!-- Verse Number -->
-            <!-- ===================================== -->
-
-
             <!-- ===================================== -->
             <!-- Arabic Verse -->
             <!-- ===================================== -->
 
-            <TextBlock
+            <SelectableTextBlock
                 x:Name="TextBlockArabic"
                 Grid.Row="0"
                 Classes="arabic"
@@ -132,7 +126,7 @@
             <!-- Transliteration -->
             <!-- ===================================== -->
 
-            <TextBlock
+            <SelectableTextBlock
                 x:Name="TextBlockTransliteration"
                 Grid.Row="2"
                 Classes="transliteration"
@@ -145,7 +139,7 @@
             <!-- Translation -->
             <!-- ===================================== -->
 
-            <TextBlock
+            <SelectableTextBlock
                 x:Name="TextBlockTranslation"
                 Grid.Row="3"
                 Classes="translation"

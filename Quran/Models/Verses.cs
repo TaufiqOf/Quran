@@ -14,6 +14,10 @@ public class Verse
     [JsonPropertyName("translation")] public string Translation { get; set; } = string.Empty;
 
     [JsonPropertyName("transliteration")] public string Transliteration { get; set; } = string.Empty;
+    public override string ToString()
+    {
+        return $"({Id}){Text}\n{Translation}";
+    }
 }
 
 public class VerseResult : Verse

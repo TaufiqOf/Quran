@@ -9,13 +9,13 @@ public static class MessageHelper
     private static bool _isShowing;
     public static Window? MainWindow { get; set; }
 
-    public static void ShowMessage(string title, string message)
+    public static void ShowMessage(string title, string message, bool isDialog = true)
     {
         var userControl = new TextBoxMessageControl(message);
-        ShowMessage(title, userControl);
+        ShowMessage(title, userControl, isDialog);
     }
 
-    public static void ShowMessage(string title, UserControl userControl)
+    public static void ShowMessage(string title, UserControl userControl, bool isDialog = true)
     {
         if (_isShowing)
             return;
@@ -33,7 +33,7 @@ public static class MessageHelper
         dialog.SetControl(userControl);
         dialog.Closed += (_, _) => _isShowing = false;
 
-        if (owner?.IsVisible == true)
+        if (owner?.IsVisible == true && isDialog)
             _ = dialog.ShowDialog(owner);
         else
             dialog.Show();

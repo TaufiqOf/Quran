@@ -18,6 +18,10 @@ public class Surah
     [JsonPropertyName("total_verses")] public int TotalVerses { get; set; }
 
     [JsonPropertyName("verses")] public List<Verse> Verses { get; set; } = new();
+    public override string ToString()
+    {
+        return $"({Id}){Transliteration} - {Name}";
+    }
 }
 
 public class SurahResult :Surah

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -11,6 +9,7 @@ using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Quran.Helpers;
+using Quran.Models;
 
 namespace Quran.Views.Pages;
 
@@ -23,6 +22,7 @@ public partial class AskView : AView
     public AskView()
     {
         InitializeComponent();
+        Messages = new ObservableCollection<ChatMessageModel>(DataManager.LoadChatMessages());
         ChatItemsControl.ItemsSource = Messages;
     }
 
@@ -65,7 +65,6 @@ public partial class AskView : AView
         // 2. Add Assistant Message Placeholder
         var aiMessage = new ChatMessageModel { IsUser = false, Content = "Thinking..." };
         Messages.Add(aiMessage);
-
         ScrollToBottom();
 
         SendButton.IsEnabled = false;
@@ -84,6 +83,8 @@ public partial class AskView : AView
             {
                 aiMessage.Content = responseText.Message;
             }
+
+            aiMessage.Refference = responseText.Context;
         }
         catch (OperationCanceledException)
         {
@@ -99,6 +100,7 @@ public partial class AskView : AView
             ProgressBar.IsIndeterminate = false;
             SendButton.IsEnabled = true;
             _sending = false;
+            DataManager.SaveChatMessages(Messages.ToList());
             ScrollToBottom();
         }
     }
@@ -138,31 +140,45 @@ public partial class AskView : AView
     {
         return Task.CompletedTask;
     }
-}
 
-public class ChatMessageModel : INotifyPropertyChanged
-{
-    private string _content = string.Empty;
-
-    public bool IsUser { get; set; }
-
-    public string Content
+    private async void CopyMessageButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        get => _content;
-        set
+        if (sender is Button button && button.CommandParameter is ChatMessageModel messageModel)
         {
-            if (_content != value)
+            await CopyToClipboardAsync(messageModel.Content);
+        }
+    }
+
+    private async Task CopyToClipboardAsync(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return;
+
+        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+        if (clipboard != null)
+        {
+            await clipboard.SetTextAsync(text);
+            MessageTextBlock.Text = "Copied message to clipboard!";
+
+            await Task.Delay(2000);
+            if (MessageTextBlock.Text == "Copied message to clipboard!")
             {
-                _content = value;
-                OnPropertyChanged();
+                MessageTextBlock.Text = string.Empty;
             }
         }
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private async void ShowReferenceButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        if (sender is Button { DataContext: ChatMessageModel messageModel }
+            && messageModel.Refference.Any())
+        {
+            MessageHelper.ShowMessage(
+                "Reference",
+                String.Join("\n\n ",
+                    messageModel.Refference
+                        .Select(r => $"{r}\n{string.Join("\n", r.VerseResults.Select(t => t.ToString()))}").ToList()),
+                false);
+        }
     }
 }

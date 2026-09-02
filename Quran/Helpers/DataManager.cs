@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Quran.Models;
+using Quran.Views.Pages;
 
 namespace Quran.Helpers;
 
@@ -145,7 +146,21 @@ public static class DataManager
         var json = JsonSerializer.Serialize(bookmarks);
         File.WriteAllText(BookmarkFilePath, json);
     }
+    public static List<ChatMessageModel> LoadChatMessages()
+    {
+        try
+        {
+            if (!File.Exists(SettingsFilePath)) return new List<ChatMessageModel>();
 
+            var json = File.ReadAllText(SettingsFilePath);
+            var settings = JsonSerializer.Deserialize<AppSettings>(json);
+            return settings?.ChatMessages ?? new List<ChatMessageModel>();
+        }
+        catch
+        {
+            return new List<ChatMessageModel>();
+        }
+    }
     public static string LoadLanguagePreference()
     {
         try
@@ -188,6 +203,13 @@ public static class DataManager
     {
         var settings = LoadAppSettings();
         settings.ReaderMode = readerMode;
+        SaveAppSettings(settings);
+    }
+    
+    public static void SaveChatMessages(List<ChatMessageModel> chatMessages)
+    {
+        var settings = LoadAppSettings();
+        settings.ChatMessages = chatMessages;
         SaveAppSettings(settings);
     }
 

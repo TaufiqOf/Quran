@@ -28,7 +28,7 @@
         <!-- Translation -->
         <!-- =============================== -->
 
-        <Style Selector="TextBlock.translation">
+        <Style Selector="SelectableTextBlock.translation">
             <Setter Property="FontSize" Value="17" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="TextAlignment" Value="Left" />
@@ -98,7 +98,7 @@
             <!-- Translation -->
             <!-- ================================= -->
 
-            <TextBlock
+            <SelectableTextBlock
                 x:Name="TextBlockTranslation"
                 Grid.Column="1"
                 Classes="translation" />

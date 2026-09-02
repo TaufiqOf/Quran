@@ -28,7 +28,7 @@
         <!-- Arabic -->
         <!-- =============================== -->
 
-        <Style Selector="TextBlock.arabic">
+        <Style Selector="SelectableTextBlock.arabic">
             <Setter
                 Property="FontFamily"
                 Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
@@ -45,7 +45,7 @@
         <!-- Translation -->
         <!-- =============================== -->
 
-        <Style Selector="TextBlock.translation">
+        <Style Selector="SelectableTextBlock.translation">
             <Setter Property="FontSize" Value="17" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="TextAlignment" Value="Center" />
@@ -59,7 +59,7 @@
         <!-- Transliteration -->
         <!-- =============================== -->
 
-        <Style Selector="TextBlock.transliteration">
+        <Style Selector="SelectableTextBlock.transliteration">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontStyle" Value="Italic" />
             <Setter Property="Foreground" Value="White" />
@@ -132,7 +132,7 @@
             <!-- Arabic -->
             <!-- =========================== -->
 
-            <TextBlock
+            <SelectableTextBlock
                 x:Name="TextBlockArabic"
                 Grid.Row="0"
                 Classes="arabic" />
@@ -141,7 +141,7 @@
             <!-- Translation -->
             <!-- =========================== -->
 
-            <TextBlock
+            <SelectableTextBlock
                 x:Name="TextBlockTranslation"
                 Grid.Row="1"
                 Classes="translation" />
@@ -151,7 +151,7 @@
             <!-- Transliteration -->
             <!-- =========================== -->
 
-            <TextBlock
+            <SelectableTextBlock
                 x:Name="TextBlockTransliteration"
                 Grid.Row="2"
                 Classes="transliteration" />

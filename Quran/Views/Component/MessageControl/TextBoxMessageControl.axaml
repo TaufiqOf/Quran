@@ -3,13 +3,36 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="Quran.Views.Component.MessageControl.TextBoxMessageControl"
     x:Name="Root">
+
+    <UserControl.Styles>
+        <!-- Removes the focus rectangle ring/adorner -->
+        <Style Selector="TextBox#TextBoxMessage">
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+
+        <!-- Overrides styles applied when the TextBox gets focus -->
+        <Style Selector="TextBox#TextBoxMessage:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!-- Ensures pointerover (hover) during focus also stays transparent -->
+        <Style Selector="TextBox#TextBoxMessage:focus:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </UserControl.Styles>
+
     <TextBox x:Name="TextBoxMessage"
              IsReadOnly="True"
              AcceptsReturn="True"
              TextWrapping="Wrap"
              Background="Transparent"
              BorderThickness="0"
-             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             Focusable="True"
+             ScrollViewer.VerticalScrollBarVisibility="Hidden"
              ScrollViewer.HorizontalScrollBarVisibility="Auto" />
 
 </UserControl>

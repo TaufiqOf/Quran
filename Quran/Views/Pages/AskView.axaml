@@ -3,20 +3,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
     xmlns:pages="clr-namespace:Quran.Views.Pages"
+    xmlns:models="clr-namespace:Quran.Models"
     x:Class="Quran.Views.Pages.AskView">
 
     <UserControl.Styles>
 
         <!-- Copy & Action Buttons -->
         <Style Selector="Button.copyButton">
-            <Setter Property="Width" Value="38" />
-            <Setter Property="Height" Value="38" />
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <!-- Ensures content inside aligns to the left edge of the button -->
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
-
         <Style Selector="Button.copyButton:pointerover">
             <Setter Property="Background" Value="#333333" />
         </Style>
@@ -84,7 +86,7 @@
             BorderBrush="#3A3A3A"
             BorderThickness="1"
             CornerRadius="6"
-            Margin="8,0,8,8">
+            Margin="8,0,8,0">
 
             <ScrollViewer
                 x:Name="ChatScrollViewer"
@@ -93,40 +95,85 @@
 
                 <ItemsControl x:Name="ChatItemsControl" Margin="12">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="pages:ChatMessageModel">
+                        <DataTemplate x:DataType="models:ChatMessageModel">
                             <Grid Margin="0,4,0,8">
 
                                 <!-- User Message Bubble (Right Aligned) -->
                                 <Border
                                     HorizontalAlignment="Right"
                                     MaxWidth="600"
+                                    MinWidth="200"
                                     Background="#2B4C7E"
                                     CornerRadius="12,12,2,12"
                                     Padding="12,8"
                                     IsVisible="{Binding IsUser}">
-                                    <SelectableTextBlock
-                                        Text="{Binding Content}"
-                                        Foreground="White"
-                                        FontSize="15"
-                                        TextWrapping="Wrap" />
+                                    <StackPanel Orientation="Vertical" Spacing="4">
+                                        <SelectableTextBlock
+                                            Text="{Binding Content}"
+                                            Foreground="#E0E0E0"
+                                            FontSize="15"
+                                            LineHeight="24"
+                                            TextWrapping="Wrap" />
+
+                                        <Grid  
+                                            Background="#213b62" 
+                                            HorizontalAlignment="Stretch" 
+                                            ColumnDefinitions="*,Auto,Auto">
+                                            <!-- User Message Bubble -->
+                                            <Button 
+                                                Grid.Column="1"
+                                                x:Name="CopyUserButton"
+                                                Classes="copyButton"
+                                                CommandParameter="{Binding}"
+                                                Click="CopyMessageButtonOnClick">
+                                                <avalonia:FluentIcon Icon="Copy" FontSize="16" />
+                                                <ToolTip.Tip>Copy</ToolTip.Tip>
+                                            </Button>
+                                        </Grid>
+                                    </StackPanel>
                                 </Border>
 
                                 <!-- Assistant Message Bubble (Left Aligned) -->
                                 <Border
                                     HorizontalAlignment="Left"
                                     MaxWidth="650"
+                                    MinWidth="200"
                                     Background="#222222"
                                     BorderBrush="#333333"
                                     BorderThickness="1"
                                     CornerRadius="12,12,12,2"
                                     Padding="12,10"
                                     IsVisible="{Binding !IsUser}">
-                                    <SelectableTextBlock
-                                        Text="{Binding Content}"
-                                        Foreground="#E0E0E0"
-                                        FontSize="15"
-                                        LineHeight="24"
-                                        TextWrapping="Wrap" />
+                                    <StackPanel Orientation="Vertical" Spacing="4">
+                                        <SelectableTextBlock
+                                            Text="{Binding Content}"
+                                            Foreground="#E0E0E0"
+                                            FontSize="15"
+                                            LineHeight="24"
+                                            TextWrapping="Wrap" />
+
+                                        <Grid  Background="#333333" HorizontalAlignment="Stretch" ColumnDefinitions="*,Auto,Auto">
+                                            <Button 
+                                                Grid.Column="1"
+                                                x:Name="ShowReferenceButton"
+                                                Classes="copyButton"
+                                                IsEnabled="{Binding HasReference}"
+                                                Click="ShowReferenceButtonOnClick">
+                                                <avalonia:FluentIcon Icon="Book" FontSize="16" />
+                                                <ToolTip.Tip>Show Reference</ToolTip.Tip>
+                                            </Button>
+                                            <Button 
+                                                Grid.Column="2"
+                                                x:Name="CopyAiButton"
+                                                Classes="copyButton"
+                                                CommandParameter="{Binding}"
+                                                Click="CopyMessageButtonOnClick">
+                                                <avalonia:FluentIcon Icon="Copy" FontSize="16" />
+                                                <ToolTip.Tip>Copy</ToolTip.Tip>
+                                            </Button>
+
+                                        </Grid>
+                                    </StackPanel>
                                 </Border>
 
                             </Grid>
@@ -144,20 +191,13 @@
             Classes="messageTextBlock" />
 
         <!-- Progress Bar -->
-        <ProgressBar
-            Grid.Row="2"
-            x:Name="ProgressBar"
-            Height="2"
-            Margin="9,0,9,0"
-            IsIndeterminate="False" />
+        <ProgressBar x:Name="ProgressBar" Grid.Row="1" IsIndeterminate="False" Height="2" Margin="16,14,16,0" />
 
         <!-- Input Bar -->
         <Border
             Grid.Row="3"
             Classes="searchBox">
-
             <Grid ColumnDefinitions="*,Auto,Auto">
-
                 <TextBox
                     Grid.Column="0"
                     x:Name="SendTextBox"

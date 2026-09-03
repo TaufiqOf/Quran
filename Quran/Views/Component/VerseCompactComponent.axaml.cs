@@ -66,4 +66,6 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
     {
         VerseBookMark();
     }
+
+
 }

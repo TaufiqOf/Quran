@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
+using Quran.Views.Component.MessageControl;
 
 namespace Quran.Views.Component;
 
@@ -14,13 +15,14 @@ public partial class ReaderComponent : UserControl, IDisposable
     public delegate void VerseSelectedEventHandler(Verse verse);
 
     public delegate void VersesLoadedEventHandler();
-    
+
     public Action<Verse>? PlayVerseRequested { get; set; }
 
     private readonly List<AVerseComponent> _verseComponents = new();
     private ReaderMode _mode;
     private Surah? _surah;
     private IEnumerable<Verse> _verses = Array.Empty<Verse>();
+    private VerseMessageControl? _control;
 
     public ReaderComponent()
     {
@@ -48,7 +50,6 @@ public partial class ReaderComponent : UserControl, IDisposable
             verseComponent.VerseSelected -= VerseComponentOnVerseSelected;
             verseComponent.Dispose();
         }
-
     }
 
     public event VerseSelectedEventHandler? VerseSelected;
@@ -108,6 +109,7 @@ public partial class ReaderComponent : UserControl, IDisposable
                             await ContextMenuHelper.CopyVerseRequested(topLevel, v);
                         verseComponent.CopyAllRequested += async v =>
                             await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
+                        verseComponent.TafasirRequested += VerseComponentOnTafasirRequested;
                         verseComponent.BookmarkVerseRequested += VerseComponentOnBookmarkVerseRequested;
                         verseComponent.PlayVerseRequested += VerseComponentOnPlayVerseRequested;
                         LinerItemsControl.Items.Add(verseComponent);
@@ -117,6 +119,19 @@ public partial class ReaderComponent : UserControl, IDisposable
                 VersesLoaded?.Invoke();
             });
         });
+    }
+
+    private async void VerseComponentOnTafasirRequested(Surah? surah, Verse verse)
+    {
+        var text = await DataManager.GetTafsirAsync(surah.Id, verse.Id);
+        if (_control != null && MessageHelper.IsShowing)
+        {
+            MessageHelper.Close();
+        }
+
+        _control = new VerseMessageControl(surah, verse, text);
+
+        MessageHelper.ShowMessage("Tafasir", _control, false);
     }
 
     private void VerseComponentOnPlayVerseRequested(Verse verse)

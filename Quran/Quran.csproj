@@ -231,6 +231,12 @@
 
         </Compile>
 
+
+        <Compile Update="Views\Component\MessageControl\VerseMessageControl.axaml.cs">
+          <DependentUpon>VerseMessageControl.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+
     </ItemGroup>
 
 </Project>

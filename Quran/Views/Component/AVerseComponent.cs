@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
@@ -66,11 +67,13 @@ public abstract class AVerseComponent : UserControl, IDisposable
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;
     public event Action<Verse>? CopyAllRequested;
-    public event Action<Verse>? CopyTransliterationRequested;
+    public event Action<Verse>? CopyTransliterationRequested; 
+    public event Action<Surah?,Verse>? TafasirRequested;
 
     public event VerseSelectedEventHandler? VerseSelected;
 
     public event VerseContextMenuEventHandler? VerseContextMenuRequested;
+    
 
     public abstract void UpdateSelectedState();
 
@@ -224,7 +227,15 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
         VerseContextMenuRequested?.Invoke(Verse);
     }
+    private void ShowTafasirButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        if(Verse != null) TafasirRequested?.Invoke(Surah,Verse);
+    }
 
+    private void CopyButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (Verse != null) CopyAllRequested?.Invoke(Verse);
+    }
 
     public abstract void VerseBookMark();
 

@@ -6,8 +6,10 @@ namespace Quran.Helpers;
 
 public static class MessageHelper
 {
-    private static bool _isShowing;
+    private static CustomMessageWindow _dialog;
+    public static bool IsShowing { get; private set; }
     public static Window? MainWindow { get; set; }
+    
 
     public static void ShowMessage(string title, string message, bool isDialog = true)
     {
@@ -17,25 +19,38 @@ public static class MessageHelper
 
     public static void ShowMessage(string title, UserControl userControl, bool isDialog = true)
     {
-        if (_isShowing)
+        ShowMessage(title, userControl, 520, 320, isDialog);
+    }
+
+    public static void ShowMessage(string title, UserControl userControl, int height, int width, bool isDialog = true)
+    {
+        if (IsShowing)
             return;
 
-        _isShowing = true;
+        IsShowing = true;
 
         var owner = MainWindow;
-        var dialog = new CustomMessageWindow(
+        _dialog = new CustomMessageWindow(
             title)
         {
             WindowStartupLocation = owner is null
                 ? WindowStartupLocation.CenterScreen
                 : WindowStartupLocation.CenterOwner
         };
-        dialog.SetControl(userControl);
-        dialog.Closed += (_, _) => _isShowing = false;
+        _dialog.SetControl(userControl);
+        _dialog.Width = width;
+        _dialog.Height = height;
+        _dialog.Closed += (_, _) => IsShowing = false;
 
         if (owner?.IsVisible == true && isDialog)
-            _ = dialog.ShowDialog(owner);
+            _ = _dialog.ShowDialog(owner);
         else
-            dialog.Show();
+            _dialog.Show();
+    }
+
+    public static void Close()
+    {
+        IsShowing = false;
+        _dialog?.Close();
     }
 }

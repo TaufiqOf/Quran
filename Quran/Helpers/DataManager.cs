@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Quran.Models;
 using Quran.Views.Pages;
 
@@ -39,7 +40,7 @@ public static class DataManager
                 Type = originalSurah.Type,
                 TotalVerses = originalSurah.TotalVerses,
                 Verses = originalSurah.Verses,
-                VerseResults = originalSurah.Verses.Select(q=> new VerseResult()
+                VerseResults = originalSurah.Verses.Select(q => new VerseResult()
                 {
                     Id = q.Id,
                     Text = q.Text,
@@ -146,6 +147,7 @@ public static class DataManager
         var json = JsonSerializer.Serialize(bookmarks);
         File.WriteAllText(BookmarkFilePath, json);
     }
+
     public static List<ChatMessageModel> LoadChatMessages()
     {
         try
@@ -161,6 +163,7 @@ public static class DataManager
             return new List<ChatMessageModel>();
         }
     }
+
     public static string LoadLanguagePreference()
     {
         try
@@ -205,13 +208,44 @@ public static class DataManager
         settings.ReaderMode = readerMode;
         SaveAppSettings(settings);
     }
-    
+
     public static void SaveChatMessages(List<ChatMessageModel> chatMessages)
     {
         var settings = LoadAppSettings();
         settings.ChatMessages = chatMessages;
         SaveAppSettings(settings);
     }
+
+    public static async Task<string> GetTafsirAsync(int surahId, int verseId)
+    {
+        var path = Path.Combine(
+                DataPath,
+                "Tafsir",
+                $"{surahId}.json"
+            );
+
+        await using var stream = File.OpenRead(path);
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        await foreach (var tafsir in JsonSerializer.DeserializeAsyncEnumerable<Tafsir>(
+                           stream,
+                           options))
+        {
+            if (tafsir?.SurahId == surahId &&
+                tafsir.VerseId == verseId)
+            {
+                return tafsir.Text ?? string.Empty;
+            }
+        }
+
+        return string.Empty;
+
+    }
+
 
     private static AppSettings LoadAppSettings()
     {

@@ -74,6 +74,14 @@
             <Setter Property="FontFamily" Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
             <Setter Property="Watermark" Value="Ask a question..." />
         </Style>
+        
+        <Style Selector="TextBlock.timeTextBlock">
+            <Setter Property="Foreground" Value="LightGray" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5,0,0,0" />
+        </Style>
     </UserControl.Styles>
 
     <!-- Main Layout -->
@@ -102,7 +110,7 @@
                                 <Border
                                     HorizontalAlignment="Right"
                                     MaxWidth="600"
-                                    MinWidth="200"
+                                    MinWidth="300"
                                     Background="#2B4C7E"
                                     CornerRadius="12,12,2,12"
                                     Padding="12,8"
@@ -118,8 +126,12 @@
                                         <Grid  
                                             Background="#213b62" 
                                             HorizontalAlignment="Stretch" 
-                                            ColumnDefinitions="*,Auto,Auto">
+                                            ColumnDefinitions="*,Auto,Auto,Auto">
                                             <!-- User Message Bubble -->
+                                            <TextBlock 
+                                                Classes="timeTextBlock"
+                                                Text="{Binding TimeString}">
+                                            </TextBlock>
                                             <Button 
                                                 Grid.Column="1"
                                                 x:Name="CopyUserButton"
@@ -128,6 +140,17 @@
                                                 Click="CopyMessageButtonOnClick">
                                                 <avalonia:FluentIcon Icon="Copy" FontSize="16" />
                                                 <ToolTip.Tip>Copy</ToolTip.Tip>
+                                                
+                                            </Button>
+                                            <Button 
+                                                Grid.Column="2"
+                                                x:Name="DeleteUserButton"
+                                                Classes="copyButton"
+                                                CommandParameter="{Binding}"
+                                                Click="DeleteMessageButtonOnClick">
+                                                <avalonia:FluentIcon Icon="Delete" FontSize="16" />
+                                                <ToolTip.Tip>Delete</ToolTip.Tip>
+                                                
                                             </Button>
                                         </Grid>
                                     </StackPanel>
@@ -137,7 +160,7 @@
                                 <Border
                                     HorizontalAlignment="Left"
                                     MaxWidth="650"
-                                    MinWidth="200"
+                                    MinWidth="300"
                                     Background="#222222"
                                     BorderBrush="#333333"
                                     BorderThickness="1"
@@ -152,8 +175,11 @@
                                             LineHeight="24"
                                             TextWrapping="Wrap" />
 
-                                        <Grid  Background="#333333" HorizontalAlignment="Stretch" ColumnDefinitions="*,Auto,Auto">
-                                            <Button 
+                                        <Grid  Background="#333333" HorizontalAlignment="Stretch" ColumnDefinitions="*,Auto,Auto,Auto">
+                                            <TextBlock 
+                                                Classes="timeTextBlock"
+                                                Text="{Binding TimeString}">
+                                            </TextBlock>                                           <Button 
                                                 Grid.Column="1"
                                                 x:Name="ShowReferenceButton"
                                                 Classes="copyButton"
@@ -170,6 +196,16 @@
                                                 Click="CopyMessageButtonOnClick">
                                                 <avalonia:FluentIcon Icon="Copy" FontSize="16" />
                                                 <ToolTip.Tip>Copy</ToolTip.Tip>
+                                            </Button>
+                                            <Button 
+                                                Grid.Column="3"
+                                                x:Name="DeleteAiButton"
+                                                Classes="copyButton"
+                                                CommandParameter="{Binding}"
+                                                Click="DeleteMessageButtonOnClick">
+                                                <avalonia:FluentIcon Icon="Delete" FontSize="16" />
+                                                <ToolTip.Tip>Delete</ToolTip.Tip>
+                                                
                                             </Button>
 
                                         </Grid>

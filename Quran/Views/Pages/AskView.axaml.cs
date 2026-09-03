@@ -16,8 +16,8 @@ namespace Quran.Views.Pages;
 public partial class AskView : AView
 {
     private CancellationTokenSource? _searchCts;
-    private bool _sending = false;
-    public ObservableCollection<ChatMessageModel> Messages { get; } = new();
+    private bool _sending;
+    public ObservableCollection<ChatMessageModel> Messages { get; }
 
     public AskView()
     {
@@ -59,32 +59,62 @@ public partial class AskView : AView
         var token = _searchCts.Token;
 
         // 1. Add User Message
-        Messages.Add(new ChatMessageModel { IsUser = true, Content = message });
+        Messages.Add(new ChatMessageModel { IsUser = true, Content = message, Time = DateTime.Now });
         SendTextBox.Text = string.Empty;
 
         // 2. Add Assistant Message Placeholder
-        var aiMessage = new ChatMessageModel { IsUser = false, Content = "Thinking..." };
+        var aiMessage = new ChatMessageModel
+        {
+            IsUser = false,
+            Content = "Getting sources related to the question...",
+            Time = DateTime.Now
+        };
         Messages.Add(aiMessage);
         ScrollToBottom();
 
         SendButton.IsEnabled = false;
         ProgressBar.IsIndeterminate = true;
         MessageTextBlock.Text = string.Empty;
-
+        DataManager.SaveChatMessages(Messages.ToList());
         try
         {
-            var responseText = await AskAiManager.Ask(message, token);
+            var messageModel = new AskAiManager.MessageResult()
+            {
+                IsSuccess = false,
+            };
+            messageModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(AskAiManager.MessageResult.Context))
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        aiMessage.Refference = messageModel.Context;
+                        aiMessage.Content = "Sources retrieved. Generating answer...";
+                    }, DispatcherPriority.Background);
+                }
+            };
+            messageModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(AskAiManager.MessageResult.Message))
+                {
+                    Dispatcher.UIThread.Post(() => { aiMessage.Content = messageModel.Message; },
+                        DispatcherPriority.Background);
+                }
+            };
+            await foreach (var chunk in AskAiManager.AskStreaming(message, messageModel, token))
+            {
+            }
 
-            if (!token.IsCancellationRequested && !responseText.IsSuccess)
+            if (!token.IsCancellationRequested && !messageModel.IsSuccess)
             {
                 aiMessage.Content = "No answer could be retrieved from context.";
             }
-            else
+            else if (messageModel.IsSuccess)
             {
-                aiMessage.Content = responseText.Message;
+                aiMessage.Content = messageModel.Message;
             }
 
-            aiMessage.Refference = responseText.Context;
+            aiMessage.Refference = messageModel.Context;
         }
         catch (OperationCanceledException)
         {
@@ -179,6 +209,15 @@ public partial class AskView : AView
                     messageModel.Refference
                         .Select(r => $"{r}\n{string.Join("\n", r.VerseResults.Select(t => t.ToString()))}").ToList()),
                 false);
+        }
+    }
+
+    private async void DeleteMessageButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.CommandParameter is ChatMessageModel messageModel)
+        {
+            Messages.Remove(messageModel);
+            DataManager.SaveChatMessages(Messages.ToList());
         }
     }
 }

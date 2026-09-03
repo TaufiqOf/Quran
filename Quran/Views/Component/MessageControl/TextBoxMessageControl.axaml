@@ -32,7 +32,7 @@
              Background="Transparent"
              BorderThickness="0"
              Focusable="True"
-             ScrollViewer.VerticalScrollBarVisibility="Hidden"
-             ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
 
 </UserControl>

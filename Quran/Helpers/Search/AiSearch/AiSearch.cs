@@ -168,7 +168,7 @@ public class AiSearch : ISearch
         return (query, defaultLimit);
     }
 
-    private static List<SurahResult> ApplyVerseLimit(List<SurahResult> results, int maxVerses)
+    private static List<SurahResult> ApplyVerseLimit(List<SurahResult>? results, int maxVerses)
     {
         if (results == null || !results.Any() || maxVerses <= 0)
             return new List<SurahResult>();

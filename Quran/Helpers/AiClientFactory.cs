@@ -6,17 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using OllamaSharp;
 using OpenAI.Chat;
+using Quran.Helpers.Search.AiSearch;
+using Quran.Models;
 using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
-namespace Quran.Helpers.Search.AiSearch;
-
-public enum AiProvider
-{
-    OpenAI,
-    Ollama,
-    LLamaSharp,
-    CustomLocalApi
-}
+namespace Quran.Helpers;
 
 public static class AiClientFactory
 {

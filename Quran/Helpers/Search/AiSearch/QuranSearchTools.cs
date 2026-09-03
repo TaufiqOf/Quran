@@ -71,9 +71,6 @@ public class QuranSearchTools
 
             foreach (var verse in surah.VerseResults)
             {
-                if (verse == null)
-                    continue;
-
                 list.Add(new VerseReference
                 {
                     SurahId = surah.Id,

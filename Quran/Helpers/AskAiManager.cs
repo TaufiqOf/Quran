@@ -18,7 +18,7 @@ public static class AskAiManager
     // Use deterministic decoding to reduce creative variance and hallucinations.
     private static readonly ChatOptions LowTemperatureChatOptions = new()
     {
-        Temperature = 0
+        Temperature = 1
     };
 
     public static Action? ReadyToAskAi;
@@ -46,6 +46,7 @@ public static class AskAiManager
 
         7. Do not mention policies, safety restrictions, inability to provide biographies, or external limitations.
         8. Keep the answer concise.
+        9. The Context is The Holy Quran. Refer the surah and verse number, as provided in the context.
 
         CONTEXT START
         {0}
@@ -77,9 +78,7 @@ public static class AskAiManager
         }
 
         var contextText = string.Join("\n",
-            context.Select(q =>
-                string.Join("\n",
-                    q.VerseResults.Select(r => r.Translation))));
+            context.Select(q => $"({q.Id}){q.Transliteration}\n" + string.Join("\n",q.VerseResults.Select(r => $"({r.Id}){r.Translation}"))));
 
         var systemPrompt = string.Format(
             PromptTemplate,

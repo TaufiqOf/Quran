@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Quran.Helpers;
+using Quran.Helpers.Search.AiSearch;
+using Quran.Models;
 
 namespace Quran.Views.Pages;
 
@@ -20,7 +22,26 @@ public partial class SettingsView : AView
 
         var readerMode = SettingService.LoadReaderModePreference();
         SelectReaderMode(readerMode);
+
+        var aiSettings = SettingService.LoadAiSettings();
+        SelectAiSettings(aiSettings);
+
         await Task.CompletedTask;
+    }
+
+    private void SelectAiSettings(AiSettings aiSettings)
+    {
+        AiProviderComboBox.SelectedIndex = 0;
+        for (var i = 0; i < AiProviderComboBox.ItemCount; i++)
+            if (AiProviderComboBox.Items[i] is ComboBoxItem item && item.Tag is string model &&
+                string.Equals(model, aiSettings.Provider.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                AiProviderComboBox.SelectedIndex = i;
+                break;
+            }
+
+        AiModelModelTextBox.Text = aiSettings.Model;
+        AiModelApiKeyTextBox.Text = aiSettings.Endpoint;
     }
 
     public override async Task Reload(params object?[] parameter)
@@ -46,7 +67,17 @@ public partial class SettingsView : AView
         }
 
         SettingService.SaveLanguagePreference(selectedLanguage);
+        var selectedAiProviderItem = AiProviderComboBox.SelectedItem as ComboBoxItem;
         SettingService.SaveReaderModePreference(selectedReaderMode);
+        var aiSettings = new AiSettings
+        {
+            Provider = Enum.TryParse<AiProvider>(selectedAiProviderItem?.Tag as string, out var provider)
+                ? provider
+                : AiProvider.Ollama,
+            Model = AiModelModelTextBox.Text ?? string.Empty,
+            Endpoint = AiModelApiKeyTextBox.Text ?? string.Empty
+        };
+        SettingService.SaveAiSettings(aiSettings);
         DataManager.LoadSurahs(selectedLanguage);
         ReloadRequested?.Invoke();
         MessageHelper.ShowMessage("Settings Saved", "Your preferences have been saved.");

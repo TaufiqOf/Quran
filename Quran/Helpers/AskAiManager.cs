@@ -37,7 +37,8 @@ public static class AskAiManager
 
     static AskAiManager()
     {
-        _chatClient = AiClientFactory.Create(AiProvider.Ollama, "http://localhost:11434", "llama3.2");
+        var aiSettings = SettingService.LoadAiSettings();
+        _chatClient = AiClientFactory.Create(aiSettings.Provider, aiSettings.Endpoint, aiSettings.Model);
         SearchManager.SearcherRegistered += SearcherRegistered;
     }
 

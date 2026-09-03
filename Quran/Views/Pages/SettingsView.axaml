@@ -9,7 +9,6 @@
             <Setter Property="BorderBrush" Value="#3A3A3A" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="24" />
-            <Setter Property="MaxWidth" Value="520" />
         </Style>
 
         <Style Selector="TextBlock.sectionTitle">
@@ -43,65 +42,89 @@
         </Style>
 
     </UserControl.Styles>
+    <ScrollViewer>
+        <Grid Margin="20"
+              RowDefinitions="*,Auto,*"
+              ColumnDefinitions="*">
+            <Border Grid.Row="1"
+                    Classes="settingsCard"
+                    Width="800"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel Spacing="14">
+                    <TextBlock Classes="sectionTitle"
+                               Text="Settings" />
 
-    <Grid Margin="20"
-          RowDefinitions="*,Auto,*"
-          ColumnDefinitions="*">
+                    <TextBlock Classes="sectionSubtitle"
+                               Text="Personalize your reading experience." />
 
-        <Border Grid.Row="1"
-                Classes="settingsCard"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-            <StackPanel Spacing="14">
-                <TextBlock Classes="sectionTitle"
-                           Text="Settings" />
+                    <Separator Margin="0,2,0,4" />
 
-                <TextBlock Classes="sectionSubtitle"
-                           Text="Personalize your reading experience." />
+                    <TextBlock Classes="fieldLabel"
+                               Text="Quran Translation Language" />
 
-                <Separator Margin="0,2,0,4" />
+                    <ComboBox x:Name="LanguageComboBox"
+                              Classes="settingsInput"
+                              SelectedIndex="0">
+                        <ComboBoxItem Content="English" Tag="en" />
+                        <ComboBoxItem Content="Bangla" Tag="bn" />
+                        <ComboBoxItem Content="Spanish" Tag="es" />
+                        <ComboBoxItem Content="French" Tag="fr" />
+                        <ComboBoxItem Content="Indonesian" Tag="id" />
+                        <ComboBoxItem Content="Russian" Tag="ru" />
+                        <ComboBoxItem Content="Swedish" Tag="sv" />
+                        <ComboBoxItem Content="Turkish" Tag="tr" />
+                        <ComboBoxItem Content="Urdu" Tag="ur" />
+                        <ComboBoxItem Content="Chinese" Tag="zh" />
+                    </ComboBox>
 
-                <TextBlock Classes="fieldLabel"
-                           Text="Quran Translation Language" />
+                    <TextBlock Classes="sectionSubtitle"
+                               Text="This updates surah translations across the app." />
 
-                <ComboBox x:Name="LanguageComboBox"
-                          Classes="settingsInput"
-                          SelectedIndex="0">
-                    <ComboBoxItem Content="English" Tag="en" />
-                    <ComboBoxItem Content="Bangla" Tag="bn" />
-                    <ComboBoxItem Content="Spanish" Tag="es" />
-                    <ComboBoxItem Content="French" Tag="fr" />
-                    <ComboBoxItem Content="Indonesian" Tag="id" />
-                    <ComboBoxItem Content="Russian" Tag="ru" />
-                    <ComboBoxItem Content="Swedish" Tag="sv" />
-                    <ComboBoxItem Content="Turkish" Tag="tr" />
-                    <ComboBoxItem Content="Urdu" Tag="ur" />
-                    <ComboBoxItem Content="Chinese" Tag="zh" />
-                </ComboBox>
+                    <TextBlock Classes="fieldLabel"
+                               Text="Preferred Reader View" />
 
-                <TextBlock Classes="sectionSubtitle"
-                           Text="This updates surah translations across the app." />
+                    <ComboBox x:Name="ReaderModeComboBox"
+                              Classes="settingsInput"
+                              SelectedIndex="0">
+                        <ComboBoxItem Content="Quranic" Tag="Quranic" />
+                        <ComboBoxItem Content="Linear" Tag="Linear" />
+                        <ComboBoxItem Content="Compact" Tag="Compact" />
+                        <ComboBoxItem Content="Translation" Tag="Translation" />
+                    </ComboBox>
 
-                <TextBlock Classes="fieldLabel"
-                           Text="Preferred Reader View" />
+                    <TextBlock Classes="sectionSubtitle"
+                               Text="Choose your default Quran reading view." />
 
-                <ComboBox x:Name="ReaderModeComboBox"
-                          Classes="settingsInput"
-                          SelectedIndex="0">
-                    <ComboBoxItem Content="Quranic" Tag="Quranic" />
-                    <ComboBoxItem Content="Linear" Tag="Linear" />
-                    <ComboBoxItem Content="Compact" Tag="Compact" />
-                    <ComboBoxItem Content="Translation" Tag="Translation" />
-                </ComboBox>
+                    <TextBlock Classes="fieldLabel"
+                               Text="Preferred Ai Provider" />
 
-                <TextBlock Classes="sectionSubtitle"
-                           Text="Choose your default Quran reading view." />
+                    <ComboBox x:Name="AiProviderComboBox"
+                              Classes="settingsInput"
+                              SelectedIndex="0">
+                        <ComboBoxItem Content="OpenAI Api" Tag="OpenAI" />
+                        <ComboBoxItem Content="Ollama" Tag="Ollama" />
+                        <ComboBoxItem Content="LLamaSharp" Tag="LLamaSharp" />
+                        <ComboBoxItem Content="Other Models" Tag="CustomLocalApi" />
+                    </ComboBox>
+                    <TextBlock Classes="fieldLabel"
+                               Text="Ai Model" />
+                    <TextBox x:Name="AiModelModelTextBox"
+                             Classes="settingsInput"
+                             PlaceholderText="Enter your AI model here" />
 
-                <Button Classes="primaryAction"
-                        Content="Save Preferences"
-                        Click="Button_OnClick" />
-            </StackPanel>
-        </Border>
-    </Grid>
+                    <TextBlock Classes="fieldLabel"
+                               Text="Ai Api Key/Endpoint" />
+                    <TextBox x:Name="AiModelApiKeyTextBox"
+                             Classes="settingsInput"
+                             PlaceholderText="Enter your AI model API key or Endpoint here" />
+
+                    <Button Classes="primaryAction"
+                            Content="Save Preferences"
+                            Click="Button_OnClick" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 
 </UserControl>

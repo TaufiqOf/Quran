@@ -15,10 +15,10 @@ public partial class SettingsView : AView
 
     public override async Task Load(params object?[] parameter)
     {
-        var languageCode = DataManager.LoadLanguagePreference();
+        var languageCode = SettingService.LoadLanguagePreference();
         SelectLanguage(languageCode);
 
-        var readerMode = DataManager.LoadReaderModePreference();
+        var readerMode = SettingService.LoadReaderModePreference();
         SelectReaderMode(readerMode);
         await Task.CompletedTask;
     }
@@ -45,8 +45,8 @@ public partial class SettingsView : AView
             return;
         }
 
-        DataManager.SaveLanguagePreference(selectedLanguage);
-        DataManager.SaveReaderModePreference(selectedReaderMode);
+        SettingService.SaveLanguagePreference(selectedLanguage);
+        SettingService.SaveReaderModePreference(selectedReaderMode);
         DataManager.LoadSurahs(selectedLanguage);
         ReloadRequested?.Invoke();
         MessageHelper.ShowMessage("Settings Saved", "Your preferences have been saved.");

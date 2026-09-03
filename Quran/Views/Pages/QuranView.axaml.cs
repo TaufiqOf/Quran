@@ -60,7 +60,7 @@ public partial class QuranView : AView
             GotoComponent.Load(_surahs, _surahOrder, _surahSynopsis);
 
             // Load preferred reader mode
-            var preferredReaderMode = DataManager.LoadReaderModePreference();
+            var preferredReaderMode = SettingService.LoadReaderModePreference();
             if (Enum.TryParse<ReaderMode>(preferredReaderMode, out var readerMode))
             {
                 ModeComboBox.SelectedIndex = (int)readerMode;

@@ -25,7 +25,7 @@ public partial class AskView : AView
     public AskView()
     {
         InitializeComponent();
-        Messages = new ObservableCollection<ChatMessageModel>(DataManager.LoadChatMessages());
+        Messages = new ObservableCollection<ChatMessageModel>(SettingService.LoadChatMessages());
         ChatItemsControl.ItemsSource = Messages;
     }
 
@@ -84,7 +84,7 @@ public partial class AskView : AView
         SendButton.IsEnabled = false;
         ProgressBar.IsIndeterminate = true;
         MessageTextBlock.Text = string.Empty;
-        DataManager.SaveChatMessages(Messages.ToList());
+        SettingService.SaveChatMessages(Messages.ToList());
         try
         {
             var messageModel = new AskAiManager.MessageResult()
@@ -139,7 +139,7 @@ public partial class AskView : AView
             ProgressBar.IsIndeterminate = false;
             SendButton.IsEnabled = true;
             _sending = false;
-            DataManager.SaveChatMessages(Messages.ToList());
+            SettingService.SaveChatMessages(Messages.ToList());
             ScrollToBottom();
         }
     }
@@ -222,7 +222,7 @@ public partial class AskView : AView
         if (sender is Button button && button.CommandParameter is ChatMessageModel messageModel)
         {
             Messages.Remove(messageModel);
-            DataManager.SaveChatMessages(Messages.ToList());
+            SettingService.SaveChatMessages(Messages.ToList());
         }
     }
 

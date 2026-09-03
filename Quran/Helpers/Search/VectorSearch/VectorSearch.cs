@@ -21,22 +21,9 @@ public class VectorSearch : ISearch
 
     public VectorSearch()
     {
-        _embeddingDataPath =
-            Path.Combine(
-                AppContext.BaseDirectory,
-                "Storage",
-                "embeddings.json");
-
-        _modelPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "Quran",
-            "Storage",
-            "model1.onnx");
-
-        _tokenizerPath = Path.Combine(
-            AppContext.BaseDirectory,
-            "Storage",
-            "tokenizer.json");
+        _embeddingDataPath = DataManager.EmbeddingDataPath;
+        _modelPath = DataManager.ModelPath;
+        _tokenizerPath = DataManager.TokenizerPath;
     }
 
     public async Task InitializeAsync()

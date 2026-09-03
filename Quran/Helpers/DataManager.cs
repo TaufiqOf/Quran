@@ -11,20 +11,35 @@ namespace Quran.Helpers;
 
 public static class DataManager
 {
+    public static string EmbeddingDataPath =
+        Path.Combine(
+            AppContext.BaseDirectory,
+            "Storage",
+            "embeddings.json");
+
+    public static string ModelPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "Quran",
+        "Storage",
+        "model1.onnx");
+
+    public static string TokenizerPath = Path.Combine(
+        AppContext.BaseDirectory,
+        "Storage",
+        "tokenizer.json");
+
     private static string DataPath => Path.Combine(AppContext.BaseDirectory, "Data");
 
     private static readonly string BookmarkFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");
 
-    private static readonly string SettingsFilePath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "quran_settings.json");
 
     static DataManager()
     {
         if (!File.Exists(BookmarkFilePath)) File.WriteAllText(BookmarkFilePath, "[]");
         // Load Surahs and Surah Orders on initialization
         Bookmarks = GetBookmarks();
-        LoadSurahs(LoadLanguagePreference());
+        LoadSurahs(SettingService.LoadLanguagePreference());
     }
 
     public static List<SurahResult> SurahResults
@@ -148,81 +163,14 @@ public static class DataManager
         File.WriteAllText(BookmarkFilePath, json);
     }
 
-    public static List<ChatMessageModel> LoadChatMessages()
-    {
-        try
-        {
-            if (!File.Exists(SettingsFilePath)) return new List<ChatMessageModel>();
-
-            var json = File.ReadAllText(SettingsFilePath);
-            var settings = JsonSerializer.Deserialize<AppSettings>(json);
-            return settings?.ChatMessages ?? new List<ChatMessageModel>();
-        }
-        catch
-        {
-            return new List<ChatMessageModel>();
-        }
-    }
-
-    public static string LoadLanguagePreference()
-    {
-        try
-        {
-            if (!File.Exists(SettingsFilePath)) return "en";
-
-            var json = File.ReadAllText(SettingsFilePath);
-            var settings = JsonSerializer.Deserialize<AppSettings>(json);
-            return string.IsNullOrWhiteSpace(settings?.Language) ? "en" : settings.Language;
-        }
-        catch
-        {
-            return "en";
-        }
-    }
-
-    public static void SaveLanguagePreference(string languageCode)
-    {
-        var settings = LoadAppSettings();
-        settings.Language = languageCode;
-        SaveAppSettings(settings);
-    }
-
-    public static string LoadReaderModePreference()
-    {
-        try
-        {
-            if (!File.Exists(SettingsFilePath)) return "Compact";
-
-            var settings = LoadAppSettings();
-            return string.IsNullOrWhiteSpace(settings?.ReaderMode) ? "Compact" : settings.ReaderMode;
-        }
-        catch
-        {
-            return "Compact";
-        }
-    }
-
-    public static void SaveReaderModePreference(string readerMode)
-    {
-        var settings = LoadAppSettings();
-        settings.ReaderMode = readerMode;
-        SaveAppSettings(settings);
-    }
-
-    public static void SaveChatMessages(List<ChatMessageModel> chatMessages)
-    {
-        var settings = LoadAppSettings();
-        settings.ChatMessages = chatMessages;
-        SaveAppSettings(settings);
-    }
 
     public static async Task<string> GetTafsirAsync(int surahId, int verseId)
     {
         var path = Path.Combine(
-                DataPath,
-                "Tafsir",
-                $"{surahId}.json"
-            );
+            DataPath,
+            "Tafsir",
+            $"{surahId}.json"
+        );
 
         await using var stream = File.OpenRead(path);
 
@@ -243,28 +191,5 @@ public static class DataManager
         }
 
         return string.Empty;
-
-    }
-
-
-    private static AppSettings LoadAppSettings()
-    {
-        try
-        {
-            if (!File.Exists(SettingsFilePath)) return new AppSettings();
-
-            var json = File.ReadAllText(SettingsFilePath);
-            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
-        }
-        catch
-        {
-            return new AppSettings();
-        }
-    }
-
-    private static void SaveAppSettings(AppSettings settings)
-    {
-        var json = JsonSerializer.Serialize(settings);
-        File.WriteAllText(SettingsFilePath, json);
     }
 }

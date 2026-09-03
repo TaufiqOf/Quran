@@ -66,6 +66,14 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
     {
         VerseBookMark();
     }
+    private void ShowTafasirButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        ShowTafasir();
+    }
 
+    private void CopyButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        Copy();
+    }
 
 }

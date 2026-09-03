@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Quran.Models;
 
 namespace Quran.Views.Component;
@@ -74,5 +75,15 @@ public partial class VerseComponent : AVerseComponent, IDisposable
     public void DontShowPlay()
     {
         PlayItemManuMenuItem?.IsVisible = false;
+    }
+
+    private void ShowTafasirButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        Dispatcher.InvokeAsync(ShowTafasir, DispatcherPriority.Background);
+    }
+
+    private void CopyButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        Dispatcher.InvokeAsync(Copy, DispatcherPriority.Background);
     }
 }

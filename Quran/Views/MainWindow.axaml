@@ -8,6 +8,7 @@
         d:DesignHeight="600"
         MinHeight="600"
         MinWidth="1200"
+        WindowState="Maximized"
         x:Class="Quran.Views.MainWindow"
         Title="Quran">
     

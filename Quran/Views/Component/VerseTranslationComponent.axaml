@@ -1,6 +1,7 @@
 <UserControl
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
     x:Class="Quran.Views.Component.VerseTranslationComponent"
     x:Name="Root"
     HorizontalAlignment="Stretch">
@@ -50,7 +51,24 @@
             <Setter Property="Foreground" Value="#8EA7D8" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <!-- Copy & Action Buttons -->
+        <Style Selector="Button.copyButton">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <!-- Ensures content inside aligns to the left edge of the button -->
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.copyButton:pointerover">
+            <Setter Property="Background" Value="#333333" />
+        </Style>
 
+        <Style Selector="Button.copyButton:pressed">
+            <Setter Property="Background" Value="#444444" />
+        </Style>
     </UserControl.Styles>
 
 
@@ -69,6 +87,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
 
@@ -100,8 +119,28 @@
 
             <SelectableTextBlock
                 x:Name="TextBlockTranslation"
+                TextWrapping="Wrap"
                 Grid.Column="1"
                 Classes="translation" />
+            <Grid Grid.Column="2" Background="#333333" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                  ColumnDefinitions="*,Auto,Auto,Auto">
+                <Button
+                    Grid.Column="1"
+                    x:Name="ShowReferenceButton"
+                    Classes="copyButton"
+                    Click="ShowTafasirButtonOnClick">
+                    <avalonia:FluentIcon Icon="Book" FontSize="16" />
+                    <ToolTip.Tip>Show Reference</ToolTip.Tip>
+                </Button>
+                <Button
+                    Grid.Column="2"
+                    x:Name="CopyAiButton"
+                    Classes="copyButton"
+                    Click="CopyButtonOnClick">
+                    <avalonia:FluentIcon Icon="Copy" FontSize="16" />
+                    <ToolTip.Tip>Copy</ToolTip.Tip>
+                </Button>
+            </Grid>
 
         </Grid>
 

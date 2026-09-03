@@ -26,6 +26,12 @@ public partial class AskView : AView
         ChatItemsControl.ItemsSource = Messages;
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ChatScrollViewer.ScrollToEnd();
+    }
+
     private void SendTextBoxOnKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && !_sending)

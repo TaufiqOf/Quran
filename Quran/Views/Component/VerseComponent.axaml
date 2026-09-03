@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
              x:Class="Quran.Views.Component.VerseComponent"
              x:Name="Root"
              Margin="5">
@@ -85,6 +86,25 @@
         <Style Selector="Border.card.selected Button.iconButton">
             <Setter Property="Background" Value="#404040" />
         </Style>
+
+        <!-- Copy & Action Buttons -->
+        <Style Selector="Button.copyButton">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <!-- Ensures content inside aligns to the left edge of the button -->
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.copyButton:pointerover">
+            <Setter Property="Background" Value="#333333" />
+        </Style>
+
+        <Style Selector="Button.copyButton:pressed">
+            <Setter Property="Background" Value="#444444" />
+        </Style>
     </UserControl.Styles>
 
 
@@ -152,22 +172,42 @@
             <!-- Buttons -->
             <!-- ===================================== -->
 
-            <StackPanel Grid.Row="4" Orientation="Horizontal">
-                <TextBlock
-                    x:Name="TextBlockBookmark"
-                    Text="&#xF02E; "
-                    FontFamily="avares://Quran/Assets/Fonts#Font Awesome 7 Free"
-                    FontWeight="Black"
-                    Margin="0,1,0,0"
-                    FontSize="16" />
-                <TextBlock
-                    x:Name="TextBlockVerseNumber"
-                    Classes="verseNumber"
-                    Text="Verse 1"
-                    HorizontalAlignment="Right"
-                    Margin="5,0,0,0" />
-
-            </StackPanel>
+            <Grid Grid.Row="4" ColumnDefinitions="Auto,*,Auto">
+                <Grid Grid.Column="0" ColumnDefinitions="Auto,*">
+                    <TextBlock Grid.Column="0"
+                        x:Name="TextBlockBookmark"
+                        Text="&#xF02E; "
+                        FontFamily="avares://Quran/Assets/Fonts#Font Awesome 7 Free"
+                        FontWeight="Black"
+                        Margin="0,1,0,0"
+                        FontSize="16" />
+                    <TextBlock Grid.Column="1"
+                        x:Name="TextBlockVerseNumber"
+                        Classes="verseNumber"
+                        Text="Verse 1"
+                        HorizontalAlignment="Right"
+                        Margin="5,0,0,0" />
+                </Grid>
+                <Grid Grid.Column="2" Background="#333333" HorizontalAlignment="Left"
+                      ColumnDefinitions="*,Auto,Auto,Auto">
+                    <Button
+                        Grid.Column="1"
+                        x:Name="ShowReferenceButton"
+                        Classes="copyButton"
+                        Click="ShowTafasirButtonOnClick">
+                        <avalonia:FluentIcon Icon="Book" FontSize="16" />
+                        <ToolTip.Tip>Show Reference</ToolTip.Tip>
+                    </Button>
+                    <Button
+                        Grid.Column="2"
+                        x:Name="CopyAiButton"
+                        Classes="copyButton"
+                        Click="CopyButtonOnClick">
+                        <avalonia:FluentIcon Icon="Copy" FontSize="16" />
+                        <ToolTip.Tip>Copy</ToolTip.Tip>
+                    </Button>
+                </Grid>
+            </Grid>
 
 
         </Grid>

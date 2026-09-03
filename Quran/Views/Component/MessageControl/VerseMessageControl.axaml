@@ -23,16 +23,47 @@
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
+
+        <Style Selector="TextBlock.metaText">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#D0D0D0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.verseText">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#9A9A9A" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
     </UserControl.Styles>
 
-    <TextBox x:Name="TextBoxMessage"
-             IsReadOnly="True"
-             AcceptsReturn="True"
-             TextWrapping="Wrap"
-             Background="Transparent"
-             BorderThickness="0"
-             Focusable="True"
-             ScrollViewer.VerticalScrollBarVisibility="Auto"
-             ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+    <Grid RowDefinitions="Auto,*" RowSpacing="8">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+            <TextBlock
+                x:Name="TextBlockSurahMeta"
+                Classes="metaText"
+                Text="(1) Al-Fatihah - \u0627\u0644\u0641\u0627\u062a\u062d\u0629" />
+            <TextBlock
+                x:Name="TextBlockVerseNumber"
+                Grid.Column="1"
+                Classes="verseText"
+                Text="Verse 1"
+                Margin="12,0,0,0" />
+        </Grid>
+
+        <TextBox
+            x:Name="TextBoxMessage"
+            Grid.Row="1"
+            IsReadOnly="True"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            Background="Transparent"
+            BorderThickness="0"
+            Focusable="True"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+    </Grid>
 
 </UserControl>

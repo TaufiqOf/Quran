@@ -9,6 +9,7 @@ using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
 using Quran.Views.Component;
+using Quran.Views.Component.MessageControl;
 
 namespace Quran.Views.Pages;
 
@@ -18,6 +19,7 @@ public partial class BookmarksView : AView
     private bool _isLoaded;
     private bool _isLoading;
     private Vector _lastScrollOffset;
+    private VerseMessageControl _control;
 
     public BookmarksView()
     {
@@ -83,6 +85,7 @@ public partial class BookmarksView : AView
                     await ContextMenuHelper.CopyVerseRequested(topLevel, v);
                 verseComponent.CopyAllRequested += async v =>
                     await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
+                verseComponent.TafasirRequested += VerseComponentOnTafasirRequested;
                 verseComponent.DontShowPlay();
                 VerseComponents.Add(verseComponent);
 
@@ -124,7 +127,18 @@ public partial class BookmarksView : AView
         }
     }
 
+    private async void VerseComponentOnTafasirRequested(Surah? surah, Verse verse)
+    {
+        var text = await DataManager.GetTafsirAsync(surah.Id, verse.Id);
+        if (_control != null && MessageHelper.IsShowing)
+        {
+            MessageHelper.Close();
+        }
 
+        _control = new VerseMessageControl(surah, verse, text);
+
+        MessageHelper.ShowMessage("Tafasir", _control, false);
+    }
     public override async Task Reload(params object?[] parameter)
     {
         _isLoaded = false;

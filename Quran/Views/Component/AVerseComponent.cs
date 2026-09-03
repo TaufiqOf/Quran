@@ -227,12 +227,12 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
         VerseContextMenuRequested?.Invoke(Verse);
     }
-    private void ShowTafasirButtonOnClick(object? sender, RoutedEventArgs e)
+    protected void ShowTafasir()
     {
         if(Verse != null) TafasirRequested?.Invoke(Surah,Verse);
     }
 
-    private void CopyButtonOnClick(object? sender, RoutedEventArgs e)
+    protected void Copy()
     {
         if (Verse != null) CopyAllRequested?.Invoke(Verse);
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -10,6 +11,7 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
+using Quran.Views.Component.MessageControl;
 
 namespace Quran.Views.Pages;
 
@@ -17,6 +19,7 @@ public partial class AskView : AView
 {
     private CancellationTokenSource? _searchCts;
     private bool _sending;
+    private VerseMessageControl _control;
     public ObservableCollection<ChatMessageModel> Messages { get; }
 
     public AskView()
@@ -209,14 +212,10 @@ public partial class AskView : AView
         if (sender is Button { DataContext: ChatMessageModel messageModel }
             && messageModel.Refference.Any())
         {
-            MessageHelper.ShowMessage(
-                "Reference",
-                String.Join("\n\n ",
-                    messageModel.Refference
-                        .Select(r => $"{r}\n{string.Join("\n", r.VerseResults.Select(t => t.ToString()))}").ToList()),
-                false);
+            ShowReference(messageModel);
         }
     }
+
 
     private async void DeleteMessageButtonOnClick(object? sender, RoutedEventArgs e)
     {
@@ -225,5 +224,25 @@ public partial class AskView : AView
             Messages.Remove(messageModel);
             DataManager.SaveChatMessages(Messages.ToList());
         }
+    }
+
+    private async void ShowReference(ChatMessageModel messageModel)
+    {
+        if (_control != null && MessageHelper.IsShowing)
+        {
+            MessageHelper.Close();
+        }
+
+        var verses = new List<VerseMessageModel>();
+        foreach (var surah in messageModel.Refference)
+        {
+            foreach (var verseWithResult in surah.ToVerses())
+            {
+                verses.Add(new VerseMessageModel(surah, verseWithResult, verseWithResult.ToString()));
+            }
+        }
+        _control = new VerseMessageControl(verses);
+
+        MessageHelper.ShowMessage("Tafasir", _control, false);
     }
 }

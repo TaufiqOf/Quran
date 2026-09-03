@@ -1,15 +1,72 @@
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Quran.Models;
 
 namespace Quran.Views.Component.MessageControl;
 
+public class VerseMessageModel : INotifyPropertyChanged
+{
+    private bool _isExpanded;
+
+    public Surah Surah { get; set; }
+    public Verse Verse { get; set; }
+    public string Message { get; set; }
+
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            if (_isExpanded == value) return;
+            _isExpanded = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public VerseMessageModel(Surah surah, Verse verse, string message)
+    {
+        Surah = surah;
+        Verse = verse;
+        Message = message;
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
 public partial class VerseMessageControl : UserControl
 {
-    public VerseMessageControl(Surah surah, Verse verse, string message)
+    private readonly List<VerseMessageModel> _messages;
+
+    public VerseMessageControl(List<VerseMessageModel> messages)
     {
         InitializeComponent();
-        TextBlockSurahMeta.Text = $"({surah.Id}) {surah.Transliteration} - {surah.Name}";
-        TextBlockVerseNumber.Text = $"Verse {verse.Id}";
-        TextBoxMessage.Text = message;
+        _messages = messages ?? new List<VerseMessageModel>();
+
+        if (_messages.Count > 0)
+        {
+            _messages[0].IsExpanded = true;
+        }
+
+        MessagesItemsControl.ItemsSource = _messages;
+    }
+
+    private void Expander_OnExpanded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (sender is not Expander { DataContext: VerseMessageModel current }) return;
+
+        foreach (var item in _messages)
+        {
+            if (!ReferenceEquals(item, current))
+            {
+                item.IsExpanded = false;
+            }
+        }
     }
 }

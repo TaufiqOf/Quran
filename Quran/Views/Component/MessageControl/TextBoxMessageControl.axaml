@@ -6,19 +6,41 @@
 
     <UserControl.Styles>
         <!-- Removes the focus rectangle ring/adorner -->
-        <Style Selector="TextBox#TextBoxMessage">
+        <!-- Removes focus ring from message text boxes inside expanders -->
+        <Style Selector="TextBox.messageBox">
+            <Setter Property="Background" Value="Transparent" /> 
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" /> 
             <Setter Property="FocusAdorner" Value="{x:Null}" />
         </Style>
 
-        <!-- Overrides styles applied when the TextBox gets focus -->
-        <Style Selector="TextBox#TextBoxMessage:focus /template/ Border#PART_BorderElement">
+        <!-- Keep transparent on hover -->
+
+        <Style Selector="TextBox.messageBox:pointerover">
+            <Setter Property="Background" Value="Transparent" /> 
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!-- Override template border on hover -->
+
+        <Style Selector="TextBox.messageBox:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" /> 
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!-- Keep transparent when focused -->
+
+        <Style Selector="TextBox.messageBox:focus /template/ Border#PART_BorderElement">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
 
-        <!-- Ensures pointerover (hover) during focus also stays transparent -->
-        <Style Selector="TextBox#TextBoxMessage:focus:pointerover /template/ Border#PART_BorderElement">
+        <!-- Keep transparent when focused and hovered -->
+
+        <Style Selector="TextBox.messageBox:focus:pointerover /template/ Border#PART_BorderElement">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
@@ -26,6 +48,7 @@
     </UserControl.Styles>
 
     <TextBox x:Name="TextBoxMessage"
+             Classes="messageBox"
              IsReadOnly="True"
              AcceptsReturn="True"
              TextWrapping="Wrap"

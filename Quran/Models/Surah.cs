@@ -18,14 +18,33 @@ public class Surah
     [JsonPropertyName("total_verses")] public int TotalVerses { get; set; }
 
     [JsonPropertyName("verses")] public List<Verse> Verses { get; set; } = new();
+
     public override string ToString()
     {
         return $"({Id}){Transliteration} - {Name}";
     }
 }
 
-public class SurahResult :Surah
+public class SurahResult : Surah
 {
     public double? SimilarityScore { get; set; }
     public List<VerseResult> VerseResults { get; set; } = new();
+
+    public List<Verse> ToVerses()
+    {
+        var versesWithResults = new List<Verse>();
+        foreach (var verseResult in VerseResults)
+        {
+            var verse = new Verse
+            {
+                Id = verseResult.Id,
+                Text = verseResult.Text,
+                Translation = verseResult.Translation,
+                Transliteration = verseResult.Transliteration
+            };
+            versesWithResults.Add(verse);
+        }
+
+        return versesWithResults;
+    }
 }

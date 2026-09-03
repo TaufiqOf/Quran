@@ -44,6 +44,7 @@ public partial class BookmarksView : AView
                 {
                     verseComponent.PointerReleased -= VerseComponentPointerReleased;
                     verseComponent.BookmarkVerseRequested -= VerseComponentBookmarkVerseRequested;
+                    verseComponent.TafasirRequested -= VerseComponentOnTafasirRequested;
                 }
 
                 VerseComponents.Clear();
@@ -135,7 +136,7 @@ public partial class BookmarksView : AView
             MessageHelper.Close();
         }
 
-        _control = new VerseMessageControl(surah, verse, text);
+        _control = new VerseMessageControl(new List<VerseMessageModel>() { new(surah, verse, text) });
 
         MessageHelper.ShowMessage("Tafasir", _control, false);
     }

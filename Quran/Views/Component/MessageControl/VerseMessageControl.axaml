@@ -1,27 +1,55 @@
 <UserControl
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="clr-namespace:Quran.Views.Component.MessageControl"
     x:Class="Quran.Views.Component.MessageControl.VerseMessageControl"
     x:Name="Root">
 
     <UserControl.Styles>
-        <!-- Removes the focus rectangle ring/adorner -->
-        <Style Selector="TextBox#TextBoxMessage">
+        <!-- Removes focus ring from message text boxes inside expanders -->
+        <Style Selector="TextBox.messageBox">
+            <Setter Property="Background" Value="Transparent" /> 
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" /> 
             <Setter Property="FocusAdorner" Value="{x:Null}" />
         </Style>
 
-        <!-- Overrides styles applied when the TextBox gets focus -->
-        <Style Selector="TextBox#TextBoxMessage:focus /template/ Border#PART_BorderElement">
+        <!-- Keep transparent on hover -->
+
+        <Style Selector="TextBox.messageBox:pointerover">
+            <Setter Property="Background" Value="Transparent" /> 
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!-- Override template border on hover -->
+
+        <Style Selector="TextBox.messageBox:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="Transparent" /> 
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!-- Keep transparent when focused -->
+
+        <Style Selector="TextBox.messageBox:focus /template/ Border#PART_BorderElement">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
 
-        <!-- Ensures pointerover (hover) during focus also stays transparent -->
-        <Style Selector="TextBox#TextBoxMessage:focus:pointerover /template/ Border#PART_BorderElement">
+        <!-- Keep transparent when focused and hovered -->
+
+        <Style Selector="TextBox.messageBox:focus:pointerover /template/ Border#PART_BorderElement">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        
+ 
+
+        <Style Selector="Expander.verseMessageExpander">
+            <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
 
         <Style Selector="TextBlock.metaText">
@@ -39,31 +67,48 @@
         </Style>
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto,*" RowSpacing="8">
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-            <TextBlock
-                x:Name="TextBlockSurahMeta"
-                Classes="metaText"
-                Text="(1) Al-Fatihah - \u0627\u0644\u0641\u0627\u062a\u062d\u0629" />
-            <TextBlock
-                x:Name="TextBlockVerseNumber"
-                Grid.Column="1"
-                Classes="verseText"
-                Text="Verse 1"
-                Margin="12,0,0,0" />
-        </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <ItemsControl x:Name="MessagesItemsControl">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="mc:VerseMessageModel">
+                    <Expander
+                        Classes="verseMessageExpander"
+                        HorizontalAlignment="Stretch"
+                        IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                        Expanded="Expander_OnExpanded">
+                        <Expander.Header>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Classes="metaText">
+                                    <Run Text="(" />
+                                    <Run Text="{Binding Surah.Id}" />
+                                    <Run Text=") " />
+                                    <Run Text="{Binding Surah.Transliteration}" />
+                                    <Run Text=" - " />
+                                    <Run Text="{Binding Surah.Name}" />
+                                </TextBlock>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Classes="verseText"
+                                    Text="{Binding Verse.Id, StringFormat=Verse {0}}"
+                                    Margin="12,0,0,0" />
+                            </Grid>
+                        </Expander.Header>
 
-        <TextBox
-            x:Name="TextBoxMessage"
-            Grid.Row="1"
-            IsReadOnly="True"
-            AcceptsReturn="True"
-            TextWrapping="Wrap"
-            Background="Transparent"
-            BorderThickness="0"
-            Focusable="True"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
-    </Grid>
+                        <TextBox
+                            Classes="messageBox"
+                            IsReadOnly="True"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            Text="{Binding Message}"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Focusable="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                    </Expander>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
 
 </UserControl>

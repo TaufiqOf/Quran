@@ -20,15 +20,15 @@ public class CustomLocalChatClient : IChatClient
     }
 
     public async Task<ChatResponse> GetResponseAsync(
-        IEnumerable<ChatMessage> messages, 
-        ChatOptions? options = null, 
+        IEnumerable<ChatMessage> messages,
+        ChatOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         var userPrompt = messages.LastOrDefault(m => m.Role == ChatRole.User)?.Text ?? string.Empty;
 
-        string resultText = await RunInferenceAsync(userPrompt, cancellationToken);
+        var resultText = await RunInferenceAsync(userPrompt, cancellationToken);
 
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -36,14 +36,14 @@ public class CustomLocalChatClient : IChatClient
     }
 
     public async IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(
-        IEnumerable<ChatMessage> messages, 
-        ChatOptions? options = null, 
+        IEnumerable<ChatMessage> messages,
+        ChatOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         var userPrompt = messages.LastOrDefault(m => m.Role == ChatRole.User)?.Text ?? string.Empty;
-        string resultText = await RunInferenceAsync(userPrompt, cancellationToken);
+        var resultText = await RunInferenceAsync(userPrompt, cancellationToken);
 
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -51,14 +51,18 @@ public class CustomLocalChatClient : IChatClient
         yield return new ChatResponseUpdate(ChatRole.Assistant, resultText);
     }
 
+    public object? GetService(Type serviceType, object? serviceKey = null)
+    {
+        return serviceType == typeof(CustomLocalChatClient) ? this : null;
+    }
+
+    public void Dispose()
+    {
+    }
+
     private async Task<string> RunInferenceAsync(string prompt, CancellationToken ct)
     {
         await Task.Delay(10, ct);
         return $"Processed: {prompt}";
     }
-
-    public object? GetService(Type serviceType, object? serviceKey = null) => 
-        serviceType == typeof(CustomLocalChatClient) ? this : null;
-
-    public void Dispose() { }
 }

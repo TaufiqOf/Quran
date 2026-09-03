@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Media;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
@@ -21,8 +20,9 @@ public abstract class AVerseComponent : UserControl, IDisposable
         AvaloniaProperty.Register<AVerseComponent, bool>(
             nameof(IsSelected));
 
-    private MenuItem? _copyVerseMenuItem;
     protected MenuItem? PlayItemManuMenuItem;
+
+    private MenuItem? _copyVerseMenuItem;
 
     protected AVerseComponent(Surah surah, Verse verse)
     {
@@ -67,13 +67,13 @@ public abstract class AVerseComponent : UserControl, IDisposable
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;
     public event Action<Verse>? CopyAllRequested;
-    public event Action<Verse>? CopyTransliterationRequested; 
-    public event Action<Surah?,Verse>? TafasirRequested;
+    public event Action<Verse>? CopyTransliterationRequested;
+    public event Action<Surah?, Verse>? TafasirRequested;
 
     public event VerseSelectedEventHandler? VerseSelected;
 
     public event VerseContextMenuEventHandler? VerseContextMenuRequested;
-    
+
 
     public abstract void UpdateSelectedState();
 
@@ -158,7 +158,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
                 FontSize = 18
             }
         };
-        
+
         PlayItemManuMenuItem = new MenuItem
         {
             Header = "Play",
@@ -227,9 +227,10 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
         VerseContextMenuRequested?.Invoke(Verse);
     }
+
     protected void ShowTafasir()
     {
-        if(Verse != null) TafasirRequested?.Invoke(Surah,Verse);
+        if (Verse != null) TafasirRequested?.Invoke(Surah, Verse);
     }
 
     protected void Copy()

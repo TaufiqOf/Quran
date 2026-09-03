@@ -13,13 +13,22 @@ namespace Quran.Helpers;
 
 public static class AskAiManager
 {
-    private static IChatClient _chatClient;
+    private static readonly IChatClient _chatClient;
+
     // Use deterministic decoding to reduce creative variance and hallucinations.
     private static readonly ChatOptions LowTemperatureChatOptions = new()
     {
         Temperature = 0
     };
+
     public static Action? ReadyToAskAi;
+
+    static AskAiManager()
+    {
+        var aiSettings = SettingService.LoadAiSettings();
+        _chatClient = AiClientFactory.Create(aiSettings.Provider, aiSettings.Endpoint, aiSettings.Model);
+        SearchManager.SearcherRegistered += SearcherRegistered;
+    }
 
     public static string PromptTemplate =>
         @"You are a strict factual assistant. Your task is to answer the user's query using ONLY the information provided in the Context section below, treating all statements within the context as absolute truth.
@@ -35,22 +44,15 @@ public static class AskAiManager
 
     public static bool IsReady => SearchManager.IsSearcherRegistered;
 
-    static AskAiManager()
-    {
-        var aiSettings = SettingService.LoadAiSettings();
-        _chatClient = AiClientFactory.Create(aiSettings.Provider, aiSettings.Endpoint, aiSettings.Model);
-        SearchManager.SearcherRegistered += SearcherRegistered;
-    }
-
     private static void SearcherRegistered()
     {
         ReadyToAskAi?.Invoke();
     }
+
     public static async IAsyncEnumerable<string> AskStreaming(
         string query,
         MessageResult result,
-        [System.Runtime.CompilerServices.EnumeratorCancellation]
-        CancellationToken cancellationToken = default)
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var formattedQuery = $"@{query.Trim()}:50";
         var context = await SearchManager.PerformSearch(
@@ -74,22 +76,20 @@ public static class AskAiManager
 
         var messages = new List<ChatMessage>
         {
-            new ChatMessage(ChatRole.System, systemPrompt),
-            new ChatMessage(ChatRole.User, query)
+            new(ChatRole.System, systemPrompt),
+            new(ChatRole.User, query)
         };
         result.Context = context;
         await foreach (var update in _chatClient.GetStreamingResponseAsync(
                            messages,
                            LowTemperatureChatOptions,
                            cancellationToken))
-        {
             if (!string.IsNullOrEmpty(update.Text))
-            {
                 result.Message += update.Text;
-            }
-        }
+
         result.IsSuccess = true;
     }
+
     public static async Task<MessageResult> Ask(string query, CancellationToken cancellationToken = default)
     {
         var formattedQuery = $"@{query.Trim()}:50";
@@ -97,14 +97,12 @@ public static class AskAiManager
 
         // Guard against empty search results before invoking LLM
         if (!context.Any())
-        {
             return new MessageResult
             {
                 IsSuccess = false,
                 Message = "I cannot answer this query based on the provided context.",
                 Context = context
             };
-        }
 
         var contextText = string.Join("\n",
             context.Select(q => string.Join("\n", q.VerseResults.Select(r => $"{r.Translation}"))));
@@ -112,8 +110,8 @@ public static class AskAiManager
 
         var messages = new List<ChatMessage>
         {
-            new ChatMessage(ChatRole.System, systemPrompt),
-            new ChatMessage(ChatRole.User, query)
+            new(ChatRole.System, systemPrompt),
+            new(ChatRole.User, query)
         };
 
         // Execute LLM call using Microsoft.Extensions.AI
@@ -128,12 +126,12 @@ public static class AskAiManager
         };
     }
 
-    public class MessageResult: INotifyPropertyChanged
-    
+    public class MessageResult : INotifyPropertyChanged
+
     {
+        private List<SurahResult> _context = new();
         private bool _isSuccess;
         private string _message = string.Empty;
-        private List<SurahResult> _context = new List<SurahResult>();
 
         public bool IsSuccess
         {

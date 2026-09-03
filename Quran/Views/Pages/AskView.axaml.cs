@@ -17,10 +17,9 @@ namespace Quran.Views.Pages;
 
 public partial class AskView : AView
 {
+    private VerseMessageControl _control;
     private CancellationTokenSource? _searchCts;
     private bool _sending;
-    private VerseMessageControl _control;
-    public ObservableCollection<ChatMessageModel> Messages { get; }
 
     public AskView()
     {
@@ -28,6 +27,8 @@ public partial class AskView : AView
         Messages = new ObservableCollection<ChatMessageModel>(SettingService.LoadChatMessages());
         ChatItemsControl.ItemsSource = Messages;
     }
+
+    public ObservableCollection<ChatMessageModel> Messages { get; }
 
     protected override void OnInitialized()
     {
@@ -87,41 +88,32 @@ public partial class AskView : AView
         SettingService.SaveChatMessages(Messages.ToList());
         try
         {
-            var messageModel = new AskAiManager.MessageResult()
+            var messageModel = new AskAiManager.MessageResult
             {
-                IsSuccess = false,
+                IsSuccess = false
             };
             messageModel.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(AskAiManager.MessageResult.Context))
-                {
                     Dispatcher.UIThread.Post(() =>
                     {
                         aiMessage.Refference = messageModel.Context;
                         aiMessage.Content = "Sources retrieved. Generating answer...";
                     }, DispatcherPriority.Background);
-                }
             };
             messageModel.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(AskAiManager.MessageResult.Message))
-                {
                     Dispatcher.UIThread.Post(() => { aiMessage.Content = messageModel.Message; },
                         DispatcherPriority.Background);
-                }
             };
             await foreach (var chunk in AskAiManager.AskStreaming(message, messageModel, token))
             {
             }
 
             if (!token.IsCancellationRequested && !messageModel.IsSuccess)
-            {
                 aiMessage.Content = "No answer could be retrieved from context.";
-            }
-            else if (messageModel.IsSuccess)
-            {
-                aiMessage.Content = messageModel.Message;
-            }
+            else if (messageModel.IsSuccess) aiMessage.Content = messageModel.Message;
 
             aiMessage.Refference = messageModel.Context;
         }
@@ -163,10 +155,7 @@ public partial class AskView : AView
             MessageTextBlock.Text = "Copied last response!";
 
             await Task.Delay(2000);
-            if (MessageTextBlock.Text == "Copied last response!")
-            {
-                MessageTextBlock.Text = string.Empty;
-            }
+            if (MessageTextBlock.Text == "Copied last response!") MessageTextBlock.Text = string.Empty;
         }
     }
 
@@ -183,9 +172,7 @@ public partial class AskView : AView
     private async void CopyMessageButtonOnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is Button button && button.CommandParameter is ChatMessageModel messageModel)
-        {
             await CopyToClipboardAsync(messageModel.Content);
-        }
     }
 
     private async Task CopyToClipboardAsync(string? text)
@@ -200,10 +187,7 @@ public partial class AskView : AView
             MessageTextBlock.Text = "Copied message to clipboard!";
 
             await Task.Delay(2000);
-            if (MessageTextBlock.Text == "Copied message to clipboard!")
-            {
-                MessageTextBlock.Text = string.Empty;
-            }
+            if (MessageTextBlock.Text == "Copied message to clipboard!") MessageTextBlock.Text = string.Empty;
         }
     }
 
@@ -211,9 +195,7 @@ public partial class AskView : AView
     {
         if (sender is Button { DataContext: ChatMessageModel messageModel }
             && messageModel.Refference.Any())
-        {
             ShowReference(messageModel);
-        }
     }
 
 
@@ -228,19 +210,13 @@ public partial class AskView : AView
 
     private async void ShowReference(ChatMessageModel messageModel)
     {
-        if (_control != null && MessageHelper.IsShowing)
-        {
-            MessageHelper.Close();
-        }
+        if (_control != null && MessageHelper.IsShowing) MessageHelper.Close();
 
         var verses = new List<VerseMessageModel>();
         foreach (var surah in messageModel.Refference)
-        {
-            foreach (var verseWithResult in surah.ToVerses())
-            {
-                verses.Add(new VerseMessageModel(surah, verseWithResult, verseWithResult.ToString()));
-            }
-        }
+        foreach (var verseWithResult in surah.ToVerses())
+            verses.Add(new VerseMessageModel(surah, verseWithResult, verseWithResult.ToString()));
+
         _control = new VerseMessageControl(verses);
 
         MessageHelper.ShowMessage("Tafasir", _control, false);

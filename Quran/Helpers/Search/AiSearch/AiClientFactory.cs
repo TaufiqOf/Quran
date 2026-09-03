@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using OllamaSharp;
+using OpenAI.Chat;
+using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace Quran.Helpers.Search.AiSearch;
 
@@ -19,12 +20,12 @@ public enum AiProvider
 public static class AiClientFactory
 {
     /// <summary>
-    /// Checks asynchronously if the configured AI provider endpoint is alive and responsive.
+    ///     Checks asynchronously if the configured AI provider endpoint is alive and responsive.
     /// </summary>
     public static async Task<bool> IsClientAvailableAsync(
-        AiProvider provider, 
-        IChatClient client, 
-        string targetModel = "", 
+        AiProvider provider,
+        IChatClient client,
+        string targetModel = "",
         CancellationToken cancellationToken = default)
     {
         if (client == null) return false;
@@ -37,7 +38,7 @@ public static class AiClientFactory
                     // If the client is directly an OllamaApiClient, use native server health checks
                     if (client is OllamaApiClient ollamaClient)
                     {
-                        bool isRunning = await ollamaClient.IsRunningAsync(cancellationToken);
+                        var isRunning = await ollamaClient.IsRunningAsync(cancellationToken);
                         if (!isRunning) return false;
 
                         if (!string.IsNullOrWhiteSpace(targetModel))
@@ -45,8 +46,10 @@ public static class AiClientFactory
                             var models = await ollamaClient.ListLocalModelsAsync(cancellationToken);
                             return models.Any(m => m.Name.StartsWith(targetModel, StringComparison.OrdinalIgnoreCase));
                         }
+
                         return true;
                     }
+
                     break;
 
                 case AiProvider.OpenAI:
@@ -71,7 +74,7 @@ public static class AiClientFactory
         return provider switch
         {
             AiProvider.OpenAI =>
-                new OpenAI.Chat.ChatClient(
+                new ChatClient(
                     string.IsNullOrEmpty(modelName) ? "gpt-4o-mini" : modelName,
                     endpointOrKey
                 ).AsIChatClient(),

@@ -56,10 +56,7 @@ public partial class VerseQuranicComponent : AVerseComponent, IDisposable
         PointerPressedEventArgs e)
     {
         var point = e.GetCurrentPoint(this);
-        if(point.Properties.IsLeftButtonPressed)
-        {
-            OnVerseSelected(Verse);
-        }
+        if (point.Properties.IsLeftButtonPressed) OnVerseSelected(Verse);
     }
 
 

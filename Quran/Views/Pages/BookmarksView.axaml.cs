@@ -15,11 +15,11 @@ namespace Quran.Views.Pages;
 
 public partial class BookmarksView : AView
 {
+    private VerseMessageControl _control;
     private bool _isChangingFilter;
     private bool _isLoaded;
     private bool _isLoading;
     private Vector _lastScrollOffset;
-    private VerseMessageControl _control;
 
     public BookmarksView()
     {
@@ -131,15 +131,13 @@ public partial class BookmarksView : AView
     private async void VerseComponentOnTafasirRequested(Surah? surah, Verse verse)
     {
         var text = await DataManager.GetTafsirAsync(surah.Id, verse.Id);
-        if (_control != null && MessageHelper.IsShowing)
-        {
-            MessageHelper.Close();
-        }
+        if (_control != null && MessageHelper.IsShowing) MessageHelper.Close();
 
-        _control = new VerseMessageControl(new List<VerseMessageModel>() { new(surah, verse, text) });
+        _control = new VerseMessageControl(new List<VerseMessageModel> { new(surah, verse, text) });
 
         MessageHelper.ShowMessage("Tafasir", _control, false);
     }
+
     public override async Task Reload(params object?[] parameter)
     {
         _isLoaded = false;

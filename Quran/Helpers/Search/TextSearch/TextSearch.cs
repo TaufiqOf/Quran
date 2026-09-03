@@ -17,9 +17,15 @@ public class TextSearch : ISearch
         "this", "to", "was", "what", "when", "where", "who", "will", "with"
     };
 
-    public bool GetSearchMode(string searchText) => true;
+    public bool GetSearchMode(string searchText)
+    {
+        return true;
+    }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
 
     public Task<List<SurahResult>> PerformSearch(string query, CancellationToken cancellationToken = default)
     {
@@ -42,7 +48,7 @@ public class TextSearch : ISearch
         if (topK == -1)
         {
             topK = 50;
-            fastSearch= true;
+            fastSearch = true;
         }
 
         if (topK <= 0 || topK > 100)
@@ -50,8 +56,8 @@ public class TextSearch : ISearch
         if (string.IsNullOrWhiteSpace(query))
             return Task.FromResult(new List<SurahResult>());
 
-        string rawPhrase = query.Trim();
-        string normalizedQueryPhrase = StripPunctuation(rawPhrase);
+        var rawPhrase = query.Trim();
+        var normalizedQueryPhrase = StripPunctuation(rawPhrase);
 
         // 2. Tokenize search terms
         var rawWords = Regex.Split(rawPhrase, @"\W+")
@@ -69,7 +75,7 @@ public class TextSearch : ISearch
         if (searchTerms.Count == 0)
             searchTerms = rawWords;
 
-        int totalQueryTerms = searchTerms.Count;
+        var totalQueryTerms = searchTerms.Count;
 
         // Flat collection to store every matching verse across all Surahs
         var flatVerseResults = new List<(Surah Surah, VerseResult VerseResult)>();
@@ -83,8 +89,8 @@ public class TextSearch : ISearch
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                string rawCombinedText = $"{verse.Translation} {verse.Transliteration} {verse.Text}";
-                string normalizedCombinedText = StripPunctuation(rawCombinedText);
+                var rawCombinedText = $"{verse.Translation} {verse.Transliteration} {verse.Text}";
+                var normalizedCombinedText = StripPunctuation(rawCombinedText);
 
                 // Exact full phrase match -> 100% (1.0)
                 if (normalizedCombinedText.Contains(normalizedQueryPhrase, StringComparison.OrdinalIgnoreCase))
@@ -99,36 +105,27 @@ public class TextSearch : ISearch
                     .ToList();
 
                 double verseTotalScore = 0;
-                int matchedTermsCount = 0;
+                var matchedTermsCount = 0;
 
                 foreach (var term in searchTerms)
                 {
                     double maxTermScore = 0;
-                    int exactMatches = 0;
+                    var exactMatches = 0;
 
                     foreach (var word in verseWords)
                     {
-                        double similarity = GetSimilarityRatio(term, word);
+                        var similarity = GetSimilarityRatio(term, word);
 
-                        if (string.Equals(term, word, StringComparison.OrdinalIgnoreCase))
-                        {
-                            exactMatches++;
-                        }
+                        if (string.Equals(term, word, StringComparison.OrdinalIgnoreCase)) exactMatches++;
 
-                        if (similarity > maxTermScore)
-                        {
-                            maxTermScore = similarity;
-                        }
+                        if (similarity > maxTermScore) maxTermScore = similarity;
                     }
 
                     if (maxTermScore >= 0.75)
                     {
                         matchedTermsCount++;
 
-                        if (exactMatches > 1)
-                        {
-                            maxTermScore += 0.1 * (exactMatches - 1);
-                        }
+                        if (exactMatches > 1) maxTermScore += 0.1 * (exactMatches - 1);
 
                         verseTotalScore += maxTermScore;
                     }
@@ -137,17 +134,17 @@ public class TextSearch : ISearch
                 if (matchedTermsCount > 0)
                 {
                     // Ratio of matched terms relative to total search terms (e.g., 1/2 = 0.5)
-                    double coverageRatio = (double)matchedTermsCount / totalQueryTerms;
+                    var coverageRatio = (double)matchedTermsCount / totalQueryTerms;
 
                     // Base quality score of matched terms
-                    double averageTermScore = verseTotalScore / matchedTermsCount;
+                    var averageTermScore = verseTotalScore / matchedTermsCount;
 
                     // Final score scales directly by coverage ratio (e.g., 2/3 words matched capped at ~66%)
-                    double rawScore = averageTermScore * coverageRatio;
+                    var rawScore = averageTermScore * coverageRatio;
 
                     //double finalVerseScore = Math.Min(0.99, Math.Round(rawScore, 4));
                     // Change Math.Min(0.99, ...) to Math.Min(1.0, ...)
-                    double finalVerseScore = Math.Min(1.0, Math.Round(rawScore, 4));
+                    var finalVerseScore = Math.Min(1.0, Math.Round(rawScore, 4));
                     flatVerseResults.Add((surah, CreateVerseResult(verse, finalVerseScore)));
                 }
             }
@@ -158,7 +155,7 @@ public class TextSearch : ISearch
             .Where(q => q.VerseResult.SimilarityScore >= 0.20)
             .OrderByDescending(item => item.VerseResult.SimilarityScore);
 
-        IEnumerable<(Surah Surah, VerseResult VerseResult)> limitedVerses = topK.HasValue
+        var limitedVerses = topK.HasValue
             ? topVerses.Take(topK.Value)
             : topVerses;
 
@@ -168,7 +165,7 @@ public class TextSearch : ISearch
             {
                 var surahInfo = group.First().Surah;
                 var verses = group.Select(item => item.VerseResult).ToList();
-                double? maxScore = verses.Max(v => v.SimilarityScore);
+                var maxScore = verses.Max(v => v.SimilarityScore);
 
                 return new SurahResult
                 {
@@ -216,48 +213,46 @@ public class TextSearch : ISearch
 
         if (target.Contains(source, StringComparison.OrdinalIgnoreCase))
         {
-            double subRatio = (double)source.Length / target.Length;
+            var subRatio = (double)source.Length / target.Length;
             return subRatio >= 0.5 ? subRatio : 0.0;
         }
 
         if (source.Length < 5) return 0.0;
 
-        int distance = LevenshteinDistance(source.ToLowerInvariant(), target.ToLowerInvariant());
-        int maxLength = Math.Max(source.Length, target.Length);
+        var distance = LevenshteinDistance(source.ToLowerInvariant(), target.ToLowerInvariant());
+        var maxLength = Math.Max(source.Length, target.Length);
 
         if (maxLength == 0) return 1.0;
 
-        double similarity = 1.0 - ((double)distance / maxLength);
+        var similarity = 1.0 - (double)distance / maxLength;
 
         return similarity >= 0.75 ? similarity : 0.0;
     }
 
     private static int LevenshteinDistance(string s, string t)
     {
-        int n = s.Length;
-        int m = t.Length;
-        int[,] d = new int[n + 1, m + 1];
+        var n = s.Length;
+        var m = t.Length;
+        var d = new int[n + 1, m + 1];
 
         if (n == 0) return m;
         if (m == 0) return n;
 
-        for (int i = 0; i <= n; d[i, 0] = i++)
+        for (var i = 0; i <= n; d[i, 0] = i++)
         {
         }
 
-        for (int j = 0; j <= m; d[0, j] = j++)
+        for (var j = 0; j <= m; d[0, j] = j++)
         {
         }
 
-        for (int i = 1; i <= n; i++)
+        for (var i = 1; i <= n; i++)
+        for (var j = 1; j <= m; j++)
         {
-            for (int j = 1; j <= m; j++)
-            {
-                int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
-                d[i, j] = Math.Min(
-                    Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
-                    d[i - 1, j - 1] + cost);
-            }
+            var cost = t[j - 1] == s[i - 1] ? 0 : 1;
+            d[i, j] = Math.Min(
+                Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
+                d[i - 1, j - 1] + cost);
         }
 
         return d[n, m];

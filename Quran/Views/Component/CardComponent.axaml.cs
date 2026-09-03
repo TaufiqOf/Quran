@@ -2,32 +2,15 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Quran.Models;
+
 namespace Quran.Views.Component;
 
 public partial class CardComponent : UserControl
 {
-    public static event Action<Surah>? CardClick;
-
     public CardComponent()
     {
         InitializeComponent();
         DataContextChanged += OnDataContextChanged;
-    }
-
-    private void OnDataContextChanged(object? sender, EventArgs e)
-    {
-        if (DataContext is SurahCardViewModel vm)
-        {
-            LoadData(vm.Surah, vm.Synopsis);
-            IsSelected = vm.IsSelected;
-            vm.PropertyChanged += (s, args) =>
-            {
-                if (args.PropertyName == nameof(SurahCardViewModel.IsSelected))
-                {
-                    IsSelected = vm.IsSelected;
-                }
-            };
-        }
     }
 
     public bool IsSelected
@@ -39,6 +22,21 @@ public partial class CardComponent : UserControl
                 CardBorder.Classes.Add("selected");
             else
                 CardBorder.Classes.Remove("selected");
+        }
+    }
+
+    public static event Action<Surah>? CardClick;
+
+    private void OnDataContextChanged(object? sender, EventArgs e)
+    {
+        if (DataContext is SurahCardViewModel vm)
+        {
+            LoadData(vm.Surah, vm.Synopsis);
+            IsSelected = vm.IsSelected;
+            vm.PropertyChanged += (s, args) =>
+            {
+                if (args.PropertyName == nameof(SurahCardViewModel.IsSelected)) IsSelected = vm.IsSelected;
+            };
         }
     }
 
@@ -54,9 +52,6 @@ public partial class CardComponent : UserControl
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is SurahCardViewModel vm)
-        {
-            CardClick?.Invoke(vm.Surah);
-        }
+        if (DataContext is SurahCardViewModel vm) CardClick?.Invoke(vm.Surah);
     }
 }

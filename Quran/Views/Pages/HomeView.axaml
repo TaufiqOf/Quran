@@ -41,18 +41,18 @@
 
             <ItemsRepeater x:Name="SurahRepeater">
                 <ItemsRepeater.Layout>
-                    <UniformGridLayout 
-                        MinItemHeight="300" 
-                        MinItemWidth="350" 
+                    <UniformGridLayout
+                        MinItemHeight="300"
+                        MinItemWidth="350"
                         Orientation="Horizontal"
-                        MinColumnSpacing="8" 
+                        MinColumnSpacing="8"
                         ItemsJustification="Center"
                         MinRowSpacing="8" />
                 </ItemsRepeater.Layout>
 
                 <ItemsRepeater.ItemTemplate>
-                    <DataTemplate DataType="component:SurahCardViewModel" >
-                        <component:CardComponent  />
+                    <DataTemplate DataType="component:SurahCardViewModel">
+                        <component:CardComponent />
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>

@@ -142,9 +142,7 @@
                     Grid.Column="1"
                     x:Name="SearchTextBox"
                     Classes="searchTextBox"
-                    KeyDown="SearchTextBox_OnKeyDown">
-
-                </TextBox>
+                    KeyDown="SearchTextBox_OnKeyDown" />
 
                 <!-- Search Button -->
 
@@ -183,7 +181,7 @@
             Grid.Row="2"
             x:Name="MessageTextBlock"
             Classes="messageTextBlock" />
-        
+
         <Border
             Grid.Row="3"
             BorderBrush="#3A3A3A"

@@ -15,6 +15,7 @@ public partial class AudioComponent : UserControl
     public event Action? PlayAction;
     public event Action? PauseAction;
     public event Action<double>? SeekAction;
+
     public void PlayMode(bool play)
     {
         if (play)
@@ -28,7 +29,7 @@ public partial class AudioComponent : UserControl
             PauseButton.IsEnabled = false;
         }
     }
-    
+
 
     private void PlayButton_OnClick(
         object? sender,

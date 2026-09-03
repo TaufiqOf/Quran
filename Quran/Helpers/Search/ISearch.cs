@@ -9,5 +9,5 @@ public interface ISearch
 {
     bool GetSearchMode(string searchText);
     Task InitializeAsync();
-    Task<List<SurahResult>> PerformSearch(string searchText,CancellationToken cancellationToken = default);
+    Task<List<SurahResult>> PerformSearch(string searchText, CancellationToken cancellationToken = default);
 }

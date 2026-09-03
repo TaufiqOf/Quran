@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -13,8 +14,8 @@ namespace Quran.Helpers.Search.AiSearch;
 public class AiSearch : ISearch
 {
     private readonly IChatClient _chatClient;
-    private readonly QuranSearchTools _tools;
     private readonly ISearch _fallbackSearch;
+    private readonly QuranSearchTools _tools;
 
     public AiSearch(IChatClient chatClient, ISearch exactSearch, ISearch semanticSearch)
     {
@@ -23,9 +24,15 @@ public class AiSearch : ISearch
         _chatClient = chatClient;
     }
 
-    public bool GetSearchMode(string searchText) => searchText.StartsWith("@", StringComparison.OrdinalIgnoreCase);
+    public bool GetSearchMode(string searchText)
+    {
+        return searchText.StartsWith("@", StringComparison.OrdinalIgnoreCase);
+    }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
 
     public async Task<List<SurahResult>> PerformSearch(string searchText, CancellationToken cancellationToken = default)
     {
@@ -51,25 +58,25 @@ public class AiSearch : ISearch
                 Tools = new List<AITool>
                 {
                     AIFunctionFactory.Create(
-                        _tools.FindExactWordMatchesAsync, 
-                        name: nameof(_tools.FindExactWordMatchesAsync)
+                        _tools.FindExactWordMatchesAsync,
+                        nameof(_tools.FindExactWordMatchesAsync)
                     ),
                     AIFunctionFactory.Create(
-                        _tools.FindTopicOrNarrativeAsync, 
-                        name: nameof(_tools.FindTopicOrNarrativeAsync)
+                        _tools.FindTopicOrNarrativeAsync,
+                        nameof(_tools.FindTopicOrNarrativeAsync)
                     )
                 }
             };
 
             var messages = new List<ChatMessage>
             {
-                new ChatMessage(ChatRole.System, 
-        @"You are a strict Quranic search tool router.
+                new(ChatRole.System,
+                    @"You are a strict Quranic search tool router.
         Select the correct search tool for the query.
         When calling FindExactWordMatchesAsync, populate parameter 'term'.
         When calling FindTopicOrNarrativeAsync, populate parameter 'topic'.
         Do NOT reply with conversational text."),
-                new ChatMessage(ChatRole.User, cleanQuery)
+                new(ChatRole.User, cleanQuery)
             };
 
             // Step 1: Execute single LLM routing call
@@ -87,12 +94,12 @@ public class AiSearch : ISearch
 
                 if (functionCall.Name == nameof(_tools.FindExactWordMatchesAsync))
                 {
-                    string term = GetArgOrDefault(functionCall.Arguments, "term", cleanQuery);
+                    var term = GetArgOrDefault(functionCall.Arguments, "term", cleanQuery);
                     references = await _tools.FindExactWordMatchesAsync(term, cts.Token);
                 }
                 else if (functionCall.Name == nameof(_tools.FindTopicOrNarrativeAsync))
                 {
-                    string topic = GetArgOrDefault(functionCall.Arguments, "topic", cleanQuery);
+                    var topic = GetArgOrDefault(functionCall.Arguments, "topic", cleanQuery);
                     references = await _tools.FindTopicOrNarrativeAsync(topic, cts.Token);
                 }
 
@@ -109,7 +116,7 @@ public class AiSearch : ISearch
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
-            System.Diagnostics.Debug.WriteLine("[AiSearch] AI request timed out. Executing local search fallback.");
+            Debug.WriteLine("[AiSearch] AI request timed out. Executing local search fallback.");
             var fallbackResults = await _fallbackSearch.PerformSearch(fallbackFormattedQuery, cancellationToken);
             return ApplyVerseLimit(fallbackResults, limit);
         }
@@ -120,14 +127,14 @@ public class AiSearch : ISearch
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"[AiSearch Exception]: {ex.Message}");
+            Debug.WriteLine($"[AiSearch Exception]: {ex.Message}");
             var fallbackResults = await _fallbackSearch.PerformSearch(fallbackFormattedQuery, cancellationToken);
             return ApplyVerseLimit(fallbackResults, limit);
         }
     }
 
     /// <summary>
-    /// Extracts argument values from FunctionCallContent dictionary across JSON providers.
+    ///     Extracts argument values from FunctionCallContent dictionary across JSON providers.
     /// </summary>
     private static string GetArgOrDefault(IDictionary<string, object?>? args, string paramName, string fallback)
     {
@@ -148,11 +155,11 @@ public class AiSearch : ISearch
 
     private static (string CleanQuery, int Limit) ParseQueryAndLimit(string rawText)
     {
-        string query = rawText.TrimStart('@').Trim();
-        int defaultLimit = 10;
+        var query = rawText.TrimStart('@').Trim();
+        var defaultLimit = 10;
 
         var match = Regex.Match(query, @":(\d+)$");
-        if (match.Success && int.TryParse(match.Groups[1].Value, out int parsedLimit))
+        if (match.Success && int.TryParse(match.Groups[1].Value, out var parsedLimit))
         {
             query = query.Substring(0, match.Index).Trim();
             return (query, parsedLimit);

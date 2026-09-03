@@ -9,16 +9,16 @@ public sealed class AiSettings
     public string Model { get; set; } = "llama3.2";
     public string Endpoint { get; set; } = "http://localhost:11434";
 }
+
 public sealed class AppSettings
 {
     public string Language { get; set; } = "en";
     public string ReaderMode { get; set; } = "Quranic";
-    
-    public AiSettings AiSettings { get; set; } = new AiSettings();
 
+    public AiSettings AiSettings { get; set; } = new();
 }
 
 public sealed class ChatModelSettings
 {
-    public List<ChatMessageModel> ChatMessages { get; set; } = new List<ChatMessageModel>();
+    public List<ChatMessageModel> ChatMessages { get; set; } = new();
 }

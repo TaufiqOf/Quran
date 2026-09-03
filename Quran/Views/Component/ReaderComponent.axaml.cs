@@ -16,18 +16,18 @@ public partial class ReaderComponent : UserControl, IDisposable
 
     public delegate void VersesLoadedEventHandler();
 
-    public Action<Verse>? PlayVerseRequested { get; set; }
-
     private readonly List<AVerseComponent> _verseComponents = new();
+    private VerseMessageControl? _control;
     private ReaderMode _mode;
     private Surah? _surah;
     private IEnumerable<Verse> _verses = Array.Empty<Verse>();
-    private VerseMessageControl? _control;
 
     public ReaderComponent()
     {
         InitializeComponent();
     }
+
+    public Action<Verse>? PlayVerseRequested { get; set; }
 
 
     public ReaderMode Mode
@@ -124,12 +124,9 @@ public partial class ReaderComponent : UserControl, IDisposable
     private async void VerseComponentOnTafasirRequested(Surah? surah, Verse verse)
     {
         var text = await DataManager.GetTafsirAsync(surah.Id, verse.Id);
-        if (_control != null && MessageHelper.IsShowing)
-        {
-            MessageHelper.Close();
-        }
+        if (_control != null && MessageHelper.IsShowing) MessageHelper.Close();
 
-        _control = new VerseMessageControl(new List<VerseMessageModel>() { new(surah, verse, text) });
+        _control = new VerseMessageControl(new List<VerseMessageModel> { new(surah, verse, text) });
 
         MessageHelper.ShowMessage("Tafasir", _control, false);
     }

@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.AI;
-using OllamaSharp;
-using OpenAI.Chat;
 using Quran.Helpers.Search;
 using Quran.Helpers.Search.AiSearch;
 using Quran.Helpers.Search.StructuredSearch;

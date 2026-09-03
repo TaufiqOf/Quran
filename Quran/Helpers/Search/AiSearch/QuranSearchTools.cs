@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
@@ -19,31 +18,33 @@ public class QuranSearchTools
         _semanticSearch = semanticSearch;
     }
 
-    [Description("Searches for exact occurrences of specific names, words, or entities in the Quran (e.g., 'Muhammad', 'Jesus', 'Pharaoh').")]
+    [Description(
+        "Searches for exact occurrences of specific names, words, or entities in the Quran (e.g., 'Muhammad', 'Jesus', 'Pharaoh').")]
     public async Task<List<VerseReference>> FindExactWordMatchesAsync(
-        [Description("The exact name or word to find in Arabic or English.")] 
+        [Description("The exact name or word to find in Arabic or English.")]
         string term,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        string cleanTerm = StripExistingLimit(term);
-        string formattedTerm = $"{cleanTerm}:-1";
+        var cleanTerm = StripExistingLimit(term);
+        var formattedTerm = $"{cleanTerm}:-1";
 
         var results = await _exactSearch.PerformSearch(formattedTerm, cancellationToken);
         return FlattenSurahResults(results);
     }
 
-    [Description("Searches for conceptual narratives, events, stories, or themes in the Quran (e.g., 'birth of Jesus', 'night of power', 'creation of heavens').")]
+    [Description(
+        "Searches for conceptual narratives, events, stories, or themes in the Quran (e.g., 'birth of Jesus', 'night of power', 'creation of heavens').")]
     public async Task<List<VerseReference>> FindTopicOrNarrativeAsync(
-        [Description("The conceptual query or narrative subject.")] 
+        [Description("The conceptual query or narrative subject.")]
         string topic,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        string cleanTopic = StripExistingLimit(topic);
-        string formattedTopic = $"{cleanTopic}:-1";
+        var cleanTopic = StripExistingLimit(topic);
+        var formattedTopic = $"{cleanTopic}:-1";
 
         var results = await _semanticSearch.PerformSearch(formattedTopic, cancellationToken);
         return FlattenSurahResults(results);
@@ -65,12 +66,12 @@ public class QuranSearchTools
 
         foreach (var surah in results)
         {
-            if (surah?.VerseResults == null) 
+            if (surah?.VerseResults == null)
                 continue;
 
             foreach (var verse in surah.VerseResults)
             {
-                if (verse == null) 
+                if (verse == null)
                     continue;
 
                 list.Add(new VerseReference

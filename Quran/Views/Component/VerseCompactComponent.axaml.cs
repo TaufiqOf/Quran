@@ -49,10 +49,7 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
     {
         var point = e.GetCurrentPoint(this);
 
-        if (point.Properties.IsLeftButtonPressed)
-        {
-            OnVerseSelected(Verse);
-        }
+        if (point.Properties.IsLeftButtonPressed) OnVerseSelected(Verse);
     }
 
     public override void VerseBookMark()
@@ -66,6 +63,7 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
     {
         VerseBookMark();
     }
+
     private void ShowTafasirButtonOnClick(object? sender, RoutedEventArgs e)
     {
         ShowTafasir();
@@ -75,5 +73,4 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
     {
         Copy();
     }
-
 }

@@ -11,7 +11,7 @@
         WindowState="Maximized"
         x:Class="Quran.Views.MainWindow"
         Title="Quran">
-    
+
     <Grid ColumnDefinitions="200,*" Background="#2e2e33">
         <!-- ================= SIDEBAR ================= -->
 
@@ -31,7 +31,7 @@
                                FontWeight="Bold"
                                HorizontalAlignment="Left"
                                Margin="10,0,0,0" />
-                    
+
                 </Grid>
                 <Border Grid.Row="1"
                         Height="2"
@@ -130,7 +130,7 @@
                                        VerticalAlignment="Center" />
                         </StackPanel>
                     </Button>
-                    
+
                     <!-- Ask -->
                     <Button x:Name="NavAskButton"
                             CornerRadius="10"
@@ -170,7 +170,7 @@
                             Icon="Settings"
                             FontSize="24"
                             VerticalAlignment="Center" />
-                        
+
                         <TextBlock Text="Settings"
                                    FontSize="16"
                                    VerticalAlignment="Center" />

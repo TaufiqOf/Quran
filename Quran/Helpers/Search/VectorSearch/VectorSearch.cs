@@ -41,13 +41,11 @@ public class VectorSearch : ISearch
                 tokenizer);
 
         if (!File.Exists(_embeddingDataPath))
-        {
             await QuranEmbeddingGenerator.GenerateAsync(
                 DataManager.Surahs,
                 _modelPath,
                 _tokenizerPath,
                 _embeddingDataPath);
-        }
 
         var embeddings =
             await EmbeddingStorage.LoadAsync(
@@ -57,7 +55,7 @@ public class VectorSearch : ISearch
             new HybridQuranSearchService(
                 _embeddingService,
                 embeddings,
-                DataManager.Surahs.Select(q => new SurahResult()
+                DataManager.Surahs.Select(q => new SurahResult
                 {
                     Id = q.Id,
                     Name = q.Name,
@@ -65,7 +63,7 @@ public class VectorSearch : ISearch
                     Translation = q.Translation,
                     Type = q.Type,
                     TotalVerses = q.TotalVerses,
-                    VerseResults = q.Verses.Select(v => new VerseResult()
+                    VerseResults = q.Verses.Select(v => new VerseResult
                     {
                         Id = v.Id,
                         Text = v.Text,
@@ -98,7 +96,7 @@ public class VectorSearch : ISearch
             query = query[1..].Trim();
 
         // Default top-k result count
-        int topK = 10;
+        var topK = 10;
 
         // Extract :N limit modifier if present
         var match = Regex.Match(query, @":(-?\d+)$");
@@ -108,7 +106,7 @@ public class VectorSearch : ISearch
             // Strip the :N part so the embedding model gets clean text ("heaven")
             query = query[..match.Index].Trim();
         }
-        
+
         if (topK == -1)
         {
             topK = 50;
@@ -123,7 +121,7 @@ public class VectorSearch : ISearch
             return new List<SurahResult>();
 
         // 2. Pass cancellation token down to the semantic vector search service
-        var results = await _semanticSearchService.SearchAsync(surahs, query, topK,fastSearch, cancellationToken);
+        var results = await _semanticSearchService.SearchAsync(surahs, query, topK, fastSearch, cancellationToken);
 
         return ConvertResultsToSurahs(surahs, results, topK, cancellationToken);
     }
@@ -176,9 +174,7 @@ public class VectorSearch : ISearch
 
             // Set/Update the max score on the parent SurahResult
             if (!resultSurah.SimilarityScore.HasValue || resultVerse.SimilarityScore > resultSurah.SimilarityScore)
-            {
                 resultSurah.SimilarityScore = resultVerse.SimilarityScore;
-            }
         }
 
         // Sort Surahs by highest similarity score, then limit by topK

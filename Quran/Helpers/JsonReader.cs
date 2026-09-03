@@ -10,12 +10,13 @@ public static class JsonReader
 {
     public static string ReadStringFromFile(string filePath)
     {
-        if(!File.Exists(filePath))
+        if (!File.Exists(filePath))
             throw new FileNotFoundException(
                 $"The file '{filePath}' does not exist.");
         using var reader = new StreamReader(filePath);
         return reader.ReadToEnd();
     }
+
     public static string ReadStringFromResource(string resourceName)
     {
         var assemblyName = typeof(JsonReader)

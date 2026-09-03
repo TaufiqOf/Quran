@@ -13,7 +13,7 @@ public class QuranSemanticSearchService(IEmbeddingService embeddingService, List
 {
     public override async Task<List<SemanticSearchResult>> SearchAsync(List<SurahResult> surahs, string rawQuery,
         int maxResults = 100,
-        bool fastSearch= false,
+        bool fastSearch = false,
         CancellationToken cancellationToken = default)
     {
         // Apply the 'query: ' prefix ONCE here

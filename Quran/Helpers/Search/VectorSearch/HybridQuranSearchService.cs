@@ -70,7 +70,7 @@ public class HybridQuranSearchService(
         const int k = 60; // Standard RRF constant
 
         // Theoretical maximum RRF score for rank #1 in both models (1/61 + 1/61)
-        const double maxPossibleRrfScore = (1.0 / (k + 1)) * 2.0;
+        const double maxPossibleRrfScore = 1.0 / (k + 1) * 2.0;
 
         var allDocIds = vectorRankings.Keys.Union(bm25Rankings.Keys);
 
@@ -80,21 +80,15 @@ public class HybridQuranSearchService(
         {
             cancellationToken.ThrowIfCancellationRequested();
             double rrfScore = 0;
-            if (vectorRankings.TryGetValue(docId, out var vec))
-            {
-                rrfScore += 1.0 / (k + vec.Rank);
-            }
+            if (vectorRankings.TryGetValue(docId, out var vec)) rrfScore += 1.0 / (k + vec.Rank);
 
-            if (bm25Rankings.TryGetValue(docId, out var bm25))
-            {
-                rrfScore += 1.0 / (k + bm25.Rank);
-            }
+            if (bm25Rankings.TryGetValue(docId, out var bm25)) rrfScore += 1.0 / (k + bm25.Rank);
 
-            int surahId = docId >> 16;
-            int verseId = docId & 0xFFFF;
+            var surahId = docId >> 16;
+            var verseId = docId & 0xFFFF;
 
             // Normalize RRF score to 0.0 - 1.0 scale relative to maximum possible score
-            double normalizedScore = Math.Min(1.0, rrfScore / maxPossibleRrfScore);
+            var normalizedScore = Math.Min(1.0, rrfScore / maxPossibleRrfScore);
 
             fusedResults.Add(new SemanticSearchResult
             {
@@ -109,7 +103,6 @@ public class HybridQuranSearchService(
             .Take(maxResults)
             .ToList();
         if (!fastSearch)
-        {
             foreach (var semanticSearchResult in result)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -119,7 +112,7 @@ public class HybridQuranSearchService(
 
                 semanticSearchResult.Impacts = await GetWordImpactByOcclusionAsync(rawQuery, verse, cancellationToken);
             }
-        }
+
         return result;
     }
 
@@ -130,7 +123,7 @@ public class HybridQuranSearchService(
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        string[] rawTokens = verse.Translation.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var rawTokens = verse.Translation.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         if (rawTokens.Length == 0) return new List<WordMappingResult>();
 
         // 1. Clean punctuation and filter out stop-words
@@ -152,14 +145,14 @@ public class HybridQuranSearchService(
         var baseQueryVector =
             await embeddingService.CreateEmbeddingAsync(EmbeddingTextBuilder.BuildQuery(queryText), cancellationToken);
         var fullVerseVector = await embeddingService.CreateEmbeddingAsync(verse.Translation, cancellationToken);
-        float baseScore = (float)VectorMath.CosineSimilarity(baseQueryVector, fullVerseVector);
+        var baseScore = (float)VectorMath.CosineSimilarity(baseQueryVector, fullVerseVector);
 
         cancellationToken.ThrowIfCancellationRequested();
 
         // 3. Batch occluded embeddings concurrently
         var occlusionTasks = targets.Select(target =>
         {
-            string occludedText = string.Join(" ", rawTokens.Where((_, idx) => idx != target.Index));
+            var occludedText = string.Join(" ", rawTokens.Where((_, idx) => idx != target.Index));
             return embeddingService.CreateEmbeddingAsync(occludedText, cancellationToken);
         }).ToList();
 
@@ -169,10 +162,10 @@ public class HybridQuranSearchService(
 
         // 4. Calculate score drops
         var rawImpacts = new List<WordMappingResult>();
-        for (int i = 0; i < targets.Count; i++)
+        for (var i = 0; i < targets.Count; i++)
         {
-            float occludedScore = (float)VectorMath.CosineSimilarity(baseQueryVector, occludedVectors[i]);
-            float impact = baseScore - occludedScore;
+            var occludedScore = (float)VectorMath.CosineSimilarity(baseQueryVector, occludedVectors[i]);
+            var impact = baseScore - occludedScore;
 
             rawImpacts.Add(new WordMappingResult
             {
@@ -198,8 +191,8 @@ public class HybridQuranSearchService(
         if (aggregated.Count == 0) return aggregated;
 
         // 6. Dynamic cutoff: Keep top terms whose impact is at least 25% of the highest impact word
-        float maxScore = aggregated.Max(x => x.CorrelationScore);
-        float dynamicCutoff = Math.Max(0.0015f, maxScore * 0.25f);
+        var maxScore = aggregated.Max(x => x.CorrelationScore);
+        var dynamicCutoff = Math.Max(0.0015f, maxScore * 0.25f);
 
         return aggregated.Where(x => x.CorrelationScore > 0.001).ToList();
     }

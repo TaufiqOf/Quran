@@ -46,10 +46,7 @@ public partial class VerseTranslationComponent : AVerseComponent, IDisposable
     private void VerseCard_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var point = e.GetCurrentPoint(this);
-        if(point.Properties.IsLeftButtonPressed)
-        {
-            OnVerseSelected(Verse);
-        }
+        if (point.Properties.IsLeftButtonPressed) OnVerseSelected(Verse);
     }
 
     public override void VerseBookMark()
@@ -62,7 +59,7 @@ public partial class VerseTranslationComponent : AVerseComponent, IDisposable
     {
         VerseBookMark();
     }
-    
+
     private void ShowTafasirButtonOnClick(object? sender, RoutedEventArgs e)
     {
         ShowTafasir();

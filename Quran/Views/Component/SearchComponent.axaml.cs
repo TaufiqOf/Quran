@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
@@ -12,7 +11,6 @@ using Avalonia.Media;
 using FluentIcons.Avalonia;
 using FluentIcons.Common;
 using Quran.Helpers;
-using Quran.Helpers.Search.VectorSearch;
 using Quran.Models;
 
 namespace Quran.Views.Component;
@@ -48,10 +46,10 @@ public partial class SearchComponent : UserControl
         _searchTerms = CreateSearchTerms(searchText);
         Surah = surah;
         HasScore = surah.SimilarityScore.HasValue;
-    
+
         // Scale score to 0-100 and format strictly to 2 decimal places
         FormattedScore = surah.SimilarityScore.HasValue
-            ? $"Score: {(surah.SimilarityScore):P2}"
+            ? $"Score: {surah.SimilarityScore:P2}"
             : string.Empty;
 
         VerseCount = $" Verses({surah.VerseResults.Count})";
@@ -107,17 +105,15 @@ public partial class SearchComponent : UserControl
             return;
 
         // 1. Extract impact words from semantic search (if present)
-        List<WordMappingResult>? impacts = (verse as VerseResult)?.Impacts;
+        var impacts = (verse as VerseResult)?.Impacts;
         var impactTerms = Array.Empty<string>();
 
         if (impacts != null && impacts.Count > 0)
-        {
             impactTerms = impacts
                 .Where(i => !string.IsNullOrWhiteSpace(i.VerseWord))
                 .Select(i => i.VerseWord.Trim('.', ',', ';', ':', '?', '!', '"', '[', ']', '(', ')', '{', '}'))
                 .Where(t => t.Length > 0)
                 .ToArray();
-        }
 
         // 2. Combine impact terms with explicit raw search terms to guarantee exact matches are never missed
         var combinedTerms = impactTerms
@@ -167,14 +163,11 @@ public partial class SearchComponent : UserControl
             while ((index = text.IndexOf(term, index, StringComparison.OrdinalIgnoreCase)) >= 0)
             {
                 // Match whole word boundaries so shorter tokens (e.g. "it") don't partially match inside words ("spirit")
-                bool startBoundary = index == 0 || !char.IsLetterOrDigit(text[index - 1]);
-                bool endBoundary = (index + term.Length >= text.Length) ||
-                                   !char.IsLetterOrDigit(text[index + term.Length]);
+                var startBoundary = index == 0 || !char.IsLetterOrDigit(text[index - 1]);
+                var endBoundary = index + term.Length >= text.Length ||
+                                  !char.IsLetterOrDigit(text[index + term.Length]);
 
-                if (startBoundary && endBoundary)
-                {
-                    ranges.Add((index, term.Length));
-                }
+                if (startBoundary && endBoundary) ranges.Add((index, term.Length));
 
                 index += Math.Max(term.Length, 1);
             }
@@ -228,12 +221,10 @@ public partial class SearchComponent : UserControl
         foreach (var range in mergedRanges)
         {
             if (range.Start > position)
-            {
                 yield return new Run
                 {
                     Text = text.Substring(position, range.Start - position)
                 };
-            }
 
             var highlight = new Span
             {
@@ -251,12 +242,10 @@ public partial class SearchComponent : UserControl
         }
 
         if (position < text.Length)
-        {
             yield return new Run
             {
                 Text = text.Substring(position)
             };
-        }
     }
 
 
@@ -460,13 +449,11 @@ public partial class SearchComponent : UserControl
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
 
         if (clipboard != null)
-        {
             foreach (var verse in Surah.VerseResults)
             {
                 var text =
-                    $"{(Surah.Id)}-{Surah.Transliteration}\n({verse.Id}){verse.Text}\n{verse.Transliteration}\n{verse.Translation}";
+                    $"{Surah.Id}-{Surah.Transliteration}\n({verse.Id}){verse.Text}\n{verse.Transliteration}\n{verse.Translation}";
                 await clipboard.SetTextAsync(text);
             }
-        }
     }
 }

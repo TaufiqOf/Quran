@@ -275,9 +275,9 @@
                                         Classes="verseScoreText"
                                         Text="{Binding SimilarityScore, StringFormat='Match {0:P2}'}" />
                                 </Border>
-                                
-                                <ItemsControl 
-                                    Grid.Column="1" 
+
+                                <ItemsControl
+                                    Grid.Column="1"
                                     Margin="8,0"
                                     ItemsSource="{Binding Impacts}">
                                     <ItemsControl.ItemsPanel>

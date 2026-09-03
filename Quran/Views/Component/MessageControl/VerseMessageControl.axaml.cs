@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Quran.Models;
 
 namespace Quran.Views.Component.MessageControl;
@@ -9,6 +10,13 @@ namespace Quran.Views.Component.MessageControl;
 public class VerseMessageModel : INotifyPropertyChanged
 {
     private bool _isExpanded;
+
+    public VerseMessageModel(Surah surah, Verse verse, string message)
+    {
+        Surah = surah;
+        Verse = verse;
+        Message = message;
+    }
 
     public Surah Surah { get; set; }
     public Verse Verse { get; set; }
@@ -23,13 +31,6 @@ public class VerseMessageModel : INotifyPropertyChanged
             _isExpanded = value;
             OnPropertyChanged();
         }
-    }
-
-    public VerseMessageModel(Surah surah, Verse verse, string message)
-    {
-        Surah = surah;
-        Verse = verse;
-        Message = message;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -49,24 +50,17 @@ public partial class VerseMessageControl : UserControl
         InitializeComponent();
         _messages = messages ?? new List<VerseMessageModel>();
 
-        if (_messages.Count > 0)
-        {
-            _messages[0].IsExpanded = true;
-        }
+        if (_messages.Count > 0) _messages[0].IsExpanded = true;
 
         MessagesItemsControl.ItemsSource = _messages;
     }
 
-    private void Expander_OnExpanded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private void Expander_OnExpanded(object? sender, RoutedEventArgs e)
     {
         if (sender is not Expander { DataContext: VerseMessageModel current }) return;
 
         foreach (var item in _messages)
-        {
             if (!ReferenceEquals(item, current))
-            {
                 item.IsExpanded = false;
-            }
-        }
     }
 }

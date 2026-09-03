@@ -10,8 +10,10 @@ public static class SettingService
 {
     public static readonly string SettingsFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "quran_settings.json");
+
     public static readonly string ChatModelSettingsFilePath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "quran_chat_model_settings.json");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "quran_chat_model_settings.json");
 
     public static void SaveLanguagePreference(string languageCode)
     {
@@ -20,14 +22,14 @@ public static class SettingService
 
     public static void SaveReaderModePreference(string readerMode)
     {
-        SaveSettings(null, null, readerMode,null);
+        SaveSettings(null, null, readerMode, null);
     }
 
     public static void SaveChatMessages(List<ChatMessageModel> chatMessages)
     {
-        SaveSettings(chatMessages, null, null,null);
+        SaveSettings(chatMessages, null, null, null);
     }
-    
+
     public static void SaveAiSettings(AiSettings aiSettings)
     {
         SaveSettings(null, null, null, aiSettings);
@@ -40,7 +42,6 @@ public static class SettingService
         return settings.ChatMessages;
     }
 
- 
 
     public static string LoadLanguagePreference()
     {
@@ -53,13 +54,13 @@ public static class SettingService
         var settings = LoadAppSettings();
         return settings.ReaderMode;
     }
-    
+
     public static AiSettings LoadAiSettings()
     {
         var settings = LoadAppSettings();
         return settings.AiSettings;
     }
-    
+
 
     private static AppSettings LoadAppSettings()
     {
@@ -74,6 +75,7 @@ public static class SettingService
             return new AppSettings();
         }
     }
+
     private static ChatModelSettings LoadChatModelSettings()
     {
         try
@@ -87,6 +89,7 @@ public static class SettingService
             return new ChatModelSettings();
         }
     }
+
     public static string SaveSettings(List<ChatMessageModel>? chatMessages, string? language, string? readerMode,
         AiSettings? aiSettings)
     {
@@ -97,11 +100,10 @@ public static class SettingService
             SaveChatModelSettings(chatModelSettings);
             return "Chat messages saved successfully.";
         }
-        else
-        {
-            return SaveSettings(language, readerMode, aiSettings);
-        }
+
+        return SaveSettings(language, readerMode, aiSettings);
     }
+
     private static string SaveSettings(string? language, string? readerMode,
         AiSettings? aiSettings)
     {

@@ -10,38 +10,34 @@ public class SimpleBm25Scorer
 {
     private const float k1 = 1.2f;
     private const float b = 0.75f;
+    private readonly double _avgDocLength;
+    private readonly Dictionary<int, int> _docLengths = new();
+    private readonly Dictionary<string, int> _documentFrequencies = new();
 
     private readonly Dictionary<int, Dictionary<string, int>> _termFrequencies = new();
-    private readonly Dictionary<string, int> _documentFrequencies = new();
-    private readonly Dictionary<int, int> _docLengths = new();
-    private readonly double _avgDocLength;
     private readonly int _totalDocs;
 
     public SimpleBm25Scorer(List<SurahResult> surahs)
     {
-        int totalLength = 0;
+        var totalLength = 0;
 
         foreach (var surah in surahs)
+        foreach (var verse in surah.VerseResults)
         {
-            foreach (var verse in surah.VerseResults)
-            {
-                int compositeId = GetKey(surah.Id, verse.Id);
-                var tokens = Tokenize($"{verse.Translation} {verse.Transliteration}");
-                
-                _docLengths[compositeId] = tokens.Length;
-                totalLength += tokens.Length;
+            var compositeId = GetKey(surah.Id, verse.Id);
+            var tokens = Tokenize($"{verse.Translation} {verse.Transliteration}");
 
-                var tfMap = tokens
-                    .GroupBy(t => t)
-                    .ToDictionary(g => g.Key, g => g.Count());
+            _docLengths[compositeId] = tokens.Length;
+            totalLength += tokens.Length;
 
-                _termFrequencies[compositeId] = tfMap;
+            var tfMap = tokens
+                .GroupBy(t => t)
+                .ToDictionary(g => g.Key, g => g.Count());
 
-                foreach (var term in tfMap.Keys)
-                {
-                    _documentFrequencies[term] = _documentFrequencies.GetValueOrDefault(term, 0) + 1;
-                }
-            }
+            _termFrequencies[compositeId] = tfMap;
+
+            foreach (var term in tfMap.Keys)
+                _documentFrequencies[term] = _documentFrequencies.GetValueOrDefault(term, 0) + 1;
         }
 
         _totalDocs = _docLengths.Count;
@@ -55,18 +51,18 @@ public class SimpleBm25Scorer
 
         foreach (var (docId, tfMap) in _termFrequencies)
         {
-            float score = 0f;
-            int docLen = _docLengths[docId];
+            var score = 0f;
+            var docLen = _docLengths[docId];
 
             foreach (var token in queryTokens)
             {
-                if (!tfMap.TryGetValue(token, out int tf)) continue;
+                if (!tfMap.TryGetValue(token, out var tf)) continue;
 
-                int df = _documentFrequencies.GetValueOrDefault(token, 0);
-                float idf = (float)Math.Log((_totalDocs - df + 0.5) / (df + 0.5) + 1.0);
+                var df = _documentFrequencies.GetValueOrDefault(token, 0);
+                var idf = (float)Math.Log((_totalDocs - df + 0.5) / (df + 0.5) + 1.0);
 
-                float numerator = tf * (k1 + 1);
-                float denominator = Convert.ToSingle(tf + k1 * (1 - b + b * (docLen / _avgDocLength)));
+                var numerator = tf * (k1 + 1);
+                var denominator = Convert.ToSingle(tf + k1 * (1 - b + b * (docLen / _avgDocLength)));
 
                 score += idf * (numerator / denominator);
             }
@@ -77,8 +73,13 @@ public class SimpleBm25Scorer
         return scores;
     }
 
-    private static string[] Tokenize(string text) =>
-        Regex.Split(text.ToLowerInvariant(), @"\W+").Where(t => t.Length > 1).ToArray();
+    private static string[] Tokenize(string text)
+    {
+        return Regex.Split(text.ToLowerInvariant(), @"\W+").Where(t => t.Length > 1).ToArray();
+    }
 
-    public static int GetKey(int surahId, int verseId) => (surahId << 16) | verseId;
+    public static int GetKey(int surahId, int verseId)
+    {
+        return (surahId << 16) | verseId;
+    }
 }

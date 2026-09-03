@@ -34,11 +34,8 @@ public class StructuredSearch : ISearch
             return Task.FromResult(list);
 
         // Remove the leading '>' character and trim surrounding whitespace
-        string cleanSearchText = searchText.Trim();
-        if (cleanSearchText.StartsWith(">"))
-        {
-            cleanSearchText = cleanSearchText[1..].Trim();
-        }
+        var cleanSearchText = searchText.Trim();
+        if (cleanSearchText.StartsWith(">")) cleanSearchText = cleanSearchText[1..].Trim();
 
         if (string.IsNullOrWhiteSpace(cleanSearchText))
             return Task.FromResult(list);
@@ -82,11 +79,8 @@ public class StructuredSearch : ISearch
             Surah? baseSurah = null;
 
             if (int.TryParse(surahSearch, out var surahId))
-            {
                 baseSurah = DataManager.Surahs.FirstOrDefault(s => s.Id == surahId);
-            }
             else
-            {
                 baseSurah = DataManager.Surahs
                     .FirstOrDefault(s =>
                         s.Name.Contains(
@@ -100,8 +94,6 @@ public class StructuredSearch : ISearch
                         s.Translation.Contains(
                             surahSearch,
                             StringComparison.OrdinalIgnoreCase));
-                
-            }
 
             if (baseSurah is null)
                 continue;

@@ -97,7 +97,6 @@ public sealed class LocalEmbeddingService :
             var tokens = encodedBatch[batchIdx];
 
             for (var seqIdx = 0; seqIdx < maxSeqLength; seqIdx++)
-            {
                 if (seqIdx < tokens.InputIds.Length)
                 {
                     inputIds[batchIdx, seqIdx] = tokens.InputIds[seqIdx];
@@ -109,7 +108,6 @@ public sealed class LocalEmbeddingService :
                     inputIds[batchIdx, seqIdx] = 0;
                     attentionMask[batchIdx, seqIdx] = 0;
                 }
-            }
         }
 
         var inputs = new List<NamedOnnxValue>
@@ -158,19 +156,12 @@ public sealed class LocalEmbeddingService :
             if (attentionMask[token] == 0) continue;
 
             validTokenCount++;
-            for (var dim = 0; dim < hiddenSize; dim++)
-            {
-                embedding[dim] += output[0, token, dim];
-            }
+            for (var dim = 0; dim < hiddenSize; dim++) embedding[dim] += output[0, token, dim];
         }
 
         if (validTokenCount > 0)
-        {
             for (var i = 0; i < embedding.Length; i++)
-            {
                 embedding[i] /= (float)validTokenCount;
-            }
-        }
 
         return embedding;
     }
@@ -189,19 +180,12 @@ public sealed class LocalEmbeddingService :
             if (attentionMask[token] == 0) continue;
 
             validTokenCount++;
-            for (var dim = 0; dim < hiddenSize; dim++)
-            {
-                embedding[dim] += output[batchIndex, token, dim];
-            }
+            for (var dim = 0; dim < hiddenSize; dim++) embedding[dim] += output[batchIndex, token, dim];
         }
 
         if (validTokenCount > 0)
-        {
             for (var i = 0; i < embedding.Length; i++)
-            {
                 embedding[i] /= (float)validTokenCount;
-            }
-        }
 
         return embedding;
     }
@@ -209,17 +193,11 @@ public sealed class LocalEmbeddingService :
     private static void Normalize(float[] vector)
     {
         double sum = 0;
-        foreach (var value in vector)
-        {
-            sum += value * value;
-        }
+        foreach (var value in vector) sum += value * value;
 
         var magnitude = Math.Sqrt(sum);
         if (magnitude == 0) return;
 
-        for (var i = 0; i < vector.Length; i++)
-        {
-            vector[i] = (float)(vector[i] / magnitude);
-        }
+        for (var i = 0; i < vector.Length; i++) vector[i] = (float)(vector[i] / magnitude);
     }
 }

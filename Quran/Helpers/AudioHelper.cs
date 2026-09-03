@@ -1,13 +1,11 @@
 using System;
 using System.IO;
-using Avalonia.Platform;
 using LibVLCSharp.Shared;
 
 namespace Quran.Helpers;
 
 public static class AudioHelper
 {
-    private static string DataPath => Path.Combine(AppContext.BaseDirectory,"Data");
     private static readonly LibVLC? LibVlc;
     private static readonly MediaPlayer? MediaPlayer;
     private static Media? _currentMedia;
@@ -29,6 +27,8 @@ public static class AudioHelper
             IsAvailable = false;
         }
     }
+
+    private static string DataPath => Path.Combine(AppContext.BaseDirectory, "Data");
 
     /// <summary>True when the native VLC libraries loaded successfully.</summary>
     public static bool IsAvailable { get; }

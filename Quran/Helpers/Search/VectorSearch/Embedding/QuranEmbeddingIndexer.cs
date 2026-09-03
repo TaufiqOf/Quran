@@ -33,15 +33,13 @@ public class QuranEmbeddingIndexer(IEmbeddingService embeddingService)
             var vectors = await embeddingService
                 .CreateEmbeddingsAsync(texts, cancellationToken);
 
-            for (int i = 0; i < chunk.Length; i++)
-            {
+            for (var i = 0; i < chunk.Length; i++)
                 embeddings.Add(new VerseEmbedding
                 {
                     SurahId = chunk[i].Surah.Id,
                     VerseId = chunk[i].Verse.Id,
                     Vector = vectors[i]
                 });
-            }
         }
 
         return embeddings;

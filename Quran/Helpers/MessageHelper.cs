@@ -9,7 +9,7 @@ public static class MessageHelper
     private static CustomMessageWindow _dialog;
     public static bool IsShowing { get; private set; }
     public static Window? MainWindow { get; set; }
-    
+
 
     public static void ShowMessage(string title, string message, bool isDialog = true)
     {

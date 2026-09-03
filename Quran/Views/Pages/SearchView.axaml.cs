@@ -11,6 +11,8 @@ using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using FluentIcons.Avalonia;
+using FluentIcons.Common;
 using Quran.Helpers;
 using Quran.Models;
 using Quran.Views.Component;
@@ -22,7 +24,6 @@ public partial class SearchView : AView
 {
     private readonly Timer _messageTimer;
     private readonly Random _random = new();
-    private CancellationTokenSource? _searchCts;
 
     private readonly List<string> _searchTips = new()
     {
@@ -55,8 +56,10 @@ public partial class SearchView : AView
         "🔢 Quick jump by Surah number Example: >114:"
     };
 
+    private bool _isSearching;
+
     private List<SurahResult> _results = new();
-    private bool _isSearching = false;
+    private CancellationTokenSource? _searchCts;
 
     public SearchView()
     {
@@ -139,7 +142,6 @@ public partial class SearchView : AView
             _searchCts?.Dispose();
             _searchCts = null;
             _isSearching = false;
-            
         }
     }
 
@@ -153,19 +155,17 @@ public partial class SearchView : AView
         _isSearching = true;
 
         // 2. Read input parameters on the UI thread
-        string text = string.Empty;
+        var text = string.Empty;
         Application.Current?.Dispatcher.Invoke(() =>
         {
             // Detach old UI events
             foreach (var item in SearchItemsControl.Items)
-            {
                 if (item is SearchComponent searchComponent)
                     DetachSearchComponentEvents(searchComponent);
-            }
 
-            SearchButton.Content = new FluentIcons.Avalonia.SymbolIcon
+            SearchButton.Content = new SymbolIcon
             {
-                Symbol = FluentIcons.Common.Symbol.Stop,
+                Symbol = Symbol.Stop,
                 FontSize = 16
             };
             ToolTip.SetTip(SearchButton, "Stop Search");
@@ -197,9 +197,9 @@ public partial class SearchView : AView
 
                 // Prepare string formatting off the UI thread
                 var totalVerses = results.Sum(s => s.VerseResults.Count);
-                string surahText = results.Count == 1 ? "surah" : "surahs";
-                string verseText = totalVerses == 1 ? "verse" : "verses";
-                string durationText =
+                var surahText = results.Count == 1 ? "surah" : "surahs";
+                var verseText = totalVerses == 1 ? "verse" : "verses";
+                var durationText =
                     $"Search completed in {st.Elapsed.TotalSeconds:F2} s. Found {totalVerses} {verseText} in {results.Count} {surahText}.";
 
                 var sText = text.Replace("?", string.Empty).Split(':')[0].Trim();
@@ -245,9 +245,9 @@ public partial class SearchView : AView
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     ProgressBar.IsIndeterminate = false;
-                    SearchButton.Content = new FluentIcons.Avalonia.SymbolIcon
+                    SearchButton.Content = new SymbolIcon
                     {
-                        Symbol = FluentIcons.Common.Symbol.Search,
+                        Symbol = Symbol.Search,
                         FontSize = 16
                     };
                     ToolTip.SetTip(SearchButton, "Search");

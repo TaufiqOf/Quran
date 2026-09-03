@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Quran.Models;
-using Quran.Views.Pages;
 
 namespace Quran.Helpers;
 
@@ -28,8 +27,6 @@ public static class DataManager
         "Storage",
         "tokenizer.json");
 
-    private static string DataPath => Path.Combine(AppContext.BaseDirectory, "Data");
-
     private static readonly string BookmarkFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");
 
@@ -41,6 +38,8 @@ public static class DataManager
         Bookmarks = GetBookmarks();
         LoadSurahs(SettingService.LoadLanguagePreference());
     }
+
+    private static string DataPath => Path.Combine(AppContext.BaseDirectory, "Data");
 
     public static List<SurahResult> SurahResults
     {
@@ -55,12 +54,12 @@ public static class DataManager
                 Type = originalSurah.Type,
                 TotalVerses = originalSurah.TotalVerses,
                 Verses = originalSurah.Verses,
-                VerseResults = originalSurah.Verses.Select(q => new VerseResult()
+                VerseResults = originalSurah.Verses.Select(q => new VerseResult
                 {
                     Id = q.Id,
                     Text = q.Text,
                     Translation = q.Translation,
-                    Transliteration = q.Transliteration,
+                    Transliteration = q.Transliteration
                 }).ToList()
             });
             return surahResults.ToList();
@@ -182,13 +181,9 @@ public static class DataManager
         await foreach (var tafsir in JsonSerializer.DeserializeAsyncEnumerable<Tafsir>(
                            stream,
                            options))
-        {
             if (tafsir?.SurahId == surahId &&
                 tafsir.VerseId == verseId)
-            {
                 return tafsir.Text ?? string.Empty;
-            }
-        }
 
         return string.Empty;
     }

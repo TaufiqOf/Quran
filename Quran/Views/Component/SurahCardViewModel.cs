@@ -8,6 +8,12 @@ public class SurahCardViewModel : INotifyPropertyChanged
 {
     private bool _isSelected;
 
+    public SurahCardViewModel(Surah surah, SurahSynopsis? synopsis)
+    {
+        Surah = surah;
+        Synopsis = synopsis;
+    }
+
     public Surah Surah { get; }
     public SurahSynopsis? Synopsis { get; }
 
@@ -22,12 +28,6 @@ public class SurahCardViewModel : INotifyPropertyChanged
                 OnPropertyChanged();
             }
         }
-    }
-
-    public SurahCardViewModel(Surah surah, SurahSynopsis? synopsis)
-    {
-        Surah = surah;
-        Synopsis = synopsis;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

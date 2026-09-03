@@ -12,11 +12,11 @@ namespace Quran.Views.Pages;
 public partial class HomeView : AView
 {
     private bool _isLoaded;
+    private int? _selectedSurahId;
     private List<SurahOrder> _surahOrder = new();
     private List<SurahSynopsis> _surahSynopsis = new();
     private IEnumerable<Surah> _surahs = new List<Surah>();
     private Dictionary<int, SurahSynopsis> _synopsisLookup = new();
-    private int? _selectedSurahId;
 
     public HomeView()
     {
@@ -95,10 +95,7 @@ public partial class HomeView : AView
     private void GotoComponent_OnSurahSelected(Surah surah)
     {
         var cardVm = Cards.FirstOrDefault(c => c.Surah?.Id == surah.Id);
-        if (cardVm != null)
-        {
-            SelectCard(cardVm);
-        }
+        if (cardVm != null) SelectCard(cardVm);
     }
 
     private void SelectCard(SurahCardViewModel cardVm)
@@ -106,15 +103,12 @@ public partial class HomeView : AView
         if (cardVm?.Surah?.Id == _selectedSurahId) return;
         _selectedSurahId = cardVm?.Surah?.Id;
 
-        foreach (var c in Cards)
-        {
-            c.IsSelected = c.Surah?.Id == cardVm?.Surah?.Id;
-        }
+        foreach (var c in Cards) c.IsSelected = c.Surah?.Id == cardVm?.Surah?.Id;
 
         var index = Cards.IndexOf(cardVm);
         if (index < 0) return;
 
-        Dispatcher.UIThread.Post(() => 
+        Dispatcher.UIThread.Post(() =>
         {
             var element = SurahRepeater.TryGetElement(index);
             element?.BringIntoView();

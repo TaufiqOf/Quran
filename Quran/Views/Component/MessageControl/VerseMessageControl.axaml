@@ -2,6 +2,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="clr-namespace:Quran.Views.Component.MessageControl"
+    xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
     x:Class="Quran.Views.Component.MessageControl.VerseMessageControl"
     x:Name="Root">
 
@@ -64,50 +65,79 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
+        <!-- Copy & Action Buttons -->
+        <Style Selector="Button.copyButton">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <!-- Ensures content inside aligns to the left edge of the button -->
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.copyButton:pointerover">
+            <Setter Property="Background" Value="#333333" />
+        </Style>
+
+        <Style Selector="Button.copyButton:pressed">
+            <Setter Property="Background" Value="#444444" />
+        </Style>
     </UserControl.Styles>
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" Background="#333333" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+              ColumnDefinitions="*,Auto">
+            <Button
+                Grid.Column="1"
+                x:Name="CopyAiButton"
+                Classes="copyButton"
+                Click="CopyButtonOnClick">
+                <avalonia:FluentIcon Icon="Copy" FontSize="16" />
+                <ToolTip.Tip>Copy</ToolTip.Tip>
+            </Button>
+        </Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl x:Name="MessagesItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="mc:VerseMessageModel">
+                        <Expander
+                            Classes="verseMessageExpander"
+                            HorizontalAlignment="Stretch"
+                            IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                            Expanded="Expander_OnExpanded">
+                            <Expander.Header>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Classes="metaText">
+                                        <Run Text="(" />
+                                        <Run Text="{Binding Surah.Id}" />
+                                        <Run Text=") " />
+                                        <Run Text="{Binding Surah.Transliteration}" />
+                                        <Run Text=" - " />
+                                        <Run Text="{Binding Surah.Name}" />
+                                    </TextBlock>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Classes="verseText"
+                                        Text="{Binding Verse.Id, StringFormat=Verse {0}}"
+                                        Margin="12,0,0,0" />
+                                </Grid>
+                            </Expander.Header>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <ItemsControl x:Name="MessagesItemsControl">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="mc:VerseMessageModel">
-                    <Expander
-                        Classes="verseMessageExpander"
-                        HorizontalAlignment="Stretch"
-                        IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
-                        Expanded="Expander_OnExpanded">
-                        <Expander.Header>
-                            <Grid ColumnDefinitions="*,Auto">
-                                <TextBlock Classes="metaText">
-                                    <Run Text="(" />
-                                    <Run Text="{Binding Surah.Id}" />
-                                    <Run Text=") " />
-                                    <Run Text="{Binding Surah.Transliteration}" />
-                                    <Run Text=" - " />
-                                    <Run Text="{Binding Surah.Name}" />
-                                </TextBlock>
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Classes="verseText"
-                                    Text="{Binding Verse.Id, StringFormat=Verse {0}}"
-                                    Margin="12,0,0,0" />
-                            </Grid>
-                        </Expander.Header>
-
-                        <TextBox
-                            Classes="messageBox"
-                            IsReadOnly="True"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
-                            Text="{Binding Message}"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Focusable="True"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
-                    </Expander>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </ScrollViewer>
-
+                            <TextBox
+                                Classes="messageBox"
+                                IsReadOnly="True"
+                                AcceptsReturn="True"
+                                TextWrapping="Wrap"
+                                Text="{Binding Message}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Focusable="True"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

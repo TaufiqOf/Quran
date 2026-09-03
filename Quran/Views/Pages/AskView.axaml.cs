@@ -24,7 +24,10 @@ public partial class AskView : AView
     public AskView()
     {
         InitializeComponent();
-        Messages = new ObservableCollection<ChatMessageModel>(SettingService.LoadChatMessages());
+        var savedMessages = SettingService.LoadChatMessages();
+        savedMessages.ForEach(m => m.IsWorking = false);
+        Messages = new ObservableCollection<ChatMessageModel>(savedMessages);
+
         ChatItemsControl.ItemsSource = Messages;
     }
 
@@ -71,13 +74,13 @@ public partial class AskView : AView
         // 1. Add User Message
         Messages.Add(new ChatMessageModel { IsUser = true, Content = message, Time = DateTime.Now });
         SendTextBox.Text = string.Empty;
-
         // 2. Add Assistant Message Placeholder
         var aiMessage = new ChatMessageModel
         {
             IsUser = false,
             Content = "Getting sources related to the question...",
-            Time = DateTime.Now
+            Time = DateTime.Now,
+            IsWorking = true
         };
         Messages.Add(aiMessage);
         ScrollToBottom();
@@ -97,7 +100,7 @@ public partial class AskView : AView
                 if (e.PropertyName == nameof(AskAiManager.MessageResult.Context))
                     Dispatcher.UIThread.Post(() =>
                     {
-                        aiMessage.Refference = messageModel.Context;
+                        aiMessage.Reference = messageModel.Context;
                         aiMessage.Content = "Sources retrieved. Generating answer...";
                     }, DispatcherPriority.Background);
             };
@@ -115,11 +118,11 @@ public partial class AskView : AView
                 aiMessage.Content = "No answer could be retrieved from context.";
             else if (messageModel.IsSuccess) aiMessage.Content = messageModel.Message;
 
-            aiMessage.Refference = messageModel.Context;
+            aiMessage.Reference = messageModel.Context;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException exception)
         {
-            aiMessage.Content = "Operation canceled.";
+            aiMessage.Content = $"Operation canceled. {exception.Message}";
         }
         catch (Exception ex)
         {
@@ -131,6 +134,7 @@ public partial class AskView : AView
             ProgressBar.IsIndeterminate = false;
             SendButton.IsEnabled = true;
             _sending = false;
+            aiMessage.IsWorking = false;
             SettingService.SaveChatMessages(Messages.ToList());
             ScrollToBottom();
         }
@@ -194,7 +198,7 @@ public partial class AskView : AView
     private async void ShowReferenceButtonOnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is Button { DataContext: ChatMessageModel messageModel }
-            && messageModel.Refference.Any())
+            && messageModel.Reference.Any())
             ShowReference(messageModel);
     }
 
@@ -210,15 +214,15 @@ public partial class AskView : AView
 
     private async void ShowReference(ChatMessageModel messageModel)
     {
-        if (_control != null && MessageHelper.IsShowing) MessageHelper.Close();
+        if (MessageHelper.IsShowing) MessageHelper.Close();
 
         var verses = new List<VerseMessageModel>();
-        foreach (var surah in messageModel.Refference)
+        foreach (var surah in messageModel.Reference)
         foreach (var verseWithResult in surah.ToVerses())
             verses.Add(new VerseMessageModel(surah, verseWithResult, verseWithResult.ToString()));
 
         _control = new VerseMessageControl(verses);
 
-        MessageHelper.ShowMessage("Tafasir", _control, false);
+        MessageHelper.ShowMessage("Reference", _control, false);
     }
 }

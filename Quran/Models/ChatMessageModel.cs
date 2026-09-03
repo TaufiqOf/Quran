@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Timers;
@@ -11,14 +12,62 @@ namespace Quran.Models;
 public class ChatMessageModel : INotifyPropertyChanged
 {
     private readonly Timer _timer = new();
-    private bool _asReference;
     private string _content = string.Empty;
+    private bool _isWorking;
+    private readonly Stopwatch _stopwatch;
+
+    public TimeSpan ResponseTime
+    {
+        get;
+        set
+        {
+            if (value.Equals(field)) return;
+            field = value;
+            OnPropertyChanged(nameof(HumanizedResponseTime));
+            OnPropertyChanged();
+        }
+    }
+    public string HumanizedResponseTime =>
+        ResponseTime.Humanize();
+    public bool IsWorking
+    {
+        get => _isWorking;
+        set
+        {
+            if (_isWorking != value)
+            {
+                _isWorking = value;
+                if (!_isWorking)
+                    _stopwatch.Stop();
+                else
+                {
+                    _stopwatch.Start();
+                }
+
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public ChatMessageModel()
     {
-        _timer.Elapsed += (s, e) => OnPropertyChanged(nameof(TimeString));
+        _timer.Elapsed += (s, e) =>
+        {
+            ResponseTime = _stopwatch?.Elapsed ?? TimeSpan.Zero;
+            OnPropertyChanged(nameof(TimeString));
+        };
         _timer.Interval = 1000;
+        _stopwatch = System.Diagnostics.Stopwatch.StartNew();
         _timer.Start();
+
+        if (IsWorking)
+        {
+            _stopwatch.Start();
+        }
+        else
+        {
+            _stopwatch.Stop();
+        }
     }
 
     public DateTime Time { get; set; }
@@ -42,32 +91,32 @@ public class ChatMessageModel : INotifyPropertyChanged
 
     public bool HasReference
     {
-        get => _asReference;
+        get;
         set
         {
-            if (_asReference != value)
+            if (field != value)
             {
-                _asReference = value;
+                field = value;
                 OnPropertyChanged();
             }
         }
     }
 
-    public List<SurahResult> Refference
+    public List<SurahResult> Reference
     {
         get;
         set
         {
             if (Equals(value, field)) return;
             field = value;
-            HasReference = value != null && value.Any();
+            HasReference = value.Any();
             OnPropertyChanged();
         }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

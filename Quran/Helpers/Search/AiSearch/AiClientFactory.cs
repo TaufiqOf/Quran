@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
@@ -81,8 +82,17 @@ public static class AiClientFactory
 
             AiProvider.Ollama =>
                 new OllamaApiClient(
-                    new Uri(string.IsNullOrEmpty(endpointOrKey) ? "http://localhost:11434" : endpointOrKey),
-                    string.IsNullOrEmpty(modelName) ? "qwen2.5:14b" : modelName
+                    new HttpClient
+                    {
+                        BaseAddress = new Uri(
+                            string.IsNullOrEmpty(endpointOrKey)
+                                ? "http://localhost:11434"
+                                : endpointOrKey),
+                        Timeout = TimeSpan.FromMinutes(10)
+                    },
+                    string.IsNullOrEmpty(modelName)
+                        ? "qwen2.5:14b"
+                        : modelName
                 ),
 
             AiProvider.LLamaSharp or AiProvider.CustomLocalApi =>

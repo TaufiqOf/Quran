@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Quran.Models;
 
@@ -62,5 +65,17 @@ public partial class VerseMessageControl : UserControl
         foreach (var item in _messages)
             if (!ReferenceEquals(item, current))
                 item.IsExpanded = false;
+    }
+
+    private async void CopyButtonOnClick(object? sender, RoutedEventArgs e)
+    {
+        var contextText = string.Join("\n",
+            _messages.Select(q=>q.Verse.Translation));
+        var topLevel = TopLevel.GetTopLevel(this);
+        var clipboard = topLevel?.Clipboard;
+        if (clipboard != null)
+        {
+            await clipboard.SetTextAsync(contextText);
+        }
     }
 }

@@ -110,6 +110,7 @@
                                     HorizontalAlignment="Right"
                                     MaxWidth="600"
                                     MinWidth="300"
+                                    BoxShadow="0 2 4 #00000080"
                                     Background="#2B4C7E"
                                     CornerRadius="12,12,2,12"
                                     Padding="12,8"
@@ -159,6 +160,7 @@
                                     HorizontalAlignment="Left"
                                     MaxWidth="650"
                                     MinWidth="300"
+                                    BoxShadow="0 2 4 #00000080"
                                     Background="#222222"
                                     BorderBrush="#333333"
                                     BorderThickness="1"
@@ -173,13 +175,17 @@
                                             LineHeight="24"
                                             TextWrapping="Wrap" />
 
-                                        <Grid Background="#333333" HorizontalAlignment="Stretch"
-                                              ColumnDefinitions="*,Auto,Auto,Auto">
+                                        <Grid Background="#333333" 
+                                              HorizontalAlignment="Stretch"
+                                              ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto">
                                             <TextBlock
                                                 Classes="timeTextBlock"
                                                 Text="{Binding TimeString}" />
+                                            <TextBlock Grid.Column="1"
+                                                Classes="timeTextBlock"
+                                                Text="{Binding HumanizedResponseTime}" />
                                             <Button
-                                                Grid.Column="1"
+                                                Grid.Column="3"
                                                 x:Name="ShowReferenceButton"
                                                 Classes="copyButton"
                                                 IsEnabled="{Binding HasReference}"
@@ -188,7 +194,7 @@
                                                 <ToolTip.Tip>Show Reference</ToolTip.Tip>
                                             </Button>
                                             <Button
-                                                Grid.Column="2"
+                                                Grid.Column="4"
                                                 x:Name="CopyAiButton"
                                                 Classes="copyButton"
                                                 CommandParameter="{Binding}"
@@ -197,9 +203,10 @@
                                                 <ToolTip.Tip>Copy</ToolTip.Tip>
                                             </Button>
                                             <Button
-                                                Grid.Column="3"
+                                                Grid.Column="5"
                                                 x:Name="DeleteAiButton"
                                                 Classes="copyButton"
+                                                IsEnabled="{Binding !IsWorking}"
                                                 CommandParameter="{Binding}"
                                                 Click="DeleteMessageButtonOnClick">
                                                 <avalonia:FluentIcon Icon="Delete" FontSize="16" />

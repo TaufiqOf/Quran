@@ -11,15 +11,6 @@ namespace Quran.Helpers.Search.VectorSearch;
 
 public class HybridQuranSearchService : ASemanticSearchService
 {
-    private readonly SimpleBm25Scorer _bm25Scorer;
-
-    public HybridQuranSearchService(IEmbeddingService embeddingService,
-        List<VerseEmbedding> embeddings,
-        List<SurahResult> surahs) : base(embeddingService, embeddings)
-    {
-        _bm25Scorer = new SimpleBm25Scorer(surahs);
-    }
-
     private static readonly HashSet<string> StopWords = new(StringComparer.OrdinalIgnoreCase)
     {
         "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in",
@@ -36,6 +27,15 @@ public class HybridQuranSearchService : ASemanticSearchService
         { "abraham", new[] { "abraham", "ibrahim", "إبراهيم" } },
         { "joseph", new[] { "joseph", "yusuf", "يوسف" } }
     };
+
+    private readonly SimpleBm25Scorer _bm25Scorer;
+
+    public HybridQuranSearchService(IEmbeddingService embeddingService,
+        List<VerseEmbedding> embeddings,
+        List<SurahResult> surahs) : base(embeddingService, embeddings)
+    {
+        _bm25Scorer = new SimpleBm25Scorer(surahs);
+    }
 
     public override async Task<List<SemanticSearchResult>> SearchAsync(List<SurahResult> surahs,
         string rawQuery,

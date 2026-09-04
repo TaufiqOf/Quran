@@ -10,12 +10,6 @@ public class SimpleBm25Scorer
 {
     private const float k1 = 1.2f;
     private const float b = 0.75f;
-    private readonly double _avgDocLength;
-    private readonly Dictionary<int, int> _docLengths = new();
-    private readonly Dictionary<string, int> _documentFrequencies = new();
-
-    private readonly Dictionary<int, Dictionary<string, int>> _termFrequencies = new();
-    private readonly int _totalDocs;
 
     private static readonly HashSet<string> StopWords =
         new(StringComparer.OrdinalIgnoreCase)
@@ -28,6 +22,13 @@ public class SimpleBm25Scorer
             "were", "will", "with",
             "does", "do", "can", "allowed"
         };
+
+    private readonly double _avgDocLength;
+    private readonly Dictionary<int, int> _docLengths = new();
+    private readonly Dictionary<string, int> _documentFrequencies = new();
+
+    private readonly Dictionary<int, Dictionary<string, int>> _termFrequencies = new();
+    private readonly int _totalDocs;
 
     public SimpleBm25Scorer(List<SurahResult> surahs)
     {
@@ -83,8 +84,8 @@ public class SimpleBm25Scorer
                     _documentFrequencies.GetValueOrDefault(token);
 
                 var idf = MathF.Log(
-                    ((_totalDocs - df + 0.5f) /
-                     (df + 0.5f)) + 1f);
+                    (_totalDocs - df + 0.5f) /
+                    (df + 0.5f) + 1f);
 
                 var denominator =
                     tf + k1 *

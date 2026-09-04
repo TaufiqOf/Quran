@@ -24,18 +24,19 @@ public class Surah
     {
         return $"({Id}){Transliteration} - {Name}";
     }
+
     public SurahResult ToSurahResult()
     {
         return new SurahResult
         {
-            Id = this.Id,
-            Name = this.Name,
-            Transliteration = this.Transliteration,
-            Translation = this.Translation,
-            Type = this.Type,
-            TotalVerses = this.TotalVerses,
-            Verses = this.Verses.ToList(),
-            VerseResults = this.Verses.Select(v => new VerseResult
+            Id = Id,
+            Name = Name,
+            Transliteration = Transliteration,
+            Translation = Translation,
+            Type = Type,
+            TotalVerses = TotalVerses,
+            Verses = Verses.ToList(),
+            VerseResults = Verses.Select(v => new VerseResult
             {
                 Id = v.Id,
                 Text = v.Text,

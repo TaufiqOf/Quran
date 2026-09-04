@@ -175,15 +175,15 @@
                                             LineHeight="24"
                                             TextWrapping="Wrap" />
 
-                                        <Grid Background="#333333" 
+                                        <Grid Background="#333333"
                                               HorizontalAlignment="Stretch"
                                               ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto">
                                             <TextBlock
                                                 Classes="timeTextBlock"
                                                 Text="{Binding TimeString}" />
                                             <TextBlock Grid.Column="1"
-                                                Classes="timeTextBlock"
-                                                Text="{Binding HumanizedResponseTime}" />
+                                                       Classes="timeTextBlock"
+                                                       Text="{Binding HumanizedResponseTime}" />
                                             <Button
                                                 Grid.Column="3"
                                                 x:Name="ShowReferenceButton"

@@ -70,14 +70,12 @@ public class QuranSearchTools
                 continue;
 
             foreach (var verse in surah.VerseResults)
-            {
                 list.Add(new VerseReference
                 {
                     SurahId = surah.Id,
                     VerseId = verse.Id,
                     Score = verse.SimilarityScore ?? surah.SimilarityScore ?? 0.0
                 });
-            }
         }
 
         return list;

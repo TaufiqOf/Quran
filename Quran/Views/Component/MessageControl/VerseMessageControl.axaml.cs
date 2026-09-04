@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
@@ -70,12 +69,9 @@ public partial class VerseMessageControl : UserControl
     private async void CopyButtonOnClick(object? sender, RoutedEventArgs e)
     {
         var contextText = string.Join("\n",
-            _messages.Select(q=>q.Verse.Translation));
+            _messages.Select(q => q.Verse.Translation));
         var topLevel = TopLevel.GetTopLevel(this);
         var clipboard = topLevel?.Clipboard;
-        if (clipboard != null)
-        {
-            await clipboard.SetTextAsync(contextText);
-        }
+        if (clipboard != null) await clipboard.SetTextAsync(contextText);
     }
 }

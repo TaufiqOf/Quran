@@ -11,10 +11,27 @@ namespace Quran.Models;
 
 public class ChatMessageModel : INotifyPropertyChanged
 {
+    private readonly Stopwatch _stopwatch;
     private readonly Timer _timer = new();
     private string _content = string.Empty;
     private bool _isWorking;
-    private readonly Stopwatch _stopwatch;
+
+    public ChatMessageModel()
+    {
+        _timer.Elapsed += (s, e) =>
+        {
+            ResponseTime = _stopwatch?.Elapsed ?? TimeSpan.Zero;
+            OnPropertyChanged(nameof(TimeString));
+        };
+        _timer.Interval = 1000;
+        _stopwatch = Stopwatch.StartNew();
+        _timer.Start();
+
+        if (IsWorking)
+            _stopwatch.Start();
+        else
+            _stopwatch.Stop();
+    }
 
     public TimeSpan ResponseTime
     {
@@ -27,8 +44,10 @@ public class ChatMessageModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
     public string HumanizedResponseTime =>
         ResponseTime.Humanize();
+
     public bool IsWorking
     {
         get => _isWorking;
@@ -40,33 +59,10 @@ public class ChatMessageModel : INotifyPropertyChanged
                 if (!_isWorking)
                     _stopwatch.Stop();
                 else
-                {
                     _stopwatch.Start();
-                }
 
                 OnPropertyChanged();
             }
-        }
-    }
-
-    public ChatMessageModel()
-    {
-        _timer.Elapsed += (s, e) =>
-        {
-            ResponseTime = _stopwatch?.Elapsed ?? TimeSpan.Zero;
-            OnPropertyChanged(nameof(TimeString));
-        };
-        _timer.Interval = 1000;
-        _stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        _timer.Start();
-
-        if (IsWorking)
-        {
-            _stopwatch.Start();
-        }
-        else
-        {
-            _stopwatch.Stop();
         }
     }
 

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Quran.Helpers;
-using Quran.Helpers.Search.AiSearch;
 using Quran.Models;
 
 namespace Quran.Views.Pages;

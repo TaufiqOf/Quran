@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
-using Quran.Helpers.Search.AiSearch;
 using Quran.Models;
 
 namespace Quran.Helpers;
@@ -78,7 +77,9 @@ public static class AskAiManager
         }
 
         var contextText = string.Join("\n",
-            context.Select(q => $"({q.Id}){q.Transliteration}\n" + string.Join("\n",q.VerseResults.Select(r => $"({r.Id}){r.Translation}"))));
+            context.Select(q =>
+                $"({q.Id}){q.Transliteration}\n" +
+                string.Join("\n", q.VerseResults.Select(r => $"({r.Id}){r.Translation}"))));
 
         var systemPrompt = string.Format(
             PromptTemplate,

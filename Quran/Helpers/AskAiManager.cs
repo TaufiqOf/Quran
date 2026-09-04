@@ -116,7 +116,10 @@ public static class AskAiManager
             };
 
         var contextText = string.Join("\n",
-            context.Select(q => string.Join("\n", q.VerseResults.Select(r => $"{r.Translation}"))));
+            context.Select(q =>
+                $"Surah {q.Id} ({q.Transliteration})\n" +
+                string.Join("\n", q.VerseResults.Select(r =>
+                    $"Surah {q.Id}, verse {r.Id}: {r.Translation}"))));
         var systemPrompt = string.Format(PromptTemplate, contextText);
 
         var messages = new List<ChatMessage>

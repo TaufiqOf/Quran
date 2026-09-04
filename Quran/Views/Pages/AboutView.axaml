@@ -105,6 +105,50 @@
                 </StackPanel>
             </Border>
 
+            <!-- Search Guide Section -->
+            <Border Classes="settingsCard"
+                    Width="800"
+                    HorizontalAlignment="Center">
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="fieldLabel"
+                               Text="💡 Search Tips" />
+                    <Separator Margin="0,2,0,4" />
+                    <ItemsControl x:Name="SearchTipsItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:AboutTextItem">
+                                <TextBlock FontSize="12"
+                                           Foreground="#BEBEBE"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"
+                                           Text="{Binding Text}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- AI Answer Section -->
+            <Border Classes="settingsCard"
+                    Width="800"
+                    HorizontalAlignment="Center">
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="fieldLabel"
+                               Text="🤖 Ask AI" />
+                    <Separator Margin="0,2,0,4" />
+                    <ItemsControl x:Name="AiAnswerItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:AboutTextItem">
+                                <TextBlock FontSize="12"
+                                           Foreground="#BEBEBE"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"
+                                           Text="{Binding Text}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
             <!-- Packages Section -->
             <Border Classes="settingsCard"
                     Width="800"

@@ -20,6 +20,8 @@ public partial class AboutView : AView
         LicenseTextBlock.Text = GetLicenseText();
         TranslatorsItemsControl.ItemsSource = BuildCredits();
         PackagesItemsControl.ItemsSource = LoadPackages();
+        SearchTipsItemsControl.ItemsSource = BuildSearchTips();
+        AiAnswerItemsControl.ItemsSource = BuildAiAnswerDescription();
         DisclaimerItemsControl.ItemsSource = BuildDisclaimerItems();
     }
 
@@ -62,6 +64,36 @@ public partial class AboutView : AView
             {
                 Text = "Translation credits are shown for transparency. Please refer to the original translators or publishers for copyright, licensing, and attribution requirements related to each translation."
             }
+        };
+    }
+
+    private static List<AboutTextItem> BuildSearchTips()
+    {
+        return new List<AboutTextItem>
+        {
+            new() { Text = "🔍 Search for a word, such as Jesus. Search can also find close spellings and related wording." },
+            new() { Text = "📖 Open a specific verse: >2:255" },
+            new() { Text = "📚 Open a range of verses: >2:2-5" },
+            new() { Text = "📖 Open an entire chapter: >112:" },
+            new() { Text = "❓ Ask a question in the Ask AI page, such as: Who will go to Heaven?" },
+            new() { Text = "🔎 Use several words together to narrow your search: Jesus Mary" },
+            new() { Text = "💡 Try different or simpler words if you do not find what you need." },
+            new() { Text = "🔤 Search English translations, transliteration, or Arabic text directly." },
+            new() { Text = "🎯 Search for a meaning or concept with ?: ? reward for good deeds" },
+            new() { Text = "🌐 Meaning-based searches can be written in any language: ? What is the night of decree?" },
+            new() { Text = "🎯 Choose the number of meaning-based results with :N: ? mercy:5" },
+            new() { Text = "🔖 Find a surah by name: >Baqarah: or jump by number: >114:" }
+        };
+    }
+
+    private static List<AboutTextItem> BuildAiAnswerDescription()
+    {
+        return new List<AboutTextItem>
+        {
+            new() { Text = "Ask AI gives a concise answer based only on the Quran verses found for your question. It does not use outside information." },
+            new() { Text = "Each answer includes the surah and verse references used as its sources, so you can read the verses yourself." },
+            new() { Text = "When the available verses do not clearly answer the question, it says: \"I cannot answer this query based on the provided context.\"" },
+            new() { Text = "AI answers are study aids. Please read the cited verses in their full context." }
         };
     }
 

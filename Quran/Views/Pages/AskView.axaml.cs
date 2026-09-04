@@ -168,11 +168,12 @@ public partial class AskView : AView
             Task.Factory.StartNew(() =>
             {
                 var savedMessages = SettingService.LoadChatMessages()
-                    .OrderBy(m=>m.Time)
-                    .Take(30).ToList();
+                    .OrderByDescending(m => m.Time)
+                    .Take(30)
+                    .OrderBy(m => m.Time)
+                    .ToList();
                 savedMessages.ForEach(m => m.IsWorking = false);
                 Messages = new ObservableCollection<ChatMessageModel>(savedMessages);
-
                 Dispatcher.UIThread.Post(() => { ChatItemsControl.ItemsSource = Messages; },
                     DispatcherPriority.Background);
             });

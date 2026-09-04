@@ -9,6 +9,7 @@ A cross-platform desktop application for reading and studying the Quran. It brin
 - Navigate directly to a surah or verse.
 - Bookmark verses and manage them from one place.
 - Play the recitation of **Mahmoud Khalil Al-Husary** while reading.
+- Tafasir (exegesis) is available for each verse (in English).
 - Search translations, transliterations, and Arabic text.
 - Find verses with ordinary words, several words together, close spellings, or a meaning rather than an exact word.
 - Use the Ask AI page to ask a question and receive a concise answer based only on the Quran verses found for that question.
@@ -73,36 +74,28 @@ Audio recitation: **Mahmoud Khalil Al-Husary**.
 
 ### Surah browser
 
-![Surah browser](docs/screenshots/Quran-Home.png)
+![Surah browser](docs/screenshots/quran-home.png)
 
 ### Quranic reading layout
 
-![Quranic reading layout](docs/screenshots/Quran-Quran.png)
+![Quranic reading layout](docs/screenshots/quran-quran-2.png)
 
 ### Compact reading layout
 
-![Compact reading layout](docs/screenshots/Quran-Quran-Compact.png)
+![Compact reading layout](docs/screenshots/quran-quran-1.png)
 
-### Linear reading layout
-
-![Linear reading layout](docs/screenshots/Quran-Quran-Linear.png)
-
-### Translation layout
-
-![Translation layout](docs/screenshots/Quran-Quran-Translation.png)
-
-### Verse menu
-
-![Verse menu](docs/screenshots/Quran-Menu.png)
 
 ### Bookmarks
 
-![Bookmarks](docs/screenshots/Quran-Bookmark.png)
+![Bookmarks](docs/screenshots/quran-bookmarks.png)
 
 ### Search
 
-![Search](docs/screenshots/Quran-Search.png)
+![Search](docs/screenshots/quran-search-3.png)
 
+### Ask
+
+![Search](docs/screenshots/quran-ask-2.png)
 Search is simple and fast. Type what you remember, and the app will show the verses that match. When a verse contains your search words, those words are highlighted so they are easier to spot.
 
 ## Build from source

@@ -31,7 +31,6 @@ public class TextSearch : ISearch
     {
         // 1. Initial cancellation check
         cancellationToken.ThrowIfCancellationRequested();
-        var fastSearch = false;
         if (string.IsNullOrWhiteSpace(query))
             return Task.FromResult(new List<SurahResult>());
 
@@ -48,7 +47,6 @@ public class TextSearch : ISearch
         if (topK == -1)
         {
             topK = 50;
-            fastSearch = true;
         }
 
         if (topK <= 0 || topK > 100)

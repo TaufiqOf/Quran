@@ -72,7 +72,7 @@ public partial class SearchView : AView
         SearchManager.SearcherRegistered += SearcherRegistered;
         if (SearchManager.IsSearcherRegistered)
         {
-            MessageTimerOnElapsed(null, null);
+            ShowMessage();
             _messageTimer.Start();
         }
         else
@@ -83,6 +83,11 @@ public partial class SearchView : AView
     }
 
     private void MessageTimerOnElapsed(object? sender, ElapsedEventArgs e)
+    {
+        ShowMessage();
+    }
+
+    private void ShowMessage()
     {
         if (SearchManager.IsSearcherRegistered)
         {
@@ -150,18 +155,15 @@ public partial class SearchView : AView
 
     private void ExecuteSearch()
     {
-        // 1. Cancel any existing in-flight search task
         _searchCts?.Cancel();
         _searchCts?.Dispose();
         _searchCts = new CancellationTokenSource();
         var token = _searchCts.Token;
         _isSearching = true;
 
-        // 2. Read input parameters on the UI thread
         var text = string.Empty;
         Application.Current?.Dispatcher.Invoke(() =>
         {
-            // Detach old UI events
             foreach (var item in SearchItemsControl.Items)
                 if (item is SearchComponent searchComponent)
                     DetachSearchComponentEvents(searchComponent);
@@ -183,22 +185,17 @@ public partial class SearchView : AView
             return;
         }
 
-        // 3. Offload HEAVY SEARCH logic to a background ThreadPool thread
         Task.Run(async () =>
         {
             try
             {
                 var st = Stopwatch.StartNew();
-
-                // Pass the cancellation token to the search service
                 var results = await SearchManager.PerformSearch(text, token);
 
                 st.Stop();
 
-                // Throw if cancellation was requested while searching
                 token.ThrowIfCancellationRequested();
 
-                // Prepare string formatting off the UI thread
                 var totalVerses = results.Sum(s => s.VerseResults.Count);
                 var surahText = results.Count == 1 ? "surah" : "surahs";
                 var verseText = totalVerses == 1 ? "verse" : "verses";
@@ -206,38 +203,37 @@ public partial class SearchView : AView
                     $"Search completed in {st.Elapsed.TotalSeconds:F2} s. Found {totalVerses} {verseText} in {results.Count} {surahText}.";
 
                 var sText = text.Replace("?", string.Empty).Split(':')[0].Trim();
-
-                // 4. Switch to the UI thread ONLY if not cancelled
-                await Application.Current.Dispatcher.InvokeAsync(() =>
+                if (Application.Current != null)
                 {
-                    // Double check token inside dispatcher in case cancellation happened during thread dispatch
-                    if (token.IsCancellationRequested)
-                        return;
-
-                    _messageTimer.Stop();
-                    ShowMessage(durationText);
-                    _messageTimer.Start();
-
-                    _results = results;
-
-                    // Populate Controls on UI Thread
-                    foreach (var surah in results)
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
-                        var searchComponent = new SearchComponent(surah, sText);
+                        if (token.IsCancellationRequested)
+                            return;
 
-                        searchComponent.GoToVerseRequested += SearchComponentOnGoToVerseRequested;
-                        searchComponent.CopyTranslationRequested += SearchComponentOnCopyTranslationRequested;
-                        searchComponent.CopyTransliterationRequested += SearchComponentOnCopyTransliterationRequested;
-                        searchComponent.CopyVerseRequested += SearchComponentOnCopyVerseRequested;
-                        searchComponent.CopyAllRequested += SearchComponentOnCopyAllRequested;
-                        searchComponent.BookmarkVerseRequested += ContextMenuHelper.OnBookmarkVerseRequested;
+                        _messageTimer.Stop();
+                        ShowMessage(durationText);
+                        _messageTimer.Start();
 
-                        SearchItemsControl.Items.Add(searchComponent);
-                    }
+                        _results = results;
 
+                        // Populate Controls on UI Thread
+                        foreach (var surah in results)
+                        {
+                            var searchComponent = new SearchComponent(surah, sText);
 
-                    ProgressBar.IsIndeterminate = false;
-                }, DispatcherPriority.Normal, token);
+                            searchComponent.GoToVerseRequested += SearchComponentOnGoToVerseRequested;
+                            searchComponent.CopyTranslationRequested += SearchComponentOnCopyTranslationRequested;
+                            searchComponent.CopyTransliterationRequested +=
+                                SearchComponentOnCopyTransliterationRequested;
+                            searchComponent.CopyVerseRequested += SearchComponentOnCopyVerseRequested;
+                            searchComponent.CopyAllRequested += SearchComponentOnCopyAllRequested;
+                            searchComponent.BookmarkVerseRequested += ContextMenuHelper.OnBookmarkVerseRequested;
+
+                            SearchItemsControl.Items.Add(searchComponent);
+                        }
+                        ProgressBar.IsIndeterminate = false;
+                    }, DispatcherPriority.Normal, token);
+                }
             }
             catch (OperationCanceledException)
             {
@@ -245,18 +241,21 @@ public partial class SearchView : AView
             }
             finally
             {
-                await Application.Current.Dispatcher.InvokeAsync(() =>
+                if (Application.Current != null)
                 {
-                    ProgressBar.IsIndeterminate = false;
-                    SearchButton.Content = new SymbolIcon
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
-                        Symbol = Symbol.Search,
-                        FontSize = 16
-                    };
-                    ToolTip.SetTip(SearchButton, "Search");
-                    _isSearching = false;
-                    SearchTextBox.Focus();
-                });
+                        ProgressBar.IsIndeterminate = false;
+                        SearchButton.Content = new SymbolIcon
+                        {
+                            Symbol = Symbol.Search,
+                            FontSize = 16
+                        };
+                        ToolTip.SetTip(SearchButton, "Search");
+                        _isSearching = false;
+                        SearchTextBox.Focus();
+                    });
+                }
             }
         }, token);
     }

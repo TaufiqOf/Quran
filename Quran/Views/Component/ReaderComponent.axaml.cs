@@ -123,6 +123,7 @@ public partial class ReaderComponent : UserControl, IDisposable
 
     private async void VerseComponentOnTafasirRequested(Surah? surah, Verse verse)
     {
+        if(surah == null) return;
         var text = await DataManager.GetTafsirAsync(surah.Id, verse.Id);
         if (_control != null && MessageHelper.IsShowing) MessageHelper.Close();
 

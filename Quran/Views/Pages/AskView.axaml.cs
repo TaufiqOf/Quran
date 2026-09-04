@@ -17,7 +17,7 @@ namespace Quran.Views.Pages;
 
 public partial class AskView : AView
 {
-    private VerseMessageControl _control;
+    private VerseMessageControl? _control;
     private CancellationTokenSource? _searchCts;
     private bool _sending;
 
@@ -31,7 +31,7 @@ public partial class AskView : AView
         ChatItemsControl.ItemsSource = Messages;
     }
 
-    public ObservableCollection<ChatMessageModel> Messages { get; }
+    private ObservableCollection<ChatMessageModel> Messages { get; }
 
     protected override void OnInitialized()
     {

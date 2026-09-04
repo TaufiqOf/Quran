@@ -23,5 +23,5 @@ public class Verse
 public class VerseResult : Verse
 {
     public double? SimilarityScore { get; set; }
-    public List<WordMappingResult> Impacts { get; set; }
+    public List<WordMappingResult>? Impacts { get; set; }
 }

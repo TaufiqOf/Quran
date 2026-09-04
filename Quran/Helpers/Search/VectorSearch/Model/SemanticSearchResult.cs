@@ -13,5 +13,5 @@ public class SemanticSearchResult
     public string Reference =>
         $"{SurahId}:{VerseId}";
 
-    public List<WordMappingResult> Impacts { get; set; }
+    public List<WordMappingResult>? Impacts { get; set; }
 }

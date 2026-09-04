@@ -388,7 +388,6 @@ public partial class SearchComponent : UserControl
     }
 
 
-    public event Action<Verse>? PlayVerseRequested;
     public event Action<Verse, Surah>? BookmarkVerseRequested;
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;

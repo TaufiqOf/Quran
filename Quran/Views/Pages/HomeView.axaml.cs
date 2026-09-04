@@ -104,7 +104,7 @@ public partial class HomeView : AView
         _selectedSurahId = cardVm?.Surah?.Id;
 
         foreach (var c in Cards) c.IsSelected = c.Surah?.Id == cardVm?.Surah?.Id;
-
+        if(cardVm?.Surah is null) return;
         var index = Cards.IndexOf(cardVm);
         if (index < 0) return;
 

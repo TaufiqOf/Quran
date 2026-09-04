@@ -31,6 +31,7 @@ public class ChatMessageModel : INotifyPropertyChanged
             _stopwatch.Start();
         else
             _stopwatch.Stop();
+        Reference = new List<SurahResult>();
     }
 
     public TimeSpan ResponseTime

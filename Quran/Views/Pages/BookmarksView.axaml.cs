@@ -15,7 +15,7 @@ namespace Quran.Views.Pages;
 
 public partial class BookmarksView : AView
 {
-    private VerseMessageControl _control;
+    private VerseMessageControl? _control;
     private bool _isChangingFilter;
     private bool _isLoaded;
     private bool _isLoading;
@@ -130,6 +130,7 @@ public partial class BookmarksView : AView
 
     private async void VerseComponentOnTafasirRequested(Surah? surah, Verse verse)
     {
+        if(surah == null) return;
         var text = await DataManager.GetTafsirAsync(surah.Id, verse.Id);
         if (_control != null && MessageHelper.IsShowing) MessageHelper.Close();
 

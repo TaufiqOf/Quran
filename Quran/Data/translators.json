@@ -1,0 +1,52 @@
+[
+  {
+    "id": "en",
+    "language": "English",
+    "translator": "Saheeh International"
+  },
+  {
+    "id": "es",
+    "language": "Español",
+    "translator": "Muhammad Isa García (Muhammad Isa García)"
+  },
+  {
+    "id": "bn",
+    "language": "বাংলা",
+    "translator": "Muhiuddin Khan (মুহিউদ্দীন খান)"
+  },
+  {
+    "id": "fr",
+    "language": "Français",
+    "translator": "Muhammad Hamidullah"
+  },
+  {
+    "id": "id",
+    "language": "Bahasa Indonesia",
+    "translator": "The Sabiq company"
+  },
+  {
+    "id": "ru",
+    "language": "Русский",
+    "translator": "Elmir Kuliev"
+  },
+  {
+    "id": "sv",
+    "language": "Svenska",
+    "translator": "Mohammed Knut Bernström"
+  },
+  {
+    "id": "tr",
+    "language": "Türkçe",
+    "translator": "Turkish Translation(Diyanet)"
+  },
+  {
+    "id": "ur",
+    "language": "اردو",
+    "translator": "Syed Abul Ala Maududi"
+  },
+  {
+    "id": "zh",
+    "language": "中文",
+    "translator": "马坚 (Ma Jian)"
+  }
+]

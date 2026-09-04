@@ -66,16 +66,6 @@
                     <ComboBox x:Name="LanguageComboBox"
                               Classes="settingsInput"
                               SelectedIndex="0">
-                        <ComboBoxItem Content="English" Tag="en" />
-                        <ComboBoxItem Content="Bangla" Tag="bn" />
-                        <ComboBoxItem Content="Spanish" Tag="es" />
-                        <ComboBoxItem Content="French" Tag="fr" />
-                        <ComboBoxItem Content="Indonesian" Tag="id" />
-                        <ComboBoxItem Content="Russian" Tag="ru" />
-                        <ComboBoxItem Content="Swedish" Tag="sv" />
-                        <ComboBoxItem Content="Turkish" Tag="tr" />
-                        <ComboBoxItem Content="Urdu" Tag="ur" />
-                        <ComboBoxItem Content="Chinese" Tag="zh" />
                     </ComboBox>
 
                     <TextBlock Classes="sectionSubtitle"

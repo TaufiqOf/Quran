@@ -59,8 +59,9 @@ public partial class MainWindow : Window
                 "Quran" => new QuranView(),
                 "Bookmarks" => new BookmarksView(),
                 "Search" => new SearchView(),
-                "Settings" => new SettingsView(),
                 "Ask" => new AskView(),
+                "Settings" => new SettingsView(),
+                "About" => new AboutView(),
 
                 _ => new HomeView()
             };
@@ -89,6 +90,7 @@ public partial class MainWindow : Window
             "Search" => NavSearchButton,
             "Settings" => NavSettingsButton,
             "Ask" => NavAskButton,
+            "About" => NavAboutButton,
             _ => NavHomeButton
         };
 
@@ -98,6 +100,7 @@ public partial class MainWindow : Window
         NavSearchButton.IsEnabled = true;
         NavSettingsButton.IsEnabled = true;
         NavAskButton.IsEnabled = true;
+        NavAboutButton.IsEnabled = true;
         currentButton.IsEnabled = false;
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -12,19 +13,26 @@ public partial class SettingsView : AView
     public SettingsView()
     {
         InitializeComponent();
+        var translator = DataManager.Translators();
+        var comboBoxItems = translator.Select(t => new ComboBoxItem
+        {
+            Content = $"{t.Language} ({t.Name})",
+            Tag = t.Id
+        }).ToList();
+        comboBoxItems.ForEach(item => LanguageComboBox.Items.Add(item));
     }
 
     public override async Task Load(params object?[] parameter)
     {
-        var languageCode = SettingService.LoadLanguagePreference();
-        SelectLanguage(languageCode);
-
         var readerMode = SettingService.LoadReaderModePreference();
         SelectReaderMode(readerMode);
 
         var aiSettings = SettingService.LoadAiSettings();
         SelectAiSettings(aiSettings);
 
+
+        var languageCode = SettingService.LoadLanguagePreference();
+        SelectLanguage(languageCode);
         await Task.CompletedTask;
     }
 

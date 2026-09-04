@@ -130,7 +130,6 @@
                                        VerticalAlignment="Center" />
                         </StackPanel>
                     </Button>
-
                     <!-- Ask -->
                     <Button x:Name="NavAskButton"
                             CornerRadius="10"
@@ -153,29 +152,58 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
+                <StackPanel 
+                    Grid.Row="3" 
+                    Spacing="8"
+                    Orientation="Vertical">
 
-                <!-- Settings -->
-                <Button Grid.Row="3"
+                    <!-- Settings -->
+                    <Button
                         CornerRadius="10"
                         x:Name="NavSettingsButton"
                         Tag="Settings"
                         Click="NavButton_OnClick"
                         HorizontalAlignment="Stretch">
 
-                    <StackPanel Orientation="Horizontal"
-                                Margin="0,5,0,5"
-                                Spacing="16">
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5,0,5"
+                                    Spacing="16">
 
-                        <icon:FluentIcon
-                            Icon="Settings"
-                            FontSize="24"
-                            VerticalAlignment="Center" />
+                            <icon:FluentIcon
+                                Icon="Settings"
+                                FontSize="24"
+                                VerticalAlignment="Center" />
 
-                        <TextBlock Text="Settings"
-                                   FontSize="16"
-                                   VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
+                            <TextBlock Text="Settings"
+                                       FontSize="16"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+
+                    <!-- About -->
+                    <Button
+                        CornerRadius="10"
+                        x:Name="NavAboutButton"
+                        Tag="About"
+                        Click="NavButton_OnClick"
+                        HorizontalAlignment="Stretch">
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5,0,5"
+                                    Spacing="16">
+
+                            <icon:FluentIcon
+                                Icon="Info"
+                                FontSize="24"
+                                VerticalAlignment="Center" />
+
+                            <TextBlock Text="About"
+                                       FontSize="16"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
             </Grid>
         </Border>
 

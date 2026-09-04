@@ -128,6 +128,11 @@ public static class DataManager
         var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, "surah_synopsis.json"));
         return JsonReader.ReadJsonList<SurahSynopsis>(json);
     }
+    public static List<Translator> Translators()
+    {
+        var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, "translators.json"));
+        return JsonReader.ReadJsonList<Translator>(json);
+    }
 
     public static List<Bookmark> GetBookmarks()
     {

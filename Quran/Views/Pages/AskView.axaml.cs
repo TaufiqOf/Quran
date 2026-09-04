@@ -169,7 +169,7 @@ public partial class AskView : AView
             {
                 var savedMessages = SettingService.LoadChatMessages()
                     .OrderByDescending(m => m.Time)
-                    .Take(30)
+                    .Take(50)
                     .OrderBy(m => m.Time)
                     .ToList();
                 savedMessages.ForEach(m => m.IsWorking = false);

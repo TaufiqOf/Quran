@@ -237,6 +237,12 @@
             <SubType>Code</SubType>
         </Compile>
 
+
+        <Compile Update="Views\Pages\AboutView.axaml.cs">
+          <DependentUpon>AboutView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+
     </ItemGroup>
 
 </Project>

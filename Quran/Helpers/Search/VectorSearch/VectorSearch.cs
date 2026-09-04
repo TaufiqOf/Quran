@@ -55,22 +55,7 @@ public class VectorSearch : ISearch
             new HybridQuranSearchService(
                 _embeddingService,
                 embeddings,
-                DataManager.Surahs.Select(q => new SurahResult
-                {
-                    Id = q.Id,
-                    Name = q.Name,
-                    Transliteration = q.Transliteration,
-                    Translation = q.Translation,
-                    Type = q.Type,
-                    TotalVerses = q.TotalVerses,
-                    VerseResults = q.Verses.Select(v => new VerseResult
-                    {
-                        Id = v.Id,
-                        Text = v.Text,
-                        Transliteration = v.Transliteration,
-                        Translation = v.Translation
-                    }).ToList()
-                }).ToList());
+                DataManager.Surahs.Select(q=> q.ToSurahResult()).ToList());
     }
 
     public bool GetSearchMode(string searchText)

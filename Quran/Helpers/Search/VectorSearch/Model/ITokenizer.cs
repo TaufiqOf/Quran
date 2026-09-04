@@ -5,4 +5,6 @@ public interface ITokenizer
     TokenizedInput Encode(
         string text,
         int maxLength);
+
+    long PadTokenId { get; set; }
 }

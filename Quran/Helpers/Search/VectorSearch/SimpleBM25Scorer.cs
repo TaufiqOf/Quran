@@ -17,6 +17,18 @@ public class SimpleBm25Scorer
     private readonly Dictionary<int, Dictionary<string, int>> _termFrequencies = new();
     private readonly int _totalDocs;
 
+    private static readonly HashSet<string> StopWords =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            "a", "an", "and", "are", "as",
+            "at", "be", "but", "by",
+            "for", "if", "in", "into",
+            "is", "it", "of", "on",
+            "or", "the", "to", "was",
+            "were", "will", "with",
+            "does", "do", "can", "allowed"
+        };
+
     public SimpleBm25Scorer(List<SurahResult> surahs)
     {
         var totalLength = 0;
@@ -25,7 +37,8 @@ public class SimpleBm25Scorer
         foreach (var verse in surah.VerseResults)
         {
             var compositeId = GetKey(surah.Id, verse.Id);
-            var tokens = Tokenize($"{verse.Translation} {verse.Transliteration}");
+            var tokens = Tokenize($"{verse.Translation} {verse.Transliteration}").Where(t => !StopWords.Contains(t))
+                .ToArray();
 
             _docLengths[compositeId] = tokens.Length;
             totalLength += tokens.Length;
@@ -41,33 +54,50 @@ public class SimpleBm25Scorer
         }
 
         _totalDocs = _docLengths.Count;
-        _avgDocLength = (double)totalLength / _totalDocs;
+
+        _avgDocLength = _totalDocs > 0
+            ? (double)totalLength / _totalDocs
+            : 1.0;
     }
 
     public Dictionary<int, float> ScoreQuery(string query)
     {
-        var queryTokens = Tokenize(query);
+        var queryTokens = Tokenize(query)
+            .Where(t => !StopWords.Contains(t))
+            .Distinct()
+            .ToArray();
+
         var scores = new Dictionary<int, float>();
 
         foreach (var (docId, tfMap) in _termFrequencies)
         {
-            var score = 0f;
+            float score = 0;
             var docLen = _docLengths[docId];
 
             foreach (var token in queryTokens)
             {
-                if (!tfMap.TryGetValue(token, out var tf)) continue;
+                if (!tfMap.TryGetValue(token, out var tf))
+                    continue;
 
-                var df = _documentFrequencies.GetValueOrDefault(token, 0);
-                var idf = (float)Math.Log((_totalDocs - df + 0.5) / (df + 0.5) + 1.0);
+                var df =
+                    _documentFrequencies.GetValueOrDefault(token);
 
-                var numerator = tf * (k1 + 1);
-                var denominator = Convert.ToSingle(tf + k1 * (1 - b + b * (docLen / _avgDocLength)));
+                var idf = MathF.Log(
+                    ((_totalDocs - df + 0.5f) /
+                     (df + 0.5f)) + 1f);
 
-                score += idf * (numerator / denominator);
+                var denominator =
+                    tf + k1 *
+                    (1f - b +
+                     b * (docLen / _avgDocLength));
+
+                score +=
+                    idf *
+                    (tf * (k1 + 1f) / (float)denominator);
             }
 
-            if (score > 0) scores[docId] = score;
+            if (score > 0)
+                scores[docId] = score;
         }
 
         return scores;
@@ -75,7 +105,22 @@ public class SimpleBm25Scorer
 
     private static string[] Tokenize(string text)
     {
-        return Regex.Split(text.ToLowerInvariant(), @"\W+").Where(t => t.Length > 1).ToArray();
+        if (string.IsNullOrWhiteSpace(text))
+            return Array.Empty<string>();
+
+        return Regex
+            .Matches(text.ToLowerInvariant(), @"[\p{L}\p{M}]+")
+            .Select(m => NormalizeToken(m.Value))
+            .Where(t => t.Length > 1)
+            .ToArray();
+    }
+
+    private static string NormalizeToken(string token)
+    {
+        if (token.EndsWith("ying") && token.Length > 5)
+            return token[..^4] + "y";
+
+        return token;
     }
 
     public static int GetKey(int surahId, int verseId)

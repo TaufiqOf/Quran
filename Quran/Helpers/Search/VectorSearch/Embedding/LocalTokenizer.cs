@@ -53,4 +53,6 @@ public sealed class LocalTokenizer : ITokenizer, IDisposable
             AttentionMask = attentionMask
         };
     }
+
+    public long PadTokenId { get; set; }
 }

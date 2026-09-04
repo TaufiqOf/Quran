@@ -110,10 +110,13 @@ public partial class SearchView : AView
 
     private void SearcherRegistered()
     {
-        MessageTextBlock.Classes.Add("fade-in");
-        MessageTextBlock.Text =
-            "Context Search is now initialized. You can search for questions and get context-aware results. using the '?' prefix. For example, you can search for '? Who will go to Heaven?' or '2:255'.";
-        _messageTimer.Start();
+        Application.Current?.Dispatcher.Invoke(() =>
+        {
+            MessageTextBlock.Classes.Add("fade-in");
+            MessageTextBlock.Text =
+                "Context Search is now initialized. You can search for questions and get context-aware results. using the '?' prefix. For example, you can search for '? Who will go to Heaven?' or '2:255'.";
+            _messageTimer.Start();
+        });
     }
 
     public override async Task Load(params object?[] parameter)

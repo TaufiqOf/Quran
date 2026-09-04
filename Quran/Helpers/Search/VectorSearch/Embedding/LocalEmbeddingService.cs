@@ -105,7 +105,7 @@ public sealed class LocalEmbeddingService :
                 else
                 {
                     // Pad with 0s for shorter sequences in the batch
-                    inputIds[batchIdx, seqIdx] = 0;
+                    inputIds[batchIdx, seqIdx] = _tokenizer.PadTokenId;
                     attentionMask[batchIdx, seqIdx] = 0;
                 }
         }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Quran.Models;
@@ -22,6 +23,26 @@ public class Surah
     public override string ToString()
     {
         return $"({Id}){Transliteration} - {Name}";
+    }
+    public SurahResult ToSurahResult()
+    {
+        return new SurahResult
+        {
+            Id = this.Id,
+            Name = this.Name,
+            Transliteration = this.Transliteration,
+            Translation = this.Translation,
+            Type = this.Type,
+            TotalVerses = this.TotalVerses,
+            Verses = this.Verses.ToList(),
+            VerseResults = this.Verses.Select(v => new VerseResult
+            {
+                Id = v.Id,
+                Text = v.Text,
+                Translation = v.Translation,
+                Transliteration = v.Transliteration
+            }).ToList()
+        };
     }
 }
 

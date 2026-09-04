@@ -9,12 +9,17 @@ using Quran.Models;
 
 namespace Quran.Helpers.Search.VectorSearch;
 
-public class HybridQuranSearchService(
-    IEmbeddingService embeddingService,
-    List<VerseEmbedding> embeddings,
-    List<SurahResult> surahs)
-    : ASemanticSearchService(embeddingService, embeddings)
+public class HybridQuranSearchService : ASemanticSearchService
 {
+    private readonly SimpleBm25Scorer _bm25Scorer;
+
+    public HybridQuranSearchService(IEmbeddingService embeddingService,
+        List<VerseEmbedding> embeddings,
+        List<SurahResult> surahs) : base(embeddingService, embeddings)
+    {
+        _bm25Scorer = new SimpleBm25Scorer(surahs);
+    }
+
     private static readonly HashSet<string> StopWords = new(StringComparer.OrdinalIgnoreCase)
     {
         "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in",
@@ -58,9 +63,7 @@ public class HybridQuranSearchService(
             .ToDictionary(x => SimpleBm25Scorer.GetKey(x.SurahId, x.VerseId));
 
         // 2. Get BM25 Scores
-        var bm25Scorer = new SimpleBm25Scorer(surahs);
-
-        var bm25Scores = bm25Scorer.ScoreQuery(rawQuery);
+        var bm25Scores = _bm25Scorer.ScoreQuery(rawQuery);
         var bm25Rankings = bm25Scores
             .OrderByDescending(x => x.Value)
             .Select((x, rank) => new { DocId = x.Key, Score = x.Value, Rank = rank + 1 })
@@ -194,6 +197,6 @@ public class HybridQuranSearchService(
         var maxScore = aggregated.Max(x => x.CorrelationScore);
         var dynamicCutoff = Math.Max(0.0015f, maxScore * 0.25f);
 
-        return aggregated.Where(x => x.CorrelationScore > 0.001).ToList();
+        return aggregated.Where(x => x.CorrelationScore > dynamicCutoff).ToList();
     }
 }

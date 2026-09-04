@@ -18,9 +18,9 @@
 
         <NoWarn>$(NoWarn);AVLN3001</NoWarn>
 
-        <AssemblyVersion>0.0.16</AssemblyVersion>
+        <AssemblyVersion>0.0.17</AssemblyVersion>
 
-        <FileVersion>0.0.16</FileVersion>
+        <FileVersion>0.0.17</FileVersion>
 
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>

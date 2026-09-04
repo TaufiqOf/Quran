@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:Quran.Models"
              x:Class="Quran.Views.Pages.AboutView">
 
     <UserControl.Styles>
@@ -43,30 +44,126 @@
 
     </UserControl.Styles>
     <ScrollViewer>
-        <Grid Margin="20"
-              RowDefinitions="*,Auto,*"
-              ColumnDefinitions="*">
-            <Border Grid.Row="1"
-                    Classes="settingsCard"
+        <StackPanel Margin="20" Spacing="20">
+
+            <!-- Header Section -->
+            <Border Classes="settingsCard"
                     Width="800"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
+                    HorizontalAlignment="Center">
                 <StackPanel Spacing="14">
-                    <StackPanel>
-                        <Image Source="avares://Quran/Assets/Icons/Quran-icons/Quran-256x256.png" Width="256" Height="256" />
+                    <StackPanel HorizontalAlignment="Center">
+                        <Image Source="avares://Quran/Assets/Icons/Quran-icons/Quran-256x256.png"
+                               Width="128" Height="128"
+                               HorizontalAlignment="Center" />
                         <TextBlock Classes="sectionTitle"
-                                   Text="About" />
+                                   Text="About Quran"
+                                   TextAlignment="Center" />
                     </StackPanel>
                     <TextBlock Classes="sectionSubtitle"
-                               Text="Personalize your reading experience." />
-
-                    <Separator Margin="0,2,0,4" />
-
-                    <TextBlock Classes="fieldLabel"
-                               Text="Quran Translation Language" />
+                               Text="A modern, open-source Quran reader with advanced search and AI-powered features."
+                               TextAlignment="Center"
+                               TextWrapping="Wrap" />
+                    <TextBlock Classes="sectionSubtitle"
+                               x:Name="VersionTextBlock"
+                               Text="Version"
+                               TextAlignment="Center"
+                               FontSize="12" />
                 </StackPanel>
             </Border>
-        </Grid>
+
+            <!-- Translators Section -->
+            <Border Classes="settingsCard"
+                    Width="800"
+                    HorizontalAlignment="Center">
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="fieldLabel"
+                               Text="Credits" />
+                    <Separator Margin="0,2,0,4" />
+
+                    <ItemsControl x:Name="TranslatorsItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:AboutCreditItem">
+                                <Border Background="#2A2A2A"
+                                        CornerRadius="8"
+                                        Padding="12,8"
+                                        Margin="0,4">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Foreground="#E8E8E8"
+                                            Text="{Binding Label}" />
+                                        <TextBlock
+                                            FontWeight="SemiBold"
+                                            Foreground="#BEBEBE"
+                                            Text="{Binding Value}"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Packages Section -->
+            <Border Classes="settingsCard"
+                    Width="800"
+                    HorizontalAlignment="Center">
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="fieldLabel"
+                               Text="Open Source Libraries" />
+                    <Separator Margin="0,2,0,4" />
+
+                    <ItemsControl x:Name="PackagesItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:AboutPackageItem">
+                                <Border Background="#2A2A2A"
+                                        CornerRadius="8"
+                                        Padding="12,8"
+                                        Margin="0,4">
+                                    <TextBlock FontSize="12"
+                                               Foreground="#BEBEBE"
+                                               Text="{Binding DisplayText}"
+                                               TextWrapping="Wrap" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Disclaimer Section -->
+            <Border Classes="settingsCard"
+                    Width="800"
+                    HorizontalAlignment="Center">
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="fieldLabel"
+                               Text="Disclaimer" />
+                    <Separator Margin="0,2,0,4" />
+
+                    <StackPanel Spacing="8">
+                        <ItemsControl x:Name="DisclaimerItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="models:AboutTextItem">
+                                    <TextBlock FontSize="12"
+                                               Foreground="#BEBEBE"
+                                               TextWrapping="Wrap"
+                                               Margin="0,0,0,8"
+                                               Text="{Binding Text}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock x:Name="LicenseTextBlock"
+                                   FontSize="12"
+                                   Foreground="#9A9A9A"
+                                   FontStyle="Italic"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
     </ScrollViewer>
 
 </UserControl>

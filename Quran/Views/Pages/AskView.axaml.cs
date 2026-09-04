@@ -20,18 +20,15 @@ public partial class AskView : AView
     private VerseMessageControl? _control;
     private CancellationTokenSource? _searchCts;
     private bool _sending;
+    private bool _isLoaded;
 
     public AskView()
     {
         InitializeComponent();
-        var savedMessages = SettingService.LoadChatMessages();
-        savedMessages.ForEach(m => m.IsWorking = false);
-        Messages = new ObservableCollection<ChatMessageModel>(savedMessages);
-
-        ChatItemsControl.ItemsSource = Messages;
     }
 
-    private ObservableCollection<ChatMessageModel> Messages { get; }
+    private ObservableCollection<ChatMessageModel> Messages { get; set; } =
+        new ObservableCollection<ChatMessageModel>();
 
     protected override void OnInitialized()
     {
@@ -165,6 +162,23 @@ public partial class AskView : AView
 
     public override Task Load(params object?[] parameter)
     {
+        if (!_isLoaded)
+        {
+            _isLoaded = true;
+            Task.Factory.StartNew(() =>
+            {
+                var savedMessages = SettingService.LoadChatMessages()
+                    .OrderBy(m=>m.Time)
+                    .Take(30).ToList();
+                savedMessages.ForEach(m => m.IsWorking = false);
+                Messages = new ObservableCollection<ChatMessageModel>(savedMessages);
+
+                Dispatcher.UIThread.Post(() => { ChatItemsControl.ItemsSource = Messages; },
+                    DispatcherPriority.Background);
+            });
+        }
+
+        ChatScrollViewer.ScrollToEnd();
         return Task.CompletedTask;
     }
 

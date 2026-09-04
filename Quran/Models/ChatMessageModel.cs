@@ -106,7 +106,7 @@ public class ChatMessageModel : INotifyPropertyChanged
         {
             if (Equals(value, field)) return;
             field = value;
-            HasReference = value.Any();
+            HasReference = value?.Any() ?? false;
             OnPropertyChanged();
         }
     }

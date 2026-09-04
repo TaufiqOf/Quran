@@ -108,10 +108,26 @@ public partial class HomeView : AView
         var index = Cards.IndexOf(cardVm);
         if (index < 0) return;
 
+        ScrollIndexIntoView(index);
+    }
+
+    private void ScrollIndexIntoView(int index)
+    {
         Dispatcher.UIThread.Post(() =>
         {
             var element = SurahRepeater.TryGetElement(index);
-            element?.BringIntoView();
-        }, DispatcherPriority.Loaded);
+            if (element != null)
+            {
+                element.BringIntoView();
+            }
+            else
+            {
+                element = SurahRepeater.GetOrCreateElement(index);
+                Dispatcher.UIThread.Post(() =>
+                {
+                    element.BringIntoView();
+                }, DispatcherPriority.Loaded);
+            }
+        }, DispatcherPriority.Background);
     }
 }

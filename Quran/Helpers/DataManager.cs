@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -148,8 +149,17 @@ public static class DataManager
     
     public static List<T> GetData<T>(string fileName) where T : class
     {
-        var json = File.ReadAllText(Path.Combine(LocalStoragePath, fileName));
-        return JsonReader.ReadJsonList<T>(json);
+        try
+        {
+            var json = File.ReadAllText(Path.Combine(LocalStoragePath, fileName));
+            return JsonReader.ReadJsonList<T>(json) ;
+
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+            return new List<T>();
+        }
     }
     public static List<FileInfo> GetFile(string searchPattern = "*.*")
     {

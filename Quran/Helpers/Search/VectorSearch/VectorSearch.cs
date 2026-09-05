@@ -67,7 +67,6 @@ public class VectorSearch : ISearch
 
     public async Task<List<SurahResult>> PerformSearch(string searchText, CancellationToken cancellationToken = default)
     {
-        // 1. Initial cancellation check
         cancellationToken.ThrowIfCancellationRequested();
         var fastSearch = false;
         var surahs = DataManager.SurahResults;
@@ -79,19 +78,13 @@ public class VectorSearch : ISearch
 
         if (query.StartsWith("?"))
             query = query[1..].Trim();
-
-        // Default top-k result count
         var topK = 10;
-
-        // Extract :N limit modifier if present
         var match = Regex.Match(query, @":(-?\d+)$");
         if (match.Success)
         {
             topK = int.Parse(match.Groups[1].Value);
-            // Strip the :N part so the embedding model gets clean text ("heaven")
             query = query[..match.Index].Trim();
         }
-
         if (topK == -1)
         {
             topK = 50;

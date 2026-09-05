@@ -20,6 +20,8 @@ public class ChatMessageModel : INotifyPropertyChanged
     {
         _timer.Elapsed += (s, e) =>
         {
+            if(!IsWorking)
+                return;
             ResponseTime = _stopwatch?.Elapsed ?? TimeSpan.Zero;
             OnPropertyChanged(nameof(TimeString));
         };

@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
     xmlns:models="clr-namespace:Quran.Models"
+    xmlns:helper="clr-namespace:Quran.Helpers.Helper"
     x:Class="Quran.Views.Pages.AskView">
 
     <UserControl.Styles>
@@ -169,7 +170,7 @@
                                     IsVisible="{Binding !IsUser}">
                                     <StackPanel Orientation="Vertical" Spacing="4">
                                         <SelectableTextBlock
-                                            Text="{Binding Content}"
+                                            helper:FormattedTextHelper.FormattedText="{Binding Content}"
                                             Foreground="#E0E0E0"
                                             FontSize="15"
                                             LineHeight="24"

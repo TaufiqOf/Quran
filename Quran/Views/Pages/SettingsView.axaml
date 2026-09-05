@@ -86,6 +86,27 @@
                     <TextBlock Classes="sectionSubtitle"
                                Text="Choose your default Quran reading view." />
 
+                    <Separator Margin="0,2,0,4" />
+                    <TextBlock Classes="fieldLabel"
+                               Text="Preferred Copy Surah Structure" />
+                    <TextBox x:Name="CopySurahStructureTextBox"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             HorizontalAlignment="Stretch">
+                    </TextBox>
+
+
+                    <TextBlock Classes="fieldLabel"
+                               Text="Preferred Copy Verse Structure" />
+                    <TextBox x:Name="CopyVerseStructureTextBox"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             HorizontalAlignment="Stretch">
+                    </TextBox>
+
+                    <Separator Margin="0,2,0,4" />
+
+
                     <TextBlock Classes="fieldLabel"
                                Text="Preferred Ai Provider" />
 

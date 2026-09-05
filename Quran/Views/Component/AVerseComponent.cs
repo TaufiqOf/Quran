@@ -66,7 +66,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
     public event Action<Verse, Surah>? BookmarkVerseRequested;
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;
-    public event Action<Verse>? CopyAllRequested;
+    public event Action<Surah, Verse>? CopyAllRequested;
     public event Action<Verse>? CopyTransliterationRequested;
     public event Action<Surah?, Verse>? TafasirRequested;
 
@@ -183,7 +183,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
         };
         copyAllItem.Click += (_, _) =>
         {
-            if (Verse != null) CopyAllRequested?.Invoke(Verse);
+            if (Verse != null && Surah != null) CopyAllRequested?.Invoke(Surah, Verse);
         };
         _copyVerseMenuItem.Click += (_, _) =>
         {
@@ -235,7 +235,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
     protected void Copy()
     {
-        if (Verse != null) CopyAllRequested?.Invoke(Verse);
+        if (Verse != null && Surah != null) CopyAllRequested?.Invoke(Surah, Verse);
     }
 
     public abstract void VerseBookMark();

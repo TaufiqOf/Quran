@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Quran.Helpers.Search.VectorSearch.Model;
 using Quran.Models;
 
-namespace Quran.Helpers.Search.VectorSearch;
+namespace Quran.Helpers.Search.VectorSearch.Model;
 
 public abstract class ASemanticSearchService
 {

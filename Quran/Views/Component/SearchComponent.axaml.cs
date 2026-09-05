@@ -271,7 +271,7 @@ public partial class SearchComponent : UserControl
             }
         };
 
-        copyAllItem.Click += (_, _) => { CopyAllRequested?.Invoke(verse); };
+        copyAllItem.Click += (_, _) => { CopyAllRequested?.Invoke(Surah, verse); };
 
 
         // =============================
@@ -391,7 +391,7 @@ public partial class SearchComponent : UserControl
     public event Action<Verse, Surah>? BookmarkVerseRequested;
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;
-    public event Action<Verse>? CopyAllRequested;
+    public event Action<Surah,Verse>? CopyAllRequested;
     public event Action<Verse>? CopyTransliterationRequested;
 
     private void InputElement_OnPointerPressed(
@@ -445,14 +445,19 @@ public partial class SearchComponent : UserControl
 
     private async void CopyButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+        var topLevel = TopLevel.GetTopLevel(this);
 
-        if (clipboard != null)
+        if (topLevel != null)
+        {
+            var text = CopyHelper.FormatText(Surah) + Environment.NewLine + Environment.NewLine;
+            
             foreach (var verse in Surah.VerseResults)
             {
-                var text =
-                    $"{Surah.Id}-{Surah.Transliteration}\n({verse.Id}){verse.Text}\n{verse.Transliteration}\n{verse.Translation}";
-                await clipboard.SetTextAsync(text);
+                text += CopyHelper.FormatText(verse) + Environment.NewLine +
+                        "________________________________________________" + Environment.NewLine + Environment.NewLine;
+
             }
+            await CopyHelper.CopyClipboard(topLevel, text);
+        }
     }
 }

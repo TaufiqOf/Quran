@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Quran.Helpers.Search.VectorSearch;
+using Quran.Helpers.Search.VectorSearch.Model;
 
 namespace Quran.Models;
 
@@ -24,4 +25,5 @@ public class VerseResult : Verse
 {
     public double? SimilarityScore { get; set; }
     public List<WordMappingResult>? Impacts { get; set; }
+    public bool Bookmarked { get; set; }
 }

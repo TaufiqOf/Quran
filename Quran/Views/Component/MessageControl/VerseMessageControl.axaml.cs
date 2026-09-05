@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -5,6 +6,7 @@ using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
+using Quran.Helpers;
 using Quran.Models;
 
 namespace Quran.Views.Component.MessageControl;
@@ -68,10 +70,15 @@ public partial class VerseMessageControl : UserControl
 
     private async void CopyButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        var contextText = string.Join("\n",
-            _messages.Select(q => q.Verse.Translation));
         var topLevel = TopLevel.GetTopLevel(this);
-        var clipboard = topLevel?.Clipboard;
-        if (clipboard != null) await clipboard.SetTextAsync(contextText);
+        if (topLevel == null)
+            return;
+        var text = string.Empty;
+        foreach (var verseMessageModel in _messages)
+        {
+           text += verseMessageModel.Message + Environment.NewLine +
+                   "________________________________________________" + Environment.NewLine + Environment.NewLine;
+        }
+        await CopyHelper.CopyClipboard(topLevel, text);
     }
 }

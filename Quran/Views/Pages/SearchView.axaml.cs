@@ -231,6 +231,7 @@ public partial class SearchView : AView
 
                             SearchItemsControl.Items.Add(searchComponent);
                         }
+
                         ProgressBar.IsIndeterminate = false;
                     }, DispatcherPriority.Normal, token);
                 }
@@ -288,10 +289,10 @@ public partial class SearchView : AView
             TopLevel.GetTopLevel(this), verse);
     }
 
-    private async void SearchComponentOnCopyAllRequested(Verse verse)
+    private async void SearchComponentOnCopyAllRequested(Surah surah, Verse verse)
     {
         await ContextMenuHelper.VerseComponentOnCopyAllRequested(
-            TopLevel.GetTopLevel(this), verse);
+            TopLevel.GetTopLevel(this), surah, verse);
     }
 
     private void SearchComponentOnGoToVerseRequested(Surah surah, Verse verse)
@@ -305,46 +306,23 @@ public partial class SearchView : AView
     {
         if (!_results.Any())
             return;
-        var surahTexts = _results
-            .Select(surah =>
+        var topLevel = TopLevel
+            .GetTopLevel(this);
+        if (topLevel == null)
+            return;
+        string text = string.Empty;
+        foreach (var surahResult in _results)
+        {
+            text += CopyHelper.FormatText(surahResult) + Environment.NewLine +
+                    "________________________________________________" + Environment.NewLine + Environment.NewLine;
+            foreach (var verse in surahResult.VerseResults)
             {
-                var lines = new List<string>
-                {
-                    $"({surah.Id}) {surah.Name}",
-                    surah.Transliteration,
-                    surah.Translation,
-                    string.Empty
-                };
+                text += CopyHelper.FormatText(verse) + Environment.NewLine +
+                        "________________________________________________" + Environment.NewLine + Environment.NewLine;
+            }
+        }
 
-                foreach (var verse in surah.VerseResults)
-                {
-                    lines.Add($"Verse {verse.Id}");
-                    lines.Add(verse.Text);
-                    lines.Add(verse.Transliteration);
-                    lines.Add(verse.Translation);
-                    lines.Add(string.Empty);
-                }
-
-                return string.Join(
-                    Environment.NewLine,
-                    lines);
-            });
-
-        var text = string.Join(
-            Environment.NewLine + Environment.NewLine,
-            surahTexts);
-
-        if (string.IsNullOrWhiteSpace(text))
-            return;
-
-        var clipboard = TopLevel
-            .GetTopLevel(this)?
-            .Clipboard;
-
-        if (clipboard is null)
-            return;
-
-        await clipboard.SetTextAsync(text);
+        await CopyHelper.CopyClipboard(topLevel, text);
     }
 
     private void SearchTextBox_OnKeyDown(object? sender, KeyEventArgs e)

@@ -15,6 +15,8 @@ public sealed class AppSettings
     public string ReaderMode { get; set; } = "Quranic";
 
     public AiSettings AiSettings { get; set; } = new();
+    public string? CopySurahStructure { get; set; } = @"({SurahNumber}){SurahTransliteration}-{SurahName}({SurahTranslation})";
+    public string? CopyVerseStructure { get; set; } = @"({VerseNumber}) {VerseText} /n({VerseTranslation})/n {VerseTransliteration}";
 }
 
 public sealed class ChatModelSettings

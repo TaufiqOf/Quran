@@ -107,7 +107,7 @@ public class VectorSearch : ISearch
 
         // 2. Pass cancellation token down to the semantic vector search service
         var results = await _semanticSearchService.SearchAsync(surahs, query, topK, fastSearch, cancellationToken);
-
+        results = new SearchEnhancer(results, query).EnhanceSearchResults();
         return ConvertResultsToSurahs(surahs, results, topK, cancellationToken);
     }
 
@@ -117,19 +117,19 @@ public class VectorSearch : ISearch
         int topK,
         CancellationToken cancellationToken)
     {
+        // Fast O(1) lookups for Surahs and Verses
+        var surahMap = surahs.ToDictionary(s => s.Id);
         var resultSurahs = new Dictionary<int, SurahResult>();
 
-        foreach (var result in results)
+        // Process results ordered by score
+        var sortedResults = results.OrderByDescending(r => r.Score).ToList();
+
+        foreach (var result in sortedResults)
         {
-            // 3. Check cancellation token during conversion
             cancellationToken.ThrowIfCancellationRequested();
 
-            var originalSurah = surahs.FirstOrDefault(s => s.Id == result.SurahId);
-            if (originalSurah == null) continue;
-
+            if (!surahMap.TryGetValue(result.SurahId, out var originalSurah)) continue;
             var originalVerse = originalSurah.VerseResults.FirstOrDefault(v => v.Id == result.VerseId);
-            if (originalVerse == null) continue;
-
             if (!resultSurahs.TryGetValue(originalSurah.Id, out var resultSurah))
             {
                 resultSurah = new SurahResult
@@ -145,7 +145,6 @@ public class VectorSearch : ISearch
                 resultSurahs.Add(originalSurah.Id, resultSurah);
             }
 
-            // Create specific VerseResult with the vector score
             var resultVerse = new VerseResult
             {
                 Id = originalVerse.Id,
@@ -153,20 +152,32 @@ public class VectorSearch : ISearch
                 Transliteration = originalVerse.Transliteration,
                 Translation = originalVerse.Translation,
                 SimilarityScore = result.Score,
-                Impacts = result.Impacts
+                Impacts = result.Impacts,
+                Bookmarked = result.Bookmarked // Preserve bookmark state on the result model
             };
             resultSurah.VerseResults.Add(resultVerse);
 
-            // Set/Update the max score on the parent SurahResult
             if (!resultSurah.SimilarityScore.HasValue || resultVerse.SimilarityScore > resultSurah.SimilarityScore)
                 resultSurah.SimilarityScore = resultVerse.SimilarityScore;
         }
 
-        // Sort Surahs by highest similarity score, then limit by topK
-        return resultSurahs.Values
+        // Separate Surahs containing bookmarked entries from standard results
+        var bookmarkedSurahs = resultSurahs.Values
+            .Where(s => s.VerseResults.Any(v => v.Bookmarked))
+            .ToList();
+
+        var nonBookmarkedSurahs = resultSurahs.Values
+            .Where(s => !s.VerseResults.Any(v => v.Bookmarked))
             .OrderByDescending(s => s.SimilarityScore ?? 0)
             .ThenBy(s => s.Id)
             .Take(topK)
+            .ToList();
+
+        // Union guarantees bookmarked surahs are retained regardless of topK cutoff
+        return bookmarkedSurahs
+            .Union(nonBookmarkedSurahs)
+            .OrderByDescending(s => s.SimilarityScore ?? 0)
+            .ThenBy(s => s.Id)
             .ToList();
     }
 }

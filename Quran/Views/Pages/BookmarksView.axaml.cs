@@ -84,8 +84,8 @@ public partial class BookmarksView : AView
                     await ContextMenuHelper.CopyTransliterationRequested(topLevel, v);
                 verseComponent.CopyVerseRequested += async v =>
                     await ContextMenuHelper.CopyVerseRequested(topLevel, v);
-                verseComponent.CopyAllRequested += async v =>
-                    await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
+                verseComponent.CopyAllRequested += async (s, v) =>
+                    await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, s, v);
                 verseComponent.TafasirRequested += VerseComponentOnTafasirRequested;
                 verseComponent.DontShowPlay();
                 VerseComponents.Add(verseComponent);

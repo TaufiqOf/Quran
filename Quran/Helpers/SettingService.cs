@@ -8,6 +8,8 @@ namespace Quran.Helpers;
 
 public static class SettingService
 {
+    private static AppSettings? _appSettings;
+
     public static readonly string SettingsFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "quran_settings.json");
 
@@ -17,22 +19,29 @@ public static class SettingService
 
     public static void SaveLanguagePreference(string languageCode)
     {
-        SaveSettings(null, languageCode, null, null);
+        SaveSettings( null, languageCode, null, null, null, null);
     }
-
+    public static void SaveCopySurahStructurePreference(string copySurahStructure)
+    {
+        SaveSettings(null, null, null, null, copySurahStructure);
+    }
+    public static void SaveCopyVerseStructurePreference(string copyVerseStructure)
+    {
+        SaveSettings(null, null, null, null, null, copyVerseStructure);
+    }
     public static void SaveReaderModePreference(string readerMode)
     {
-        SaveSettings(null, null, readerMode, null);
+        SaveSettings(null, null, readerMode, null, null, null);
     }
 
     public static void SaveChatMessages(List<ChatMessageModel> chatMessages)
     {
-        SaveSettings(chatMessages, null, null, null);
+        SaveSettings(chatMessages, null, null, null, null, null);
     }
 
     public static void SaveAiSettings(AiSettings aiSettings)
     {
-        SaveSettings(null, null, null, aiSettings);
+        SaveSettings(null, null, null, aiSettings, null, null);
     }
 
 
@@ -42,7 +51,16 @@ public static class SettingService
         return settings.ChatMessages;
     }
 
-
+    public static string? LoadCopySurahStructurePreference()
+    {
+        var settings = LoadAppSettings();
+        return settings.CopySurahStructure;
+    }
+    public static string? LoadCopyVerseStructurePreference()
+    {
+        var settings = LoadAppSettings();
+        return settings.CopyVerseStructure;
+    }
     public static string LoadLanguagePreference()
     {
         var settings = LoadAppSettings();
@@ -66,9 +84,11 @@ public static class SettingService
     {
         try
         {
+            if(_appSettings != null) return _appSettings;
             if (!File.Exists(SettingsFilePath)) return new AppSettings();
             var json = File.ReadAllText(SettingsFilePath);
-            return JsonConvert.DeserializeObject<AppSettings>(json) ?? new AppSettings();
+            _appSettings = JsonConvert.DeserializeObject<AppSettings>(json) ?? new AppSettings();
+            return _appSettings;
         }
         catch
         {
@@ -91,7 +111,7 @@ public static class SettingService
     }
 
     public static string SaveSettings(List<ChatMessageModel>? chatMessages, string? language, string? readerMode,
-        AiSettings? aiSettings)
+        AiSettings? aiSettings, string? copySurahStructure, string? copyVerseStructure)
     {
         if (chatMessages != null)
         {
@@ -101,16 +121,18 @@ public static class SettingService
             return "Chat messages saved successfully.";
         }
 
-        return SaveSettings(language, readerMode, aiSettings);
+        return SaveSettings(language, readerMode, aiSettings, copySurahStructure,copyVerseStructure);
     }
 
     private static string SaveSettings(string? language, string? readerMode,
-        AiSettings? aiSettings)
+        AiSettings? aiSettings, string? copySurahStructure, string? copyVerseStructure)
     {
         var settings = LoadAppSettings();
         settings.Language = language ?? settings.Language;
         settings.ReaderMode = readerMode ?? settings.ReaderMode;
         settings.AiSettings = aiSettings ?? settings.AiSettings;
+        settings.CopySurahStructure = copySurahStructure ?? settings.CopySurahStructure;
+        settings.CopyVerseStructure = copyVerseStructure ?? settings.CopyVerseStructure;
         SaveAppSettings(settings);
         return "Settings saved successfully.";
     }
@@ -126,4 +148,6 @@ public static class SettingService
         var json = JsonConvert.SerializeObject(settings);
         File.WriteAllText(ChatModelSettingsFilePath, json);
     }
+
+ 
 }

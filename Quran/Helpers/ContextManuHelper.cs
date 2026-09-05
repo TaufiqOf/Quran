@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input.Platform;
@@ -39,14 +40,22 @@ public static class ContextMenuHelper
 
     public static async Task VerseComponentOnCopyAllRequested(
         TopLevel? topLevel,
+        Surah surah,
         Verse verse)
     {
-        var clipboard = topLevel?.Clipboard;
+        if(topLevel == null)
+            return;
+        //@"({VerseNumber}){VerseText}}/n({VerseTranslation})\n{VerseTransliteration})";
+        // @"({SurahNumber}){SurahTransliteration}-{SurahName}({SurahTranslation})";
+        var surahStructurePreference = SettingService.LoadCopySurahStructurePreference();
+        var verseStructurePreference = SettingService.LoadCopyVerseStructurePreference();
+        
 
-        if (clipboard != null)
+        if (!string.IsNullOrEmpty(verseStructurePreference) && !string.IsNullOrEmpty(surahStructurePreference))
         {
-            var text = $"{verse.Text}\n{verse.Transliteration}\n{verse.Translation}";
-            await clipboard.SetTextAsync(text);
+            var text = CopyHelper.FormatText(surah);
+            text = text + Environment.NewLine + CopyHelper.FormatText(verse);
+            await CopyHelper.CopyClipboard(topLevel, text);
         }
     }
 

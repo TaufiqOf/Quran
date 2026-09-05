@@ -4,6 +4,7 @@
     xmlns:models="clr-namespace:Quran.Models"
     xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
     xmlns:helpers="clr-namespace:Quran.Helpers.Search.VectorSearch"
+    xmlns:model="clr-namespace:Quran.Helpers.Search.VectorSearch.Model"
     x:Class="Quran.Views.Component.SearchComponent"
     x:Name="Root">
 
@@ -286,7 +287,7 @@
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="helpers:WordMappingResult">
+                                        <DataTemplate x:DataType="model:WordMappingResult">
                                             <Border Classes="verseWordScoreBadge" Margin="2">
                                                 <TextBlock Classes="verseWordScoreText">
                                                     <Run Text="{Binding VerseWord}" />

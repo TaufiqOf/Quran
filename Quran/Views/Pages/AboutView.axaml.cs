@@ -122,11 +122,11 @@ public partial class AboutView : AView
 
     private static List<AboutPackageItem> LoadPackages()
     {
-        var packages = LoadPackagesFromProjectFile();
-        if (packages.Count > 0)
-            return packages;
+        // var packages = LoadPackagesFromProjectFile();
+        // if (packages.Count > 0)
+        //     return packages;
 
-        packages = LoadPackagesFromDepsFile();
+        var packages = LoadPackagesFromDepsFile();
         return packages;
     }
 

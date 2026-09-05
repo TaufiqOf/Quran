@@ -24,6 +24,9 @@ public partial class SettingsView : AView
 
     public override async Task Load(params object?[] parameter)
     {
+        CopySurahStructureTextBox.Text = SettingService.LoadCopySurahStructurePreference();
+        CopyVerseStructureTextBox.Text = SettingService.LoadCopyVerseStructurePreference();
+        
         var readerMode = SettingService.LoadReaderModePreference();
         SelectReaderMode(readerMode);
 
@@ -85,6 +88,8 @@ public partial class SettingsView : AView
             Endpoint = AiModelApiKeyTextBox.Text ?? string.Empty
         };
         SettingService.SaveAiSettings(aiSettings);
+        SettingService.SaveCopySurahStructurePreference(CopySurahStructureTextBox.Text ?? string.Empty);
+        SettingService.SaveCopyVerseStructurePreference(CopyVerseStructureTextBox.Text ?? string.Empty);
         DataManager.LoadSurahs(selectedLanguage);
         ReloadRequested?.Invoke();
         MessageHelper.ShowMessage("Settings Saved", "Your preferences have been saved.");

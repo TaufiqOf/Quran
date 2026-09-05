@@ -80,8 +80,8 @@ public partial class ReaderComponent : UserControl, IDisposable
                             await ContextMenuHelper.CopyTransliterationRequested(topLevel, v);
                         verseComponent.CopyVerseRequested += async v =>
                             await ContextMenuHelper.CopyVerseRequested(topLevel, v);
-                        verseComponent.CopyAllRequested += async v =>
-                            await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
+                        verseComponent.CopyAllRequested += async (s, v) =>
+                            await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, s, v);
                         verseComponent.BookmarkVerseRequested += VerseComponentOnBookmarkVerseRequested;
                         QuranicItemsControl.Items.Add(verseComponent);
                     }
@@ -107,8 +107,8 @@ public partial class ReaderComponent : UserControl, IDisposable
                             await ContextMenuHelper.CopyTransliterationRequested(topLevel, v);
                         verseComponent.CopyVerseRequested += async v =>
                             await ContextMenuHelper.CopyVerseRequested(topLevel, v);
-                        verseComponent.CopyAllRequested += async v =>
-                            await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, v);
+                        verseComponent.CopyAllRequested += async (s, v) =>
+                            await ContextMenuHelper.VerseComponentOnCopyAllRequested(topLevel, s, v);
                         verseComponent.TafasirRequested += VerseComponentOnTafasirRequested;
                         verseComponent.BookmarkVerseRequested += VerseComponentOnBookmarkVerseRequested;
                         verseComponent.PlayVerseRequested += VerseComponentOnPlayVerseRequested;

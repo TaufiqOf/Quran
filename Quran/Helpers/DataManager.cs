@@ -10,22 +10,28 @@ namespace Quran.Helpers;
 
 public static class DataManager
 {
-    public static string EmbeddingDataPath =
+    
+    public static readonly string EmbeddingDataPath =
         Path.Combine(
             AppContext.BaseDirectory,
             "Storage",
             "embeddings.json");
-
-    public static string ModelPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "Quran",
-        "Storage",
-        "model1.onnx");
-
-    public static string TokenizerPath = Path.Combine(
+    
+    public static readonly string TokenizerPath = Path.Combine(
         AppContext.BaseDirectory,
         "Storage",
         "tokenizer.json");
+    
+    public static readonly string LocalStoragePath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "Quran",
+        "Storage");
+    
+    public static readonly string ModelPath = Path.Combine(
+        LocalStoragePath,
+        "model1.onnx");
+
+
 
     private static readonly string BookmarkFilePath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bookmarks.json");
@@ -138,6 +144,19 @@ public static class DataManager
     {
         var json = File.ReadAllText(BookmarkFilePath);
         return JsonReader.ReadJsonList<Bookmark>(json);
+    }
+    
+    public static List<T> GetData<T>(string fileName) where T : class
+    {
+        var json = File.ReadAllText(Path.Combine(LocalStoragePath, fileName));
+        return JsonReader.ReadJsonList<T>(json);
+    }
+    public static List<FileInfo> GetFile(string searchPattern = "*.*")
+    {
+        var json = Directory.GetFiles(LocalStoragePath, searchPattern, SearchOption.TopDirectoryOnly)
+            .Select(f => new FileInfo(f))
+            .ToList();
+        return json;
     }
 
     public static bool IsBookmarked(int surahId, int verseId)

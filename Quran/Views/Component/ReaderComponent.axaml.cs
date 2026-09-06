@@ -63,12 +63,13 @@ public partial class ReaderComponent : UserControl, IDisposable
             Dispatcher.UIThread.Post(() =>
             {
                 if (_surah == null) return;
-                var topLevel = TopLevel.GetTopLevel(this);
                 ClearVerses();
                 if (mode == ReaderMode.Quranic)
                 {
                     LinerScrollViewer.IsVisible = false;
                     QuranicScrollViewer.IsVisible = true;
+                    var topLevel = TopLevel.GetTopLevel(this);
+
                     foreach (var verse in _verses)
                     {
                         var verseComponent = new VerseQuranicComponent(_surah, verse);
@@ -90,6 +91,7 @@ public partial class ReaderComponent : UserControl, IDisposable
                 {
                     LinerScrollViewer.IsVisible = true;
                     QuranicScrollViewer.IsVisible = false;
+                    var topLevel = TopLevel.GetTopLevel(this);
                     foreach (var verse in _verses)
                     {
                         AVerseComponent verseComponent = mode switch
@@ -123,7 +125,7 @@ public partial class ReaderComponent : UserControl, IDisposable
 
     private async void VerseComponentOnTafasirRequested(Surah? surah, Verse verse)
     {
-        if(surah == null) return;
+        if (surah == null) return;
         var text = await DataManager.GetTafsirAsync(surah.Id, verse.Id);
         if (_control != null && MessageHelper.IsShowing) MessageHelper.Close();
 

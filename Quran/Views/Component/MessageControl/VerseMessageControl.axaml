@@ -87,6 +87,22 @@
     <Grid RowDefinitions="Auto,*">
         <Grid Grid.Row="0" Background="#333333" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
               ColumnDefinitions="*,Auto">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Surah:" VerticalAlignment="Center" Margin="0,0,8,0"></Label>
+                <ComboBox x:Name="SurahComboBox" 
+                          SelectionChanged="SurahComboBoxOnSelectionChanged" 
+                          Width="200">
+                </ComboBox>
+                <Label x:Name="VerseLabel" 
+                       Content="Verse:" 
+                       VerticalAlignment="Center" 
+                       Margin="8,0,0,0">
+                </Label>
+                <ComboBox x:Name="VerseComboBox" 
+                          Width="100" 
+                          SelectionChanged="VerseComboBoxOnSelectionChanged">
+                </ComboBox>
+            </StackPanel>
             <Button
                 Grid.Column="1"
                 x:Name="CopyAiButton"

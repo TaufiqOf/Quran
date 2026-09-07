@@ -57,6 +57,17 @@ public partial class VerseMessageControl : UserControl
         if (_messages.Count > 0) _messages[0].IsExpanded = true;
 
         MessagesItemsControl.ItemsSource = _messages;
+        SurahComboBox.Items.Add(new ComboBoxItem()
+        {
+            Content = "All",
+            Tag = "0"
+        });
+        _messages.Select(m => m.Surah).Distinct().ToList().Select(q=> new ComboBoxItem()
+        {
+            Content = q.ToString(),
+            Tag = q.Id
+        }).ToList().ForEach(item => SurahComboBox.Items.Add(item));
+        SurahComboBox.SelectedIndex = 0;
     }
 
     private void Expander_OnExpanded(object? sender, RoutedEventArgs e)
@@ -80,5 +91,37 @@ public partial class VerseMessageControl : UserControl
                    "________________________________________________" + Environment.NewLine + Environment.NewLine;
         }
         await CopyHelper.CopyClipboard(topLevel, text);
+    }
+
+    private void SurahComboBoxOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        VerseComboBox.Items.Clear();
+        VerseComboBox.Items.Add(new ComboBoxItem()
+        {
+            Content = "All",
+            Tag = 0
+        });
+        var selectedSurahId = int.Parse((SurahComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "0");
+        
+        _messages
+            .Where(m => m.Surah.Id == selectedSurahId)
+            .ToList()
+            .Select(q=> new ComboBoxItem()
+            {
+                Content = q.Verse.Id.ToString(),
+                Tag = q.Verse.Id
+            }).ToList().ForEach(item => VerseComboBox.Items.Add(item));
+        MessagesItemsControl.ItemsSource = _messages
+            .Where(m => selectedSurahId == 0 || m.Surah.Id == selectedSurahId).ToList();
+        VerseComboBox.SelectedIndex = 0;
+    }
+
+    private void VerseComboBoxOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        var selectedVerseId = int.Parse((VerseComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "0");
+        var selectedSurahId = int.Parse((SurahComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "0");
+        MessagesItemsControl.ItemsSource = _messages.Where(m => 
+            (selectedVerseId == 0 || m.Verse.Id == selectedVerseId) && 
+            (selectedSurahId == 0 || m.Surah.Id == selectedSurahId)).ToList();
     }
 }

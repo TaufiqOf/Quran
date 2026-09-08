@@ -13,7 +13,7 @@
         </Style>
 
         <Style Selector="ComboBox.hadithFilter">
-            <Setter Property="Width" Value="350" />
+            <Setter Property="Width" Value="200" />
             <Setter Property="Height" Value="38" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>

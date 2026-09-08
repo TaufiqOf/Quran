@@ -20,7 +20,7 @@ public partial class HadithView : AView
     public override Task Load(params object?[] parameter)
     {
         _hadithBooks = DataManager.GetHadithBooks();
-        HadithComboBox.ItemsSource = _hadithBooks;
+        HadithComboBox.ItemsSource = _hadithBooks.OrderBy(q=>q);
         HadithComboBox.SelectedIndex = 0; // Optionally select the first book by default
         return Task.CompletedTask;
     }

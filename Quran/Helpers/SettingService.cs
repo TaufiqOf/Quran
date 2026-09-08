@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Quran.Models;
 
@@ -110,18 +111,47 @@ public static class SettingService
         }
     }
 
-    public static string SaveSettings(List<ChatMessageModel>? chatMessages, string? language, string? readerMode,
-        AiSettings? aiSettings, string? copySurahStructure, string? copyVerseStructure)
+    public static void SaveSettings(List<ChatMessageModel>? chatMessages,
+        string? language,
+        string? readerMode,
+        AiSettings? aiSettings,
+        string? copySurahStructure,
+        string? copyVerseStructure)
     {
         if (chatMessages != null)
         {
             var chatModelSettings = LoadChatModelSettings();
-            chatModelSettings.ChatMessages = chatMessages;
+
+            // Remove messages that no longer exist in the incoming list
+            chatModelSettings.ChatMessages = chatModelSettings.ChatMessages
+                .Where(existing => 
+                    chatMessages.Any(incoming => 
+                        incoming.Id == existing.Id))
+                .ToList();
+
+            // Add new messages
+            var existingIds = chatModelSettings.ChatMessages
+                .Select(x => x.Id)
+                .ToHashSet();
+
+            var newMessages = chatMessages
+                .Where(incoming => 
+                    !existingIds.Contains(incoming.Id))
+                .ToList();
+
+            chatModelSettings.ChatMessages.AddRange(newMessages);
+
             SaveChatModelSettings(chatModelSettings);
-            return "Chat messages saved successfully.";
+
+            return;
         }
 
-        return SaveSettings(language, readerMode, aiSettings, copySurahStructure,copyVerseStructure);
+        SaveSettings(
+            language,
+            readerMode,
+            aiSettings,
+            copySurahStructure,
+            copyVerseStructure);
     }
 
     private static string SaveSettings(string? language, string? readerMode,

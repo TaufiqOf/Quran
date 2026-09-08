@@ -47,9 +47,24 @@
         <Style Selector="TextBlock.messageTextBlock">
             <Setter Property="Foreground" Value="LightCoral" />
             <Setter Property="Height" Value="20" />
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontSize" Value="10" />
             <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Opacity" Value="1" />
         </Style>
+        <Style Selector="TextBlock.messageTextBlock.fade-in">
+            <Setter Property="Foreground" Value="White" />
+            <Style.Animations>
+                <Animation Duration="0:0:0.4">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="1" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+
 
         <!-- Search Container -->
         <Style Selector="Border.searchBox">

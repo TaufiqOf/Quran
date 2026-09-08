@@ -11,6 +11,7 @@ namespace Quran.Models;
 
 public class ChatMessageModel : INotifyPropertyChanged
 {
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     private readonly Stopwatch _stopwatch;
     private readonly Timer _timer = new();
     private string _content = string.Empty;

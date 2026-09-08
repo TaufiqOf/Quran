@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
@@ -12,6 +14,7 @@ using Avalonia.Threading;
 using Quran.Helpers;
 using Quran.Models;
 using Quran.Views.Component.MessageControl;
+using Timer = System.Timers.Timer;
 
 namespace Quran.Views.Pages;
 
@@ -21,14 +24,27 @@ public partial class AskView : AView
     private CancellationTokenSource? _searchCts;
     private bool _sending;
     private bool _isLoaded;
+    private readonly Timer _messageTimer;
+    private readonly Random _random = new();
+    private ObservableCollection<ChatMessageModel> Messages { get; set; } = new();
+
+    private readonly List<string> _searchTips = new()
+    {
+        "💡 Is not a chat bot, but a context-aware search tool. You can ask questions and get answers based on the Quranic context.",
+        "💡 Ai provide answers based on context. but it may miss some context. You can always check the references provided in the answer.",
+    };
 
     public AskView()
     {
         InitializeComponent();
+        _messageTimer = new Timer();
+        _messageTimer.Interval = 10000;
+        _messageTimer.Stop();
+        _messageTimer.Elapsed += MessageTimerOnElapsed;
+        SearchManager.SearcherRegistered += SearcherRegistered;
+        ShowMessage();
     }
 
-    private ObservableCollection<ChatMessageModel> Messages { get; set; } =
-        new ObservableCollection<ChatMessageModel>();
 
     protected override void OnInitialized()
     {
@@ -123,7 +139,7 @@ public partial class AskView : AView
         }
         catch (Exception ex)
         {
-            MessageTextBlock.Text = "An error occurred while getting response.";
+            ShowMessage($"Error occurred: {ex.Message}");
             aiMessage.Content = $"Error: {ex.Message}";
         }
         finally
@@ -144,19 +160,19 @@ public partial class AskView : AView
 
     private async void CopyButtonOnClick(object? sender, RoutedEventArgs e)
     {
-        var lastAiMessage = Messages.LastOrDefault(m => !m.IsUser)?.Content;
+        var savedMessages = SettingService.LoadChatMessages()
+            .OrderByDescending(m => m.Time)
+            .ToList();
+        var text = string.Join("\n\n", savedMessages.Select(m => $"{(m.IsUser ? "Question:" : "Answer:")} : {m.Content}"));
 
-        if (string.IsNullOrWhiteSpace(lastAiMessage))
+        if (string.IsNullOrWhiteSpace(text))
             return;
 
         var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
         if (clipboard != null)
         {
-            await clipboard.SetTextAsync(lastAiMessage);
-            MessageTextBlock.Text = "Copied last response!";
-
-            await Task.Delay(2000);
-            if (MessageTextBlock.Text == "Copied last response!") MessageTextBlock.Text = string.Empty;
+            await clipboard.SetTextAsync(text);
+            ShowMessage("Copied last response!");
         }
     }
 
@@ -203,14 +219,12 @@ public partial class AskView : AView
         if (clipboard != null)
         {
             await clipboard.SetTextAsync(text);
-            MessageTextBlock.Text = "Copied message to clipboard!";
+            ShowMessage("Copied message to clipboard!");
 
-            await Task.Delay(2000);
-            if (MessageTextBlock.Text == "Copied message to clipboard!") MessageTextBlock.Text = string.Empty;
         }
     }
 
-    private async void ShowReferenceButtonOnClick(object? sender, RoutedEventArgs e)
+    private void ShowReferenceButtonOnClick(object? sender, RoutedEventArgs e)
     {
         if (sender is Button { DataContext: ChatMessageModel messageModel }
             && messageModel.Reference.Any())
@@ -227,7 +241,7 @@ public partial class AskView : AView
         }
     }
 
-    private async void ShowReference(ChatMessageModel messageModel)
+    private void ShowReference(ChatMessageModel messageModel)
     {
         if (MessageHelper.IsShowing) MessageHelper.Close();
 
@@ -239,5 +253,47 @@ public partial class AskView : AView
         _control = new VerseMessageControl(verses);
 
         MessageHelper.ShowMessage("Reference", _control, false);
+    }
+
+    private void MessageTimerOnElapsed(object? sender, ElapsedEventArgs e)
+    {
+        ShowMessage();
+    }
+
+    private void ShowMessage()
+    {
+        if (SearchManager.IsSearcherRegistered)
+        {
+            var tip = _searchTips[_random.Next(_searchTips.Count)];
+            Application.Current?.Dispatcher.Invoke(() => { ShowMessage(tip); });
+        }
+        else
+        {
+            Application.Current?.Dispatcher.Invoke(() =>
+            {
+                ShowMessage(
+                    "Context Search is not initialized yet. You can still search for verses by keywords, or reference (Chapter:Verse). For example, you can search for '2:255' or 'Jesus'.");
+            });
+        }
+    }
+
+    private void ShowMessage(string text)
+    {
+        MessageTextBlock.Classes.Remove("fade-in");
+        MessageTextBlock.Text = text;
+
+        // Re-add the class after removing it
+        MessageTextBlock.Classes.Add("fade-in");
+    }
+
+    private void SearcherRegistered()
+    {
+        Application.Current?.Dispatcher.Invoke(() =>
+        {
+            MessageTextBlock.Classes.Add("fade-in");
+            MessageTextBlock.Text =
+                "Context Search is now initialized. You can search for questions and get context-aware results. using the '?' prefix. For example, you can search for '? Who will go to Heaven?' or '2:255'.";
+            _messageTimer.Start();
+        });
     }
 }

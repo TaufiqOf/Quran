@@ -4,8 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Quran.Models;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Quran.Helpers;
 
@@ -195,8 +198,61 @@ public static class DataManager
         var json = JsonSerializer.Serialize(bookmarks);
         File.WriteAllText(BookmarkFilePath, json);
     }
+    
+    public static List<string?> GetHadithBooks()
+    {
+        try
+        {
+            var books = Directory.EnumerateDirectories(Path.Combine(DataPath, "Hadith"))
+                .Where(dir => !string.IsNullOrEmpty(dir))
+                .Select(dir => new DirectoryInfo(dir).Name)
+                .ToList();
+            return books;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return new List<string?>();
+        }
 
+    }
+    
+    public static List<string?> GetHadithChaptersByBooks(string bookName)
+    {
+        try
+        {
+            var chapters = Directory.EnumerateFiles(Path.Combine(DataPath, "Hadith", bookName))
+                .Where(file => Path.GetExtension(file) == ".json")
+                .Select(file => Path.GetFileNameWithoutExtension(file))
+                .ToList();
+            return chapters;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return new List<string?>();
+        }
+    }
+    
+    public static HadithRootObject? GetHadithsByBookAndChapter(string bookName, string chapterName)
+    {
+        try
+        {
+            var filePath = Path.Combine(DataPath, "Hadith", bookName, $"{chapterName}.json");
+            if (!File.Exists(filePath))
+                return null;
 
+            var json = File.ReadAllText(filePath);
+            return JsonConvert.DeserializeObject<HadithRootObject>(json);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
+        }
+
+    }
+    
     public static async Task<string> GetTafsirAsync(int surahId, int verseId)
     {
         var path = Path.Combine(

@@ -57,6 +57,7 @@ public partial class MainWindow : Window
             {
                 "Home" => new HomeView(),
                 "Quran" => new QuranView(),
+                "Hadith" => new HadithView(),
                 "Bookmarks" => new BookmarksView(),
                 "Search" => new SearchView(),
                 "Ask" => new AskView(),
@@ -86,6 +87,7 @@ public partial class MainWindow : Window
         {
             "Home" => NavHomeButton,
             "Quran" => NavQuranButton,
+            "Hadith" => NavHadithButton,
             "Bookmarks" => NavBookmarksButton,
             "Search" => NavSearchButton,
             "Settings" => NavSettingsButton,
@@ -96,6 +98,7 @@ public partial class MainWindow : Window
 
         NavHomeButton.IsEnabled = true;
         NavQuranButton.IsEnabled = true;
+        NavHadithButton.IsEnabled = true;
         NavBookmarksButton.IsEnabled = true;
         NavSearchButton.IsEnabled = true;
         NavSettingsButton.IsEnabled = true;

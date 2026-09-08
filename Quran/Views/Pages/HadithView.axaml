@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:component="clr-namespace:Quran.Views.Component"
+             x:Class="Quran.Views.Pages.HadithView">
+
+    <UserControl.Styles>
+
+        <Style Selector="Border.topBar">
+            <Setter Property="Background" Value="#202020" />
+            <Setter Property="BorderBrush" Value="#3A3A3A" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="8" />
+        </Style>
+
+        <Style Selector="ComboBox.hadithFilter">
+            <Setter Property="Width" Value="350" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Remove selected item background -->
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <!-- Remove hover background -->
+        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- =========================== -->
+        <!-- Header -->
+        <!-- =========================== -->
+
+        <Border Grid.Row="0"
+                Classes="topBar">
+
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto"
+                  ColumnSpacing="10">
+                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="Books:"></TextBlock>
+                <ComboBox
+                    Grid.Column="1"
+                    x:Name="HadithComboBox"
+                    Margin="0,5,0,5"
+                    Classes="hadithFilter"
+                    HorizontalAlignment="Left"
+                    SelectionChanged="HadithComboBoxOnSelectionChanged" />
+                <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="Chapters:"></TextBlock>
+                <ComboBox
+                    Grid.Column="3"
+                    x:Name="HadithChapterComboBox"
+                    Margin="5,5,0,5"
+                    Classes="hadithFilter"
+                    HorizontalAlignment="Left"
+                    SelectionChanged="HadithChapterComboBoxOnSelectionChanged" />
+            </Grid>
+
+        </Border>
+
+        <!-- =========================== -->
+        <!-- Main -->
+        <!-- =========================== -->
+
+        <ListBox Grid.Row="1"
+                 x:Name="ItemsControl"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <component:HadithControl />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+
+    </Grid>
+
+</UserControl>

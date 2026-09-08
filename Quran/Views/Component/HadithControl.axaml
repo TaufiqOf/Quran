@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:Quran.Models"
+             x:DataType="models:Hadith"
+             x:Class="Quran.Views.Component.HadithControl">
+
+    <UserControl.Styles>
+
+        <Style Selector="SelectableTextBlock.arabic">
+            <Setter Property="FontFamily"
+                    Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FlowDirection" Value="RightToLeft" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <!-- ========================================= -->
+        <!-- Translation -->
+        <!-- ========================================= -->
+
+        <Style Selector="SelectableTextBlock.translation">
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="#D8D8D8" />
+            <Setter Property="LineHeight" Value="26" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,Auto"
+          RowSpacing="12"
+          Margin="20,15">
+
+        <SelectableTextBlock Grid.Row="0"
+                             Classes="arabic"
+                             Text="{Binding Arabic}" />
+
+        <SelectableTextBlock Grid.Row="1"
+                             HorizontalAlignment="Center"
+                             Classes="translation"
+                             Text="{Binding English.Text}"
+                             TextWrapping="Wrap" />
+
+    </Grid>
+
+</UserControl>

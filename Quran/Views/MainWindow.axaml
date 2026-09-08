@@ -87,7 +87,27 @@
                                        VerticalAlignment="Center" />
                         </StackPanel>
                     </Button>
+                    <!-- Hadith -->
+                    <Button x:Name="NavHadithButton"
+                            CornerRadius="10"
+                            Tag="Hadith"
+                            Click="NavButton_OnClick"
+                            HorizontalAlignment="Stretch">
 
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5,0,5"
+                                    Spacing="16">
+
+                            <icon:FluentIcon
+                                Icon="Library"
+                                FontSize="24"
+                                VerticalAlignment="Center" />
+
+                            <TextBlock Text="Hadith"
+                                       FontSize="16"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
                     <!-- Bookmarks -->
                     <Button x:Name="NavBookmarksButton"
                             CornerRadius="10"

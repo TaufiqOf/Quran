@@ -59,9 +59,7 @@
                             HorizontalAlignment="Stretch" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-
             </ItemsControl>
-
         </ScrollViewer>
     </Grid>
 </UserControl>

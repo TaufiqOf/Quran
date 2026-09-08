@@ -35,7 +35,7 @@ public partial class HadithView : AView
         if (HadithComboBox.SelectedItem is string selectedBook)
         {
             var chaptersByBooks = DataManager.GetHadithChaptersByBooks(selectedBook);
-            HadithChapterComboBox.ItemsSource = chaptersByBooks.OrderBy(by => by).ToList();
+            HadithChapterComboBox.ItemsSource = chaptersByBooks.OrderBy(int.Parse).ToList();
             HadithChapterComboBox.SelectedIndex = 0; // Optionally select the first chapter by default
         }
     }

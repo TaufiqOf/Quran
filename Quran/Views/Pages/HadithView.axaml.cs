@@ -20,7 +20,7 @@ public partial class HadithView : AView
     public override Task Load(params object?[] parameter)
     {
         _hadithBooks = DataManager.GetHadithBooks();
-        HadithComboBox.ItemsSource = _hadithBooks.OrderBy(q=>q);
+        HadithComboBox.ItemsSource = _hadithBooks.OrderBy(q => q);
         HadithComboBox.SelectedIndex = 0; // Optionally select the first book by default
         return Task.CompletedTask;
     }
@@ -49,13 +49,44 @@ public partial class HadithView : AView
             {
                 var hadithObject = DataManager.GetHadithsByBookAndChapter(selectedBook, selectedChapter);
                 ItemsControl.ItemsSource = hadithObject?.Hadiths ?? Array.Empty<Hadith>();
-                // Do something with the hadiths, e.g., display them in a ListBox or other control
+                VerseChapterComboBox.ItemsSource =
+                    hadithObject?.Hadiths.Select(h => h.Id.ToString()).Distinct().ToList() ?? new List<string>();
+                VerseChapterComboBox.SelectedIndex = 0;
             }
         }
         catch (Exception exception)
         {
             Console.WriteLine(exception);
         }
+    }
 
+    private void VerseChapterComboBoxOnSelectionChanged(
+        object? sender,
+        SelectionChangedEventArgs e)
+    {
+        if (VerseChapterComboBox.SelectedItem is not string selectedVerse)
+            return;
+
+        var hadith = ItemsControl.Items
+            .OfType<Hadith>()
+            .FirstOrDefault(h => h.Id.ToString() == selectedVerse);
+
+        if (hadith == null)
+            return;
+
+        var index = ItemsControl.Items.IndexOf(hadith);
+
+        if (index >= 0)
+        {
+            ItemsControl.ScrollIntoView(index);
+        }
+    }
+
+    private void ItemsControlOnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (ItemsControl.SelectedItem is Hadith selectedHadith)
+        {
+            VerseChapterComboBox.SelectedIndex = VerseChapterComboBox.Items.IndexOf(selectedHadith.Id.ToString());
+        }
     }
 }

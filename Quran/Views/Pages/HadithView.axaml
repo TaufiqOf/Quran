@@ -39,7 +39,7 @@
         <Border Grid.Row="0"
                 Classes="topBar">
 
-            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto"
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                   ColumnSpacing="10">
                 <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="Books:"></TextBlock>
                 <ComboBox
@@ -57,6 +57,14 @@
                     Classes="hadithFilter"
                     HorizontalAlignment="Left"
                     SelectionChanged="HadithChapterComboBoxOnSelectionChanged" />
+                <TextBlock VerticalAlignment="Center" Grid.Column="4" Text="Verses:"></TextBlock>
+                <ComboBox
+                    Grid.Column="5"
+                    x:Name="VerseChapterComboBox"
+                    Margin="5,5,0,5"
+                    Classes="hadithFilter"
+                    HorizontalAlignment="Left"
+                    SelectionChanged="VerseChapterComboBoxOnSelectionChanged" />
             </Grid>
 
         </Border>
@@ -67,6 +75,7 @@
 
         <ListBox Grid.Row="1"
                  x:Name="ItemsControl"
+                 SelectionChanged="ItemsControlOnSelectionChanged"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ScrollViewer.VerticalScrollBarVisibility="Auto">
 

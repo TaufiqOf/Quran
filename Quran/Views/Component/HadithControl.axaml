@@ -27,7 +27,7 @@
         </Style>
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto,Auto"
+    <Grid RowDefinitions="Auto,Auto,Auto"
           RowSpacing="12"
           Margin="20,15">
 
@@ -40,7 +40,13 @@
                              Classes="translation"
                              Text="{Binding English.Text}"
                              TextWrapping="Wrap" />
-
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
+            <TextBlock Text="Verse: "></TextBlock>
+            <TextBlock x:Name="VerseTextBlock"
+                       Grid.Column="1"
+                       Text="{Binding Id}">
+            </TextBlock>
+        </Grid>
     </Grid>
 
 </UserControl>

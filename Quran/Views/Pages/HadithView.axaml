@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:component="clr-namespace:Quran.Views.Component"
+             xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
              x:Class="Quran.Views.Pages.HadithView">
 
     <UserControl.Styles>
@@ -39,7 +40,7 @@
         <Border Grid.Row="0"
                 Classes="topBar">
 
-            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto,Auto"
                   ColumnSpacing="10">
                 <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="Books:"></TextBlock>
                 <ComboBox
@@ -54,6 +55,7 @@
                     Grid.Column="3"
                     x:Name="HadithChapterComboBox"
                     Margin="5,5,0,5"
+                    Width="100"
                     Classes="hadithFilter"
                     HorizontalAlignment="Left"
                     SelectionChanged="HadithChapterComboBoxOnSelectionChanged" />
@@ -62,9 +64,23 @@
                     Grid.Column="5"
                     x:Name="VerseChapterComboBox"
                     Margin="5,5,0,5"
+                    Width="100"
                     Classes="hadithFilter"
                     HorizontalAlignment="Left"
                     SelectionChanged="VerseChapterComboBoxOnSelectionChanged" />
+
+                <TextBox Grid.Column="7" 
+                         x:Name="SearchTextBox" 
+                         PlaceholderText="Search..." 
+                         Height="30"
+                         Width="200" />
+                <Button Grid.Column="8" 
+                        Click="SearchButtonOnClick" >
+                    <avalonia:FluentIcon Icon="Search" 
+                                         Width="16" 
+                                         Height="16"
+                                         />
+                </Button>
             </Grid>
 
         </Border>

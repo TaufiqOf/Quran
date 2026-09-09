@@ -28,10 +28,14 @@ public class VectorSearch : ISearch
 
     public async Task InitializeAsync()
     {
+
         if (!File.Exists(_modelPath))
-            await DownloadHelper.DownloadFileAsync(
-                "https://huggingface.co/intfloat/multilingual-e5-small/resolve/main/onnx/model.onnx?download=true",
-                _modelPath);
+        {
+            var parameter = new DownloadParameter(
+                "https://huggingface.co/tiiuae/falcon-7b-instruct/resolve/main/tokenizer.json",
+                _tokenizerPath);
+            await DownloadHelper.DownloadFileAsync(parameter);
+        }
 
         var tokenizer = new LocalTokenizer(_tokenizerPath);
 
@@ -123,6 +127,7 @@ public class VectorSearch : ISearch
 
             if (!surahMap.TryGetValue(result.SurahId, out var originalSurah)) continue;
             var originalVerse = originalSurah.VerseResults.FirstOrDefault(v => v.Id == result.VerseId);
+            if(originalVerse == null) continue;
             if (!resultSurahs.TryGetValue(originalSurah.Id, out var resultSurah))
             {
                 resultSurah = new SurahResult
@@ -137,7 +142,7 @@ public class VectorSearch : ISearch
                 };
                 resultSurahs.Add(originalSurah.Id, resultSurah);
             }
-
+            
             var resultVerse = new VerseResult
             {
                 Id = originalVerse.Id,

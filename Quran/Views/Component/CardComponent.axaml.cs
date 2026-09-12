@@ -33,7 +33,7 @@ public partial class CardComponent : UserControl
         {
             LoadData(vm.Surah, vm.Synopsis);
             IsSelected = vm.IsSelected;
-            vm.PropertyChanged += (s, args) =>
+            vm.PropertyChanged += (_, args) =>
             {
                 if (args.PropertyName == nameof(SurahCardViewModel.IsSelected)) IsSelected = vm.IsSelected;
             };

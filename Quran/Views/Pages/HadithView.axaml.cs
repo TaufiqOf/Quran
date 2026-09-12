@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
 using FuzzySharp;
 using Quran.Helpers;
@@ -14,7 +13,7 @@ namespace Quran.Views.Pages;
 
 public partial class HadithView : AView
 {
-    private List<string?> _hadithBooks;
+    private List<string?>? _hadithBooks;
     private List<Hadith> _hadiths;
     private readonly ObservableCollection<Hadith> _hadithFiltered = new();
 
@@ -44,7 +43,7 @@ public partial class HadithView : AView
         {
             var chaptersByBooks = DataManager.GetHadithChaptersByBooks(selectedBook);
             HadithChapterComboBox.ItemsSource =
-                chaptersByBooks.Where(c => int.TryParse(c, out _)).OrderBy(int.Parse).ToList();
+                chaptersByBooks.Where(c => int.TryParse(c, out _)).OrderBy(q => q).ToList();
             HadithChapterComboBox.SelectedIndex = 0; // Optionally select the first chapter by default
         }
     }
@@ -57,7 +56,7 @@ public partial class HadithView : AView
                 HadithChapterComboBox.SelectedItem is string selectedChapter)
             {
                 var hadithObject = DataManager.GetHadithsByBookAndChapter(selectedBook, selectedChapter);
-                _hadiths = hadithObject?.Hadiths?.ToList() ?? new List<Hadith>();
+                _hadiths = hadithObject?.Hadiths.ToList() ?? new List<Hadith>();
                 _hadithFiltered.Clear();
                 if (hadithObject?.Hadiths != null)
                 {
@@ -68,7 +67,7 @@ public partial class HadithView : AView
                 }
 
                 VerseChapterComboBox.ItemsSource =
-                    _hadithFiltered.Select(h => h.Id.ToString()).Distinct().ToList() ?? new List<string>();
+                    _hadithFiltered.Select(h => h.Id.ToString()).Distinct().ToList();
                 if (VerseChapterComboBox.ItemCount > 0)
                     VerseChapterComboBox.SelectedIndex = 0;
             }
@@ -137,7 +136,7 @@ public partial class HadithView : AView
         }
 
         VerseChapterComboBox.ItemsSource =
-            _hadithFiltered.Select(h => h.Id.ToString()).Distinct().ToList() ?? new List<string>();
+            _hadithFiltered.Select(h => h.Id.ToString()).Distinct().ToList();
         if (VerseChapterComboBox.ItemCount > 0)
             VerseChapterComboBox.SelectedIndex = 0;
     }

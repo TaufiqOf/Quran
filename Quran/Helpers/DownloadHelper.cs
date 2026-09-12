@@ -6,8 +6,8 @@ namespace Quran.Helpers;
 
 public class DownloadParameter(string url, string destinationPath)
 {
-    public string _url = url;
-    public string _destinationPath = destinationPath;
+    public readonly string Url = url;
+    public readonly string DestinationPath = destinationPath;
 }
 
 public static class DownloadHelper
@@ -16,8 +16,8 @@ public static class DownloadHelper
 
     public static async Task DownloadFileAsync(DownloadParameter downloadParameter)
     {
-        var url = downloadParameter._url;
-        var destinationPath = downloadParameter._destinationPath;
+        var url = downloadParameter.Url;
+        var destinationPath = downloadParameter.DestinationPath;
         var directoryPath = Path.GetDirectoryName(destinationPath);
         if (directoryPath == null)
             throw new DirectoryNotFoundException(

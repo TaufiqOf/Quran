@@ -17,7 +17,7 @@ public static class CopyHelper
     public static string FormatText(Surah surah)
     {
         var surahStructurePreference = SettingService.LoadCopySurahStructurePreference();
-        var text = surahStructurePreference
+        var text = surahStructurePreference?
             .Replace("{SurahNumber}", surah.Id.ToString())
             .Replace("{SurahName}", surah.Name)
             .Replace("{SurahTransliteration}", surah.Transliteration)
@@ -25,13 +25,13 @@ public static class CopyHelper
             .Replace("/n", Environment.NewLine)
             .Replace("\\n", Environment.NewLine)
             .Replace("\n", Environment.NewLine);
-        return text;
+        return text!;
     }
 
     public static string FormatText(Verse verse)
     {
         var verseStructurePreference = SettingService.LoadCopyVerseStructurePreference();
-        var text = verseStructurePreference
+        var text = verseStructurePreference?
             .Replace("{VerseNumber}", verse.Id.ToString())
             .Replace("{VerseText}", verse.Text)
             .Replace("{VerseTransliteration}", verse.Transliteration)
@@ -40,7 +40,7 @@ public static class CopyHelper
             .Replace("/n", Environment.NewLine)
             .Replace("\\n", Environment.NewLine)
             .Replace("\n", Environment.NewLine);
-        return text;
+        return text!;
     }
 
 }

@@ -66,9 +66,6 @@ public class QuranSearchTools
 
         foreach (var surah in results)
         {
-            if (surah?.VerseResults == null)
-                continue;
-
             foreach (var verse in surah.VerseResults)
                 list.Add(new VerseReference
                 {

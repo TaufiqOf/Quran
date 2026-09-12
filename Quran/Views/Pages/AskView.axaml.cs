@@ -108,7 +108,7 @@ public partial class AskView : AView
             {
                 IsSuccess = false
             };
-            messageModel.PropertyChanged += (s, e) =>
+            messageModel.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(AskAiManager.MessageResult.Context))
                     Dispatcher.UIThread.Post(() =>
@@ -117,7 +117,7 @@ public partial class AskView : AView
                         aiMessage.Content = "Sources retrieved. Generating answer...";
                     }, DispatcherPriority.Background);
             };
-            messageModel.PropertyChanged += (s, e) =>
+            messageModel.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(AskAiManager.MessageResult.Message))
                     Dispatcher.UIThread.Post(() => { aiMessage.Content = messageModel.Message; },

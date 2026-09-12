@@ -23,8 +23,6 @@ public static class AiClientFactory
         string targetModel = "",
         CancellationToken cancellationToken = default)
     {
-        if (client == null) return false;
-
         try
         {
             switch (provider)
@@ -47,13 +45,13 @@ public static class AiClientFactory
 
                     break;
 
-                case AiProvider.OpenAI:
+                case AiProvider.OpenAi:
                 case AiProvider.LLamaSharp:
                 case AiProvider.CustomLocalApi:
                     // Perform a minimal dry-run execution to check connectivity
                     var testMessages = new[] { new ChatMessage(ChatRole.User, "ping") };
-                    var response = await client.GetResponseAsync(testMessages, null, cancellationToken);
-                    return response != null;
+                    _ = await client.GetResponseAsync(testMessages, null, cancellationToken);
+                    return true;
             }
 
             return false;
@@ -68,7 +66,7 @@ public static class AiClientFactory
     {
         return provider switch
         {
-            AiProvider.OpenAI =>
+            AiProvider.OpenAi =>
                 new ChatClient(
                     string.IsNullOrEmpty(modelName) ? "gpt-4o-mini" : modelName,
                     endpointOrKey
@@ -90,7 +88,7 @@ public static class AiClientFactory
                 ),
 
             AiProvider.LLamaSharp or AiProvider.CustomLocalApi =>
-                new CustomLocalChatClient(endpointOrKey, modelName),
+                new CustomLocalChatClient(),
 
             _ => throw new ArgumentOutOfRangeException(nameof(provider), provider, null)
         };

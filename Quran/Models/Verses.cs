@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Quran.Helpers.Search.VectorSearch;
 using Quran.Helpers.Search.VectorSearch.Model;
 
 namespace Quran.Models;

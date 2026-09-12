@@ -153,9 +153,7 @@ public class TextSearch : ISearch
             .Where(q => q.VerseResult.SimilarityScore >= 0.20)
             .OrderByDescending(item => item.VerseResult.SimilarityScore);
 
-        var limitedVerses = topK.HasValue
-            ? topVerses.Take(topK.Value)
-            : topVerses;
+        var limitedVerses = topVerses.Take(topK.Value);
 
         var groupedResults = limitedVerses
             .GroupBy(item => item.Surah.Id)

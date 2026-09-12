@@ -75,8 +75,8 @@ public class StructuredSearch : ISearch
             // Find Surah by ID or Name
             // =====================================
 
-            SurahResult? surah;
-            Surah? baseSurah = null;
+            SurahResult? surah = null;
+            Surah? baseSurah;
 
             if (int.TryParse(surahSearch, out var surahId))
                 baseSurah = DataManager.Surahs.FirstOrDefault(s => s.Id == surahId);
@@ -106,14 +106,14 @@ public class StructuredSearch : ISearch
                 Transliteration = baseSurah.Transliteration,
                 Type = baseSurah.Type,
                 TotalVerses = baseSurah.TotalVerses,
-                VerseResults = baseSurah.Verses?.Select(v => new VerseResult
+                VerseResults = baseSurah.Verses.Select(v => new VerseResult
                 {
                     Id = v.Id,
                     Text = v.Text,
                     Translation = v.Translation,
                     Transliteration = v.Transliteration,
                     SimilarityScore = 1.0
-                }).ToList() ?? new List<VerseResult>(),
+                }).ToList(),
                 SimilarityScore = 1.0
             };
 

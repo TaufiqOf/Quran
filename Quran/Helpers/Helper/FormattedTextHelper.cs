@@ -130,7 +130,7 @@ public static class FormattedTextHelper
                 if (match.Success)
                 {
                     var linkText = match.Groups[1].Value;
-                    var url = match.Groups[2].Value;
+                    //var url = match.Groups[2].Value;
 
                     var linkRun = new Run
                     {

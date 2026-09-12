@@ -110,7 +110,7 @@ public partial class MainWindow : Window
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         
-        SettingService.SaveCurrentPositionSettings(DataManager.CurrentSurah.Id, DataManager.CurrentVerseId); 
+        SettingService.SaveCurrentPositionSettings(DataManager.CurrentSurah?.Id, DataManager.CurrentVerseId); 
         base.OnClosing(e);
     }
 }

@@ -94,17 +94,16 @@ public partial class HomeView : AView
 
     private void GotoComponent_OnSurahSelected(Surah surah)
     {
-        var cardVm = Cards.FirstOrDefault(c => c.Surah?.Id == surah.Id);
+        var cardVm = Cards.FirstOrDefault(c => c.Surah.Id == surah.Id);
         if (cardVm != null) SelectCard(cardVm);
     }
 
     private void SelectCard(SurahCardViewModel cardVm)
     {
-        if (cardVm?.Surah?.Id == _selectedSurahId) return;
-        _selectedSurahId = cardVm?.Surah?.Id;
+        if (cardVm.Surah.Id == _selectedSurahId) return;
+        _selectedSurahId = cardVm.Surah.Id;
 
-        foreach (var c in Cards) c.IsSelected = c.Surah?.Id == cardVm?.Surah?.Id;
-        if(cardVm?.Surah is null) return;
+        foreach (var c in Cards) c.IsSelected = c.Surah.Id == cardVm.Surah.Id;
         var index = Cards.IndexOf(cardVm);
         if (index < 0) return;
 

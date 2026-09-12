@@ -12,7 +12,7 @@ namespace Quran.Helpers;
 
 public static class AskAiManager
 {
-    private static readonly IChatClient _chatClient;
+    private static readonly IChatClient ChatClient;
 
     // Use deterministic decoding to reduce creative variance and hallucinations.
     private static readonly ChatOptions LowTemperatureChatOptions = new()
@@ -25,7 +25,7 @@ public static class AskAiManager
     static AskAiManager()
     {
         var aiSettings = SettingService.LoadAiSettings();
-        _chatClient = AiClientFactory.Create(aiSettings.Provider, aiSettings.Endpoint, aiSettings.Model);
+        ChatClient = AiClientFactory.Create(aiSettings.Provider, aiSettings.Endpoint, aiSettings.Model);
         SearchManager.SearcherRegistered += SearcherRegistered;
     }
 
@@ -91,7 +91,7 @@ public static class AskAiManager
             new(ChatRole.User, query)
         };
         result.Context = context;
-        await foreach (var update in _chatClient.GetStreamingResponseAsync(
+        await foreach (var update in ChatClient.GetStreamingResponseAsync(
                            messages,
                            LowTemperatureChatOptions,
                            cancellationToken))
@@ -131,13 +131,13 @@ public static class AskAiManager
         };
 
         // Execute LLM call using Microsoft.Extensions.AI
-        var response = await _chatClient.GetResponseAsync(messages, LowTemperatureChatOptions, cancellationToken);
+        var response = await ChatClient.GetResponseAsync(messages, LowTemperatureChatOptions, cancellationToken);
 
         // Extract plain text response from the message contents
         return new MessageResult
         {
             IsSuccess = true,
-            Message = response.Text ?? string.Empty,
+            Message = response.Text,
             Context = context
         };
     }

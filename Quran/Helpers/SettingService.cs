@@ -164,19 +164,6 @@ public static class SettingService
         SaveChatModelSettings(chatModelSettings);
     }
 
-    private static string SaveSettings(string? language, string? readerMode,
-        AiSettings? aiSettings, string? copySurahStructure, string? copyVerseStructure)
-    {
-        var settings = LoadAppSettings();
-        settings.Language = language ?? settings.Language;
-        settings.ReaderMode = readerMode ?? settings.ReaderMode;
-        settings.AiSettings = aiSettings ?? settings.AiSettings;
-        settings.CopySurahStructure = copySurahStructure ?? settings.CopySurahStructure;
-        settings.CopyVerseStructure = copyVerseStructure ?? settings.CopyVerseStructure;
-        SaveAppSettings(settings);
-        return "Settings saved successfully.";
-    }
-
     private static void SaveAppSettings(AppSettings settings)
     {
         var json = JsonConvert.SerializeObject(settings);
@@ -190,11 +177,13 @@ public static class SettingService
     }
 
 
-    public static void SaveCurrentPositionSettings(int currentSurahId, int? currentVerseId)
+    public static void SaveCurrentPositionSettings(int? currentSurahId, int? currentVerseId)
     {
+        if(currentSurahId == null || currentVerseId == null)
+            return;
         var appsettings = LoadAppSettings();
-        appsettings.CurrentSurahId = currentSurahId;
-        appsettings.CurrentVerseId = currentVerseId;
+        appsettings.CurrentSurahId = currentSurahId.Value;
+        appsettings.CurrentVerseId = currentVerseId.Value;
         SaveAppSettings(appsettings);
     }
 

@@ -1,4 +1,3 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -6,7 +5,7 @@ using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class VerseQuranicComponent : AVerseComponent, IDisposable
+public partial class VerseQuranicComponent : AVerseComponent
 {
     public VerseQuranicComponent(Surah surah, Verse verse) : base(surah, verse)
     {

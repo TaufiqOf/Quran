@@ -19,7 +19,7 @@ public class ChatMessageModel : INotifyPropertyChanged
 
     public ChatMessageModel()
     {
-        _timer.Elapsed += (s, e) =>
+        _timer.Elapsed += (_, _) =>
         {
             if(!IsWorking)
                 return;

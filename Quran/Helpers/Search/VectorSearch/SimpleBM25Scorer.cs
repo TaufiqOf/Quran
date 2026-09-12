@@ -8,8 +8,8 @@ namespace Quran.Helpers.Search.VectorSearch;
 
 public class SimpleBm25Scorer
 {
-    private const float k1 = 1.2f;
-    private const float b = 0.75f;
+    private const float K1 = 1.2f;
+    private const float B = 0.75f;
 
     private static readonly HashSet<string> StopWords =
         new(StringComparer.OrdinalIgnoreCase)
@@ -88,13 +88,13 @@ public class SimpleBm25Scorer
                     (df + 0.5f) + 1f);
 
                 var denominator =
-                    tf + k1 *
-                    (1f - b +
-                     b * (docLen / _avgDocLength));
+                    tf + K1 *
+                    (1f - B +
+                     B * (docLen / _avgDocLength));
 
                 score +=
                     idf *
-                    (tf * (k1 + 1f) / (float)denominator);
+                    (tf * (K1 + 1f) / (float)denominator);
             }
 
             if (score > 0)

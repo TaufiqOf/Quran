@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:models="clr-namespace:Quran.Models"
     xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
-    xmlns:helpers="clr-namespace:Quran.Helpers.Search.VectorSearch"
     xmlns:model="clr-namespace:Quran.Helpers.Search.VectorSearch.Model"
     x:Class="Quran.Views.Component.SearchComponent"
     x:Name="Root">

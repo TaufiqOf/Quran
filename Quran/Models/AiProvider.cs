@@ -2,7 +2,7 @@ namespace Quran.Models;
 
 public enum AiProvider
 {
-    OpenAI,
+    OpenAi,
     Ollama,
     LLamaSharp,
     CustomLocalApi

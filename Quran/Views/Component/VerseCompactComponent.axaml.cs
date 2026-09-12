@@ -1,11 +1,10 @@
-using System;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Quran.Models;
 
 namespace Quran.Views.Component;
 
-public partial class VerseCompactComponent : AVerseComponent, IDisposable
+public partial class VerseCompactComponent : AVerseComponent
 {
     public VerseCompactComponent(Surah surah, Verse verse) : base(surah, verse)
     {
@@ -31,18 +30,6 @@ public partial class VerseCompactComponent : AVerseComponent, IDisposable
             VerseCard.Classes.Add("selected");
         else
             VerseCard.Classes.Remove("selected");
-    }
-
-    private void ButtonBookmark_OnClick(
-        object? sender,
-        RoutedEventArgs e)
-    {
-    }
-
-    private void ButtonPlay_OnClick(
-        object? sender,
-        RoutedEventArgs e)
-    {
     }
 
     private void VerseCard_OnPointerPressed(object? sender, PointerPressedEventArgs e)

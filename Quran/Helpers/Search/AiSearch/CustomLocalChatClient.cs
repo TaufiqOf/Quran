@@ -10,15 +10,6 @@ namespace Quran.Helpers.Search.AiSearch;
 
 public class CustomLocalChatClient : IChatClient
 {
-    private readonly string _endpointOrKey;
-    private readonly string _modelName;
-
-    public CustomLocalChatClient(string endpointOrKey, string modelName)
-    {
-        _endpointOrKey = endpointOrKey;
-        _modelName = modelName;
-    }
-
     public async Task<ChatResponse> GetResponseAsync(
         IEnumerable<ChatMessage> messages,
         ChatOptions? options = null,

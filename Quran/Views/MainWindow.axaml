@@ -23,7 +23,7 @@
             <Grid RowDefinitions="Auto,Auto,*,Auto">
 
                 <!-- App title -->
-                <Grid Grid.Row="0" Grid.ColumnDefinitions="Auto,*" HorizontalAlignment="Left">
+                <Grid Grid.Row="0" ColumnDefinitions="Auto,*" HorizontalAlignment="Left">
                     <Image Source="avares://Quran/Assets/Icons/Quran-icons/Quran-32x32.png" Width="32" Height="32" />
                     <TextBlock Grid.Column="1"
                                Text="Quran"

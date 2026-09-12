@@ -19,10 +19,10 @@ public class QuranSemanticSearchService(IEmbeddingService embeddingService, List
         // Apply the 'query: ' prefix ONCE here
         var queryText = EmbeddingTextBuilder.BuildQuery(rawQuery);
 
-        var queryVector = await embeddingService
+        var queryVector = await EmbeddingService
             .CreateEmbeddingAsync(queryText, cancellationToken);
 
-        var results = embeddings
+        var results = Embeddings
             .Select(embedding => new SemanticSearchResult
             {
                 SurahId = embedding.SurahId,

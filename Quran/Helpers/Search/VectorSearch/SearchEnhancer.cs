@@ -2,16 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
 using Quran.Helpers.Search.VectorSearch.Model;
 
 namespace Quran.Helpers.Search.VectorSearch;
 
 public class SearchEnhancer(List<SemanticSearchResult> searchResult, string query)
 {
-    private readonly List<SemanticSearchResult> _searchResult = searchResult ?? [];
-    private readonly string _query = query?.Trim().ToLower() ?? string.Empty;
+    private readonly string _query = query.Trim().ToLower();
 
     private static readonly HashSet<string> StopWords = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -32,7 +29,7 @@ public class SearchEnhancer(List<SemanticSearchResult> searchResult, string quer
         {
             if (string.IsNullOrWhiteSpace(_query))
             {
-                return _searchResult;
+                return searchResult;
             }
 
             // 1. Extract, clean, and stem query tokens
@@ -40,7 +37,7 @@ public class SearchEnhancer(List<SemanticSearchResult> searchResult, string quer
 
             if (queryTokens.Count == 0)
             {
-                return _searchResult;
+                return searchResult;
             }
 
             var files = DataManager.GetFile("*.json");
@@ -69,7 +66,7 @@ public class SearchEnhancer(List<SemanticSearchResult> searchResult, string quer
             foreach (var matchedFile in matchedFiles)
             {
                 var jsonFile = DataManager.GetData<SemanticSearchResult>(matchedFile.Name);
-                if (jsonFile != null && jsonFile.Count > 0)
+                if (jsonFile.Count > 0)
                 {
                     pinnedResults.AddRange(jsonFile);
                 }
@@ -77,7 +74,7 @@ public class SearchEnhancer(List<SemanticSearchResult> searchResult, string quer
 
             if (pinnedResults.Count == 0)
             {
-                return _searchResult;
+                return searchResult;
             }
 
             // 3. Set top priority scores for pinned results
@@ -95,7 +92,7 @@ public class SearchEnhancer(List<SemanticSearchResult> searchResult, string quer
                 combinedDictionary[(item.SurahId, item.VerseId)] = item;
             }
 
-            foreach (var item in _searchResult)
+            foreach (var item in searchResult)
             {
                 var key = (item.SurahId, item.VerseId);
                 if (!combinedDictionary.ContainsKey(key))
@@ -112,7 +109,7 @@ public class SearchEnhancer(List<SemanticSearchResult> searchResult, string quer
         catch (Exception e)
         {
             Console.WriteLine($"Error merging search results: {e.Message}");
-            return _searchResult;
+            return searchResult;
         }
     }
 

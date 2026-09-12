@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
-using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Quran.Helpers;
 using Quran.Models;
@@ -52,7 +51,7 @@ public partial class VerseMessageControl : UserControl
     public VerseMessageControl(List<VerseMessageModel> messages)
     {
         InitializeComponent();
-        _messages = messages ?? new List<VerseMessageModel>();
+        _messages = messages;
 
         if (_messages.Count > 0) _messages[0].IsExpanded = true;
 

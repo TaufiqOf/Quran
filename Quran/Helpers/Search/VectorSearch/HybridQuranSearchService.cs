@@ -18,16 +18,6 @@ public class HybridQuranSearchService : ASemanticSearchService
         "their", "then", "there", "these", "they", "this", "to", "was", "will", "with"
     };
 
-    private static readonly Dictionary<string, string[]> EntityAliases = new(StringComparer.OrdinalIgnoreCase)
-    {
-        { "jesus", new[] { "jesus", "isa", "عيسى", "maseeh", "messiah" } },
-        { "mary", new[] { "mary", "maryam", "مريم" } },
-        { "moses", new[] { "moses", "musa", "موسى" } },
-        { "pharaoh", new[] { "pharaoh", "firawn", "فرعون" } },
-        { "abraham", new[] { "abraham", "ibrahim", "إبراهيم" } },
-        { "joseph", new[] { "joseph", "yusuf", "يوسف" } }
-    };
-
     private readonly SimpleBm25Scorer _bm25Scorer;
 
     public HybridQuranSearchService(IEmbeddingService embeddingService,
@@ -47,11 +37,11 @@ public class HybridQuranSearchService : ASemanticSearchService
 
         // 1. Get Vector Scores
         var queryText = EmbeddingTextBuilder.BuildQuery(rawQuery);
-        var queryVector = await embeddingService.CreateEmbeddingAsync(queryText, cancellationToken);
+        var queryVector = await EmbeddingService.CreateEmbeddingAsync(queryText, cancellationToken);
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        var vectorRankings = embeddings
+        var vectorRankings = Embeddings
             .Select(item => new
             {
                 item.SurahId,
@@ -146,8 +136,8 @@ public class HybridQuranSearchService : ASemanticSearchService
 
         // 2. Compute baseline similarity
         var baseQueryVector =
-            await embeddingService.CreateEmbeddingAsync(EmbeddingTextBuilder.BuildQuery(queryText), cancellationToken);
-        var fullVerseVector = await embeddingService.CreateEmbeddingAsync(verse.Translation, cancellationToken);
+            await EmbeddingService.CreateEmbeddingAsync(EmbeddingTextBuilder.BuildQuery(queryText), cancellationToken);
+        var fullVerseVector = await EmbeddingService.CreateEmbeddingAsync(verse.Translation, cancellationToken);
         var baseScore = (float)VectorMath.CosineSimilarity(baseQueryVector, fullVerseVector);
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -156,7 +146,7 @@ public class HybridQuranSearchService : ASemanticSearchService
         var occlusionTasks = targets.Select(target =>
         {
             var occludedText = string.Join(" ", rawTokens.Where((_, idx) => idx != target.Index));
-            return embeddingService.CreateEmbeddingAsync(occludedText, cancellationToken);
+            return EmbeddingService.CreateEmbeddingAsync(occludedText, cancellationToken);
         }).ToList();
 
         var occludedVectors = await Task.WhenAll(occlusionTasks);

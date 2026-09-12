@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Quran.Models;
@@ -207,7 +206,7 @@ public static class DataManager
                 .Where(dir => !string.IsNullOrEmpty(dir))
                 .Select(dir => new DirectoryInfo(dir).Name)
                 .ToList();
-            return books;
+            return books!;
         }
         catch (Exception e)
         {
@@ -225,7 +224,7 @@ public static class DataManager
                 .Where(file => Path.GetExtension(file) == ".json")
                 .Select(file => Path.GetFileNameWithoutExtension(file))
                 .ToList();
-            return chapters;
+            return chapters!;
         }
         catch (Exception e)
         {
@@ -273,7 +272,7 @@ public static class DataManager
                            options))
             if (tafsir?.SurahId == surahId &&
                 tafsir.VerseId == verseId)
-                return tafsir.Text ?? string.Empty;
+                return tafsir.Text;
 
         return string.Empty;
     }

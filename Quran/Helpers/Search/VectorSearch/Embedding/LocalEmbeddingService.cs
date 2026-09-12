@@ -75,7 +75,7 @@ public sealed class LocalEmbeddingService :
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (texts == null || texts.Count == 0)
+        if (texts.Count == 0)
             return Task.FromResult(new List<float[]>());
 
         var batchSize = texts.Count;

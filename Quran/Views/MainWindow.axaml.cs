@@ -106,4 +106,11 @@ public partial class MainWindow : Window
         NavAboutButton.IsEnabled = true;
         currentButton.IsEnabled = false;
     }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        
+        SettingService.SaveCurrentPositionSettings(DataManager.CurrentSurah.Id, DataManager.CurrentVerseId); 
+        base.OnClosing(e);
+    }
 }

@@ -20,29 +20,39 @@ public static class SettingService
 
     public static void SaveLanguagePreference(string languageCode)
     {
-        SaveSettings( null, languageCode, null, null, null, null);
+        var appSettings = LoadAppSettings();
+        appSettings.Language = languageCode;
+        SaveSettings(appSettings);
     }
     public static void SaveCopySurahStructurePreference(string copySurahStructure)
     {
-        SaveSettings(null, null, null, null, copySurahStructure);
+        var appSettings = LoadAppSettings();
+        appSettings.CopySurahStructure = copySurahStructure;
+        SaveSettings(appSettings);
     }
     public static void SaveCopyVerseStructurePreference(string copyVerseStructure)
     {
-        SaveSettings(null, null, null, null, null, copyVerseStructure);
+        var appSettings = LoadAppSettings();
+        appSettings.CopyVerseStructure = copyVerseStructure;
+        SaveSettings(appSettings);
     }
     public static void SaveReaderModePreference(string readerMode)
     {
-        SaveSettings(null, null, readerMode, null, null, null);
+        var appSettings = LoadAppSettings();
+        appSettings.ReaderMode = readerMode;
+        SaveSettings(appSettings);
     }
 
     public static void SaveChatMessages(List<ChatMessageModel> chatMessages)
     {
-        SaveSettings(chatMessages, null, null, null, null, null);
+        SaveSettings(chatMessages);
     }
 
     public static void SaveAiSettings(AiSettings aiSettings)
     {
-        SaveSettings(null, null, null, aiSettings, null, null);
+        var appSettings = LoadAppSettings();
+        appSettings.AiSettings = aiSettings;
+        SaveSettings(appSettings);
     }
 
 
@@ -111,12 +121,15 @@ public static class SettingService
         }
     }
 
-    public static void SaveSettings(List<ChatMessageModel>? chatMessages,
-        string? language,
-        string? readerMode,
-        AiSettings? aiSettings,
-        string? copySurahStructure,
-        string? copyVerseStructure)
+    public static void SaveSettings(AppSettings? appSettings)
+    {
+        if (appSettings != null)
+        {
+            SaveAppSettings(appSettings);
+        }
+    }
+    
+    public static void SaveSettings(List<ChatMessageModel>? chatMessages)
     {
         if (chatMessages != null)
         {
@@ -142,16 +155,8 @@ public static class SettingService
             chatModelSettings.ChatMessages.AddRange(newMessages);
 
             SaveChatModelSettings(chatModelSettings);
-
-            return;
         }
 
-        SaveSettings(
-            language,
-            readerMode,
-            aiSettings,
-            copySurahStructure,
-            copyVerseStructure);
     }
 
     private static string SaveSettings(string? language, string? readerMode,
@@ -179,5 +184,18 @@ public static class SettingService
         File.WriteAllText(ChatModelSettingsFilePath, json);
     }
 
- 
+
+    public static void SaveCurrentPositionSettings(int currentSurahId, int? currentVerseId)
+    {
+        var appsettings = LoadAppSettings();
+        appsettings.CurrentSurahId = currentSurahId;
+        appsettings.CurrentVerseId = currentVerseId;
+        SaveAppSettings(appsettings);
+    }
+
+    public static (int surahId, int? verseId) LoadCurrentPosition()
+    {
+        var appSettings = LoadAppSettings();
+        return (appSettings.CurrentSurahId, appSettings.CurrentVerseId);
+    }
 }

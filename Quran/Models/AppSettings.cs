@@ -17,6 +17,8 @@ public sealed class AppSettings
     public AiSettings AiSettings { get; set; } = new();
     public string? CopySurahStructure { get; set; } = @"({SurahNumber}){SurahTransliteration}-{SurahName}({SurahTranslation})";
     public string? CopyVerseStructure { get; set; } = @"({VerseNumber}) {VerseText} /n({VerseTranslation})/n {VerseTransliteration}";
+    public int CurrentSurahId { get; set; } = 1;
+    public int? CurrentVerseId { get; set; } = 1;
 }
 
 public sealed class ChatModelSettings

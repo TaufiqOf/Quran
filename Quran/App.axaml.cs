@@ -1,3 +1,4 @@
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -24,6 +25,9 @@ public class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            var (surahId,verseId) = SettingService.LoadCurrentPosition();
+            DataManager.CurrentSurah = DataManager.Surahs.FirstOrDefault(s => s.Id == surahId);
+            DataManager.CurrentVerseId = verseId;
             desktop.MainWindow = new MainWindow();
             MessageHelper.MainWindow = desktop.MainWindow;
         }

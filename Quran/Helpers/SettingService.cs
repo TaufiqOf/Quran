@@ -131,32 +131,37 @@ public static class SettingService
     
     public static void SaveSettings(List<ChatMessageModel>? chatMessages)
     {
-        if (chatMessages != null)
+        if (chatMessages == null)
+            return;
+
+        var chatModelSettings = LoadChatModelSettings();
+
+        // Remove messages that no longer exist
+        chatModelSettings.ChatMessages = chatModelSettings.ChatMessages
+            .Where(existing =>
+                chatMessages.Any(incoming => incoming.Id == existing.Id))
+            .ToList();
+
+        foreach (var incoming in chatMessages)
         {
-            var chatModelSettings = LoadChatModelSettings();
+            var existing = chatModelSettings.ChatMessages
+                .FirstOrDefault(x => x.Id == incoming.Id);
 
-            // Remove messages that no longer exist in the incoming list
-            chatModelSettings.ChatMessages = chatModelSettings.ChatMessages
-                .Where(existing => 
-                    chatMessages.Any(incoming => 
-                        incoming.Id == existing.Id))
-                .ToList();
+            if (existing == null)
+            {
+                // New message
+                chatModelSettings.ChatMessages.Add(incoming);
+            }
+            else if (existing.Time != incoming.Time || existing.IsWorking != incoming.IsWorking || existing.Content != incoming.Content)
+            {
+                // Message changed, replace the saved version
+                var index = chatModelSettings.ChatMessages.IndexOf(existing);
 
-            // Add new messages
-            var existingIds = chatModelSettings.ChatMessages
-                .Select(x => x.Id)
-                .ToHashSet();
-
-            var newMessages = chatMessages
-                .Where(incoming => 
-                    !existingIds.Contains(incoming.Id))
-                .ToList();
-
-            chatModelSettings.ChatMessages.AddRange(newMessages);
-
-            SaveChatModelSettings(chatModelSettings);
+                chatModelSettings.ChatMessages[index] = incoming;
+            }
         }
 
+        SaveChatModelSettings(chatModelSettings);
     }
 
     private static string SaveSettings(string? language, string? readerMode,

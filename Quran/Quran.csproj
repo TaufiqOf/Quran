@@ -106,7 +106,7 @@
 
     <ItemGroup>
 
-        <PackageReference Include="FluentIcons.Avalonia" Version="2.1.339.1" />
+        <PackageReference Include="FluentIcons.Avalonia" Version="2.1.341" />
 
     </ItemGroup>
 
@@ -137,7 +137,7 @@
 
     <ItemGroup>
 
-        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.29.0"/>
+        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.30.0" />
 
         <PackageReference Include="Tokenizers.HuggingFace" Version="3.23.1"/>
 

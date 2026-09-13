@@ -216,20 +216,18 @@ public static class DataManager
 
     }
     
-    public static List<string?> GetHadithChaptersByBooks(string bookName)
+    public static List<HadithChapter> GetHadithChaptersByBooks(string bookName)
     {
         try
         {
-            var chapters = Directory.EnumerateFiles(Path.Combine(DataPath, "Hadith", bookName))
-                .Where(file => Path.GetExtension(file) == ".json")
-                .Select(file => Path.GetFileNameWithoutExtension(file))
-                .ToList();
-            return chapters!;
+            var path = Path.Combine(DataPath, "Hadith", bookName,"chapters.json");
+            var chapters = JsonConvert.DeserializeObject<List<HadithChapter>>(File.ReadAllText(path));
+            return chapters;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return new List<string?>();
+            return new List<HadithChapter>();
         }
     }
     

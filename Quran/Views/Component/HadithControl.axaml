@@ -40,12 +40,14 @@
                              Classes="translation"
                              Text="{Binding English.Text}"
                              TextWrapping="Wrap" />
-        <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
-            <TextBlock Text="Verse: "></TextBlock>
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,*,Auto">
+
+            <TextBlock Text="Hadith No: "></TextBlock>
             <TextBlock x:Name="VerseTextBlock"
                        Grid.Column="1"
                        Text="{Binding Id}">
             </TextBlock>
+            <TextBlock Grid.Column="2" Text="{Binding English.Narrator}"></TextBlock>
         </Grid>
     </Grid>
 

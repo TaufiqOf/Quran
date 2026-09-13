@@ -55,11 +55,11 @@
                     Grid.Column="3"
                     x:Name="HadithChapterComboBox"
                     Margin="5,5,0,5"
-                    Width="100"
+                    Width="300"
                     Classes="hadithFilter"
                     HorizontalAlignment="Left"
                     SelectionChanged="HadithChapterComboBoxOnSelectionChanged" />
-                <TextBlock VerticalAlignment="Center" Grid.Column="4" Text="Verses:"></TextBlock>
+                <TextBlock VerticalAlignment="Center" Grid.Column="4" Text="Hadith No:"></TextBlock>
                 <ComboBox
                     Grid.Column="5"
                     x:Name="VerseChapterComboBox"

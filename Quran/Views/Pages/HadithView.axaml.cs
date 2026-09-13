@@ -42,8 +42,11 @@ public partial class HadithView : AView
         if (HadithComboBox.SelectedItem is string selectedBook)
         {
             var chaptersByBooks = DataManager.GetHadithChaptersByBooks(selectedBook);
-            HadithChapterComboBox.ItemsSource =
-                chaptersByBooks.Where(c => int.TryParse(c, out _)).OrderBy(q => q).ToList();
+            HadithChapterComboBox.ItemsSource = chaptersByBooks.OrderBy(q => q.Id).Select(q=> new ComboBoxItem()
+            {
+                Content = q.ToString(),
+                Tag = q.Id
+            }).ToList();
             HadithChapterComboBox.SelectedIndex = 0; // Optionally select the first chapter by default
         }
     }
@@ -53,9 +56,10 @@ public partial class HadithView : AView
         try
         {
             if (HadithComboBox.SelectedItem is string selectedBook &&
-                HadithChapterComboBox.SelectedItem is string selectedChapter)
+                HadithChapterComboBox.SelectedItem is ComboBoxItem selectedChapterItem &&
+                selectedChapterItem.Tag is decimal selectedChapterId)
             {
-                var hadithObject = DataManager.GetHadithsByBookAndChapter(selectedBook, selectedChapter);
+                var hadithObject = DataManager.GetHadithsByBookAndChapter(selectedBook, selectedChapterId.ToString());
                 _hadiths = hadithObject?.Hadiths.ToList() ?? new List<Hadith>();
                 _hadithFiltered.Clear();
                 if (hadithObject?.Hadiths != null)

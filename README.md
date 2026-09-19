@@ -74,28 +74,34 @@ Audio recitation: **Mahmoud Khalil Al-Husary**.
 
 ### Surah browser
 
-![Surah browser](docs/screenshots/quran-home.png)
+![Surah browser](docs/screenshots/quran-home.1.png)
 
 ### Quranic reading layout
 
-![Quranic reading layout](docs/screenshots/quran-quran-2.png)
+![Quranic reading layout](docs/screenshots/quran-quran-1.2.png)
 
 ### Compact reading layout
 
-![Compact reading layout](docs/screenshots/quran-quran-1.png)
+![Compact reading layout](docs/screenshots/quran-quran-1.1.png)
 
 
 ### Bookmarks
 
-![Bookmarks](docs/screenshots/quran-bookmarks.png)
+![Bookmarks](docs/screenshots/quran-bookmarks.1.png)
 
 ### Search
 
-![Search](docs/screenshots/quran-search-3.png)
+![Search](docs/screenshots/quran-search.1.png)
 
 ### Ask
 
-![Search](docs/screenshots/quran-ask-2.png)
+![Search](docs/screenshots/quran-ask.1.png)
+
+### Settings
+
+![Settings](docs/screenshots/quran-settings.1.png)
+
+
 Search is simple and fast. Type what you remember, and the app will show the verses that match. When a verse contains your search words, those words are highlighted so they are easier to spot.
 
 ## Build from source

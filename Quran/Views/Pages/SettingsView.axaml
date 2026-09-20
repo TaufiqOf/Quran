@@ -113,7 +113,7 @@
                     <ComboBox x:Name="AiProviderComboBox"
                               Classes="settingsInput"
                               SelectedIndex="0">
-                        <ComboBoxItem Content="OpenAI Api" Tag="OpenAI" />
+                        <ComboBoxItem Content="OpenAI Api" Tag="OpenAi" />
                         <ComboBoxItem Content="Ollama" Tag="Ollama" />
                         <ComboBoxItem Content="LLamaSharp" Tag="LLamaSharp" />
                         <ComboBoxItem Content="Other Models" Tag="CustomLocalApi" />

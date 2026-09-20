@@ -12,7 +12,7 @@ namespace Quran.Helpers;
 
 public static class AskAiManager
 {
-    private static readonly IChatClient ChatClient;
+    private static IChatClient ChatClient;
 
     // Use deterministic decoding to reduce creative variance and hallucinations.
     private static readonly ChatOptions LowTemperatureChatOptions = new()
@@ -24,8 +24,8 @@ public static class AskAiManager
 
     static AskAiManager()
     {
-        var aiSettings = SettingService.LoadAiSettings();
-        ChatClient = AiClientFactory.Create(aiSettings.Provider, aiSettings.Endpoint, aiSettings.Model);
+        // var aiSettings = SettingService.LoadAiSettings();
+        // ChatClient = AiClientFactory.Create(aiSettings.Provider, aiSettings.Endpoint, aiSettings.Model);
         SearchManager.SearcherRegistered += SearcherRegistered;
     }
 
@@ -65,6 +65,8 @@ public static class AskAiManager
         MessageResult result,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
+        var aiSettings = SettingService.LoadAiSettings();
+        ChatClient = AiClientFactory.Create(aiSettings.Provider, aiSettings.Endpoint, aiSettings.Model);
         var formattedQuery = $"@{query.Trim()}:50";
         var context = await SearchManager.PerformSearch(
             formattedQuery,

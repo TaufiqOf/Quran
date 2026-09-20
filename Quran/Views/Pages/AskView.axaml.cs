@@ -137,6 +137,16 @@ public partial class AskView : AView
         {
             aiMessage.Content = $"Operation canceled. {exception.Message}";
         }
+        catch (TypeInitializationException ex)
+        {
+            ShowMessage($"Your AI settings are not configured properly. Please check your settings. Error: {ex.Message}");
+            aiMessage.Content = $"Your AI settings are not configured properly. Please check your settings. Error: {ex.Message}";
+        }
+        catch (ArgumentException ex)
+        {
+            ShowMessage($"Your AI settings are not configured properly. Please check your settings. Error: {ex.Message}");
+            aiMessage.Content = $"Your AI settings are not configured properly. Please check your settings. Error: {ex.Message}";
+        }
         catch (Exception ex)
         {
             ShowMessage($"Error occurred: {ex.Message}");

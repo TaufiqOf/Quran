@@ -43,6 +43,8 @@ You can choose how many results to return by adding `:N`, for example `? mercy:5
 
 ### Ask AI
 
+[Need AI key?](https://platform.openai.com/account/api-keys) Add your OpenAI API/Ollama/Gemini key in the settings to enable Ask AI.
+
 For a written answer rather than a list of search results, open **Ask AI** and ask a question such as `Who will go to Heaven?` Ask AI first finds relevant Quran verses, then asks the assistant to answer using only those verses. The answer is kept concise and includes the surah and verse references used as its sources.
 
 If the available verses do not explicitly answer the question, Ask AI responds:

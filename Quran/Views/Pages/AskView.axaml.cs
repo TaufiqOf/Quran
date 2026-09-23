@@ -205,6 +205,17 @@ public partial class AskView : AView
             });
         }
 
+        var loadAiSettings = SettingService.LoadAiSettings();   
+        if(string.IsNullOrEmpty(loadAiSettings.Endpoint) || string.IsNullOrEmpty(loadAiSettings.Model))
+        {
+            MessageTextBlock.Text = "Your AI settings are not configured properly. Please check your settings.";
+            SendButton.IsEnabled = false;
+        }
+        else
+        {
+            MessageTextBlock.Text = string.Empty;
+            SendButton.IsEnabled = true;
+        }
         ChatScrollViewer.ScrollToEnd();
         return Task.CompletedTask;
     }

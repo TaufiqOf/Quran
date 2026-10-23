@@ -1,9 +1,7 @@
 <UserControl
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:models="clr-namespace:Quran.Models"
     xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
-    xmlns:model="clr-namespace:Quran.Helpers.Search.VectorSearch.Model"
     xmlns:component="clr-namespace:Quran.Views.Component"
     x:Class="Quran.Views.Component.BookmarkComponent"
     x:Name="Root">
@@ -174,6 +172,16 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
+        <Style Selector="Button.verseDeleteButton">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
     </UserControl.Styles>
 
 
@@ -192,18 +200,29 @@
 
         <Expander.Header>
             <Border Classes="surahHeader">
-                <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto">
                     <TextBox
                         x:Name="HeaderSurahNameTextBox"
                         Grid.Column="0"
                         Classes="surahName"
                         Text="{Binding Header.Name, ElementName=Root}"
                         IsReadOnly="False"
+                        BorderThickness="0"
                         Background="Transparent"
                         />
 
                     <Button
                         Grid.Column="1"
+                        Classes="headerAction"
+                        ToolTip.Tip="Copy all verses in this header"
+                        Click="CopyHeaderButton_OnClick">
+                        <avalonia:FluentIcon
+                            Icon="Copy"
+                            FontSize="18" />
+                    </Button>
+
+                    <Button
+                        Grid.Column="2"
                         Classes="headerAction"
                         Click="SaveHeaderNameButton_OnClick" >
                         <avalonia:FluentIcon
@@ -212,7 +231,7 @@
                     </Button>
 
                     <Button
-                        Grid.Column="2"
+                        Grid.Column="3"
                         Classes="headerAction"
                         x:Name="DeleteHeaderButton"
                         IsEnabled="{Binding CanDeleteHeader, ElementName=Root}"
@@ -223,7 +242,7 @@
                     </Button>
 
                     <TextBlock
-                        Grid.Column="3"
+                        Grid.Column="4"
                         Classes="verseCount"
                         Text="{Binding BookmarkVerses.Count, ElementName=Root, StringFormat='{}{0} verses'}" />
                 </Grid>
@@ -261,7 +280,7 @@
                                 Classes="transliteration"
                                 Text="{Binding Verse.Transliteration}" />
 
-                            <!-- Bottom Bar: Score Badge & Verse Number -->
+                            <!-- Bottom Bar: Surah, Verse Number & Delete -->
                             <Grid Grid.Row="3" ColumnDefinitions="Auto,10,Auto,*,Auto" Margin="0,6,0,0">
                                 <TextBlock
                                     Grid.Column="0"
@@ -273,6 +292,26 @@
                                     Grid.Column="2"
                                     Classes="verseNumber"
                                     Text="{Binding Verse.Id, StringFormat=' Verse: {0}'}" />
+
+                                <Button
+                                    Grid.Column="3"
+                                    Classes="verseDeleteButton"
+                                    ToolTip.Tip="Copy verse"
+                                    Click="CopyVerseButton_OnClick">
+                                    <avalonia:FluentIcon
+                                        Icon="Copy"
+                                        FontSize="16" />
+                                </Button>
+
+                                <Button
+                                    Grid.Column="4"
+                                    Classes="verseDeleteButton"
+                                    ToolTip.Tip="Remove verse from this bookmark header"
+                                    Click="DeleteVerseButton_OnClick">
+                                    <avalonia:FluentIcon
+                                        Icon="Delete"
+                                        FontSize="16" />
+                                </Button>
                             </Grid>
                         </Grid>
                     </Border>

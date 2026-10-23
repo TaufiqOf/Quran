@@ -1,6 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -19,9 +20,9 @@ public partial class BookmarkComponent : UserControl
         public string SurahName => $"Surah: ({Surah.Id}) {Surah.Transliteration}";
     }
 
-    public BookmarkHeader Header { get; private set; }
-    public List<BookmarkVerse> BookmarkVerses { get; private set; }
-    public bool CanDeleteHeader => Header?.Id != DataManager.DefaultHeader;
+    public BookmarkHeader Header { get; private set; } = null!;
+    public ObservableCollection<BookmarkVerse> BookmarkVerses { get; } = null!;
+    public bool CanDeleteHeader { get; set; } = true;
     public event Action<Surah, Verse>? GoToVerseRequested;
     public event Action<BookmarkHeader>? HeaderDeleted;
 
@@ -31,8 +32,9 @@ public partial class BookmarkComponent : UserControl
         InitializeComponent();
         Header = bookmarkHeader;
         HeaderSurahNameTextBox.Text = Header.Name;
+        CanDeleteHeader = Header.Id != DataManager.DefaultHeader;
         DeleteHeaderButton.IsVisible = CanDeleteHeader;
-        BookmarkVerses = Header.Bookmarks
+        BookmarkVerses = new ObservableCollection<BookmarkVerse>(Header.Bookmarks
             .Select(bookmark =>
             {
                 var surah = DataManager.Surahs.FirstOrDefault(s => s.Id == bookmark.SurahId);
@@ -42,7 +44,7 @@ public partial class BookmarkComponent : UserControl
                     : null;
             })
             .OfType<BookmarkVerse>()
-            .ToList();
+            .ToList());
 
         BookmarkItemsControl.ItemsSource = BookmarkVerses;
     }
@@ -60,6 +62,37 @@ public partial class BookmarkComponent : UserControl
             HeaderSurahNameTextBox.Text = Header.Name;
     }
 
+    private async void CopyHeaderButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel == null)
+            return;
+
+        var text = new StringBuilder(Header.Name);
+        foreach (var bookmarkVerse in BookmarkVerses)
+        {
+            text.Append(Environment.NewLine)
+                .Append(Environment.NewLine)
+                .Append(CopyHelper.FormatText(bookmarkVerse.Verse));
+        }
+
+        await CopyHelper.CopyClipboard(topLevel, text.ToString());
+        e.Handled = true;
+    }
+
+    private async void CopyVerseButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { DataContext: BookmarkVerse bookmarkVerse })
+            return;
+
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel == null)
+            return;
+
+        await CopyHelper.CopyClipboard(topLevel, CopyHelper.FormatText(bookmarkVerse.Verse));
+        e.Handled = true;
+    }
+
     private void DeleteHeaderButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (!CanDeleteHeader || !DataManager.DeleteBookmarkHeader(Header.Id))
@@ -68,8 +101,27 @@ public partial class BookmarkComponent : UserControl
         HeaderDeleted?.Invoke(Header);
     }
 
+    private void DeleteVerseButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { DataContext: BookmarkVerse bookmarkVerse })
+            return;
+
+        var bookmark = new Bookmark
+        {
+            SurahId = bookmarkVerse.Surah.Id,
+            VerseId = bookmarkVerse.Verse.Id
+        };
+
+        DataManager.RemoveBookmark(bookmark, Header.Id);
+        BookmarkVerses.Remove(bookmarkVerse);
+        e.Handled = true;
+    }
+
     private void VerseBorder_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if (e.Source is Button)
+            return;
+
         if (sender is Border { DataContext: BookmarkVerse bookmarkVerse })
             GoToVerseRequested?.Invoke(bookmarkVerse.Surah, bookmarkVerse.Verse);
     }

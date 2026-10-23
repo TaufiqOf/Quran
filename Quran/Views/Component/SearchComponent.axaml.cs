@@ -348,33 +348,34 @@ public partial class SearchComponent : UserControl
         // Bookmark
         // =============================
 
-        var isBookmarked =
-            DataManager.IsBookmarked(
-                Surah.Id,
-                verse.Id);
-
         var bookmarkItem = new MenuItem
         {
-            Header = isBookmarked
-                ? "Remove Bookmark"
-                : "Bookmark",
-
+            Header = "Bookmark",
             Icon = new SymbolIcon
             {
-                Symbol = isBookmarked
-                    ? Symbol.BookmarkOff
-                    : Symbol.Bookmark,
-
+                Symbol = Symbol.Bookmark,
                 FontSize = 18
             }
         };
 
-        bookmarkItem.Click += (_, _) =>
+        foreach (var header in DataManager.Bookmarks)
         {
-            BookmarkVerseRequested?.Invoke(
-                verse,
-                Surah);
-        };
+            var headerId = header.Id;
+            var headerItem = new MenuItem
+            {
+                Header = header.Name,
+                Icon = new SymbolIcon
+                {
+                    Symbol = DataManager.IsBookmarked(Surah.Id, verse.Id, headerId)
+                        ? Symbol.BookmarkOff
+                        : Symbol.Bookmark,
+                    FontSize = 18
+                }
+            };
+
+            headerItem.Click += (_, _) => BookmarkVerseRequested?.Invoke(verse, Surah, headerId);
+            bookmarkItem.Items.Add(headerItem);
+        }
 
         // =============================
         // Add Items
@@ -387,7 +388,7 @@ public partial class SearchComponent : UserControl
     }
 
 
-    public event Action<Verse, Surah>? BookmarkVerseRequested;
+    public event Action<Verse, Surah, string>? BookmarkVerseRequested;
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;
     public event Action<Surah,Verse>? CopyAllRequested;

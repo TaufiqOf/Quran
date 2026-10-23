@@ -13,27 +13,27 @@ namespace Quran.Helpers;
 
 public static class DataManager
 {
-    
+    public static string DefaultHeader { get; set; } = "defaultHeaderId";
+
     public static readonly string EmbeddingDataPath =
         Path.Combine(
             AppContext.BaseDirectory,
             "Storage",
             "embeddings.json");
-    
+
     public static readonly string TokenizerPath = Path.Combine(
         AppContext.BaseDirectory,
         "Storage",
         "tokenizer.json");
-    
+
     public static readonly string LocalStoragePath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "Quran",
         "Storage");
-    
+
     public static readonly string ModelPath = Path.Combine(
         LocalStoragePath,
         "model1.onnx");
-
 
 
     private static readonly string BookmarkFilePath =
@@ -82,7 +82,7 @@ public static class DataManager
     public static Surah? CurrentSurah { get; set; }
     public static int? CurrentVerseId { get; set; }
 
-    public static List<Bookmark> Bookmarks { get; }
+    public static List<BookmarkHeader> Bookmarks { get; }
 
     public static void LoadSurahs(string language = "en")
     {
@@ -137,25 +137,34 @@ public static class DataManager
         var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, "surah_synopsis.json"));
         return JsonReader.ReadJsonList<SurahSynopsis>(json);
     }
+
     public static List<Translator> Translators()
     {
         var json = JsonReader.ReadStringFromFile(Path.Combine(DataPath, "translators.json"));
         return JsonReader.ReadJsonList<Translator>(json);
     }
 
-    public static List<Bookmark> GetBookmarks()
+    public static List<BookmarkHeader> GetBookmarks()
     {
         var json = File.ReadAllText(BookmarkFilePath);
-        return JsonReader.ReadJsonList<Bookmark>(json);
+        var readJsonList = JsonReader.ReadJsonList<BookmarkHeader>(json);
+
+        if (readJsonList.Count == 0 || !readJsonList.Any(header => header.Id == DefaultHeader))
+            readJsonList.Add(new BookmarkHeader
+            {
+                Id = DefaultHeader,
+                Name = "Default Header",
+                Bookmarks = new List<Bookmark>()
+            });
+        return readJsonList;
     }
-    
+
     public static List<T> GetData<T>(string fileName) where T : class
     {
         try
         {
             var json = File.ReadAllText(Path.Combine(LocalStoragePath, fileName));
-            return JsonReader.ReadJsonList<T>(json) ;
-
+            return JsonReader.ReadJsonList<T>(json);
         }
         catch (Exception e)
         {
@@ -163,6 +172,7 @@ public static class DataManager
             return new List<T>();
         }
     }
+
     public static List<FileInfo> GetFile(string searchPattern = "*.*")
     {
         var json = Directory.GetFiles(LocalStoragePath, searchPattern, SearchOption.TopDirectoryOnly)
@@ -173,31 +183,83 @@ public static class DataManager
 
     public static bool IsBookmarked(int surahId, int verseId)
     {
-        return Bookmarks.Any(b => b.SurahId == surahId && b.VerseId == verseId);
+        return IsBookmarked(surahId, verseId, DefaultHeader);
     }
 
-    public static void AddBookmark(Bookmark bookmark)
+    public static bool IsBookmarked(int surahId, int verseId, string headerId)
     {
-        if (IsBookmarked(bookmark.SurahId, bookmark.VerseId)) return; // Bookmark already exists, do not add it again
+        var header = Bookmarks.FirstOrDefault(q => q.Id == headerId);
+        if (header == null) return false;
+        return header.Bookmarks.Any(b => b.SurahId == surahId && b.VerseId == verseId);
+    }
+
+    public static void AddBookmark(Bookmark bookmark, string headerId)
+    {
+        var header = Bookmarks.FirstOrDefault(q => q.Id == headerId);
+        if (header == null) return;
+        if (IsBookmarked(bookmark.SurahId, bookmark.VerseId, headerId))
+            return; // Bookmark already exists, do not add it again
         bookmark.Timestamp = DateTime.Now; // Update the timestamp to the current time
-        Bookmarks.Add(bookmark);
+        header.Bookmarks.Add(bookmark);
         SaveBookmarks(Bookmarks);
     }
 
-    public static void RemoveBookmark(Bookmark bookmark)
+    public static void RemoveBookmark(Bookmark bookmark, string headerId)
     {
-        if (!IsBookmarked(bookmark.SurahId, bookmark.VerseId)) return; // Bookmark does not exist, do not remove it
+        if (!IsBookmarked(bookmark.SurahId, bookmark.VerseId, headerId))
+            return; // Bookmark does not exist, do not remove it
 
-        Bookmarks.RemoveAll(b => b.SurahId == bookmark.SurahId && b.VerseId == bookmark.VerseId);
+        var header = Bookmarks.FirstOrDefault(q => q.Id == headerId);
+        if (header == null) return;
+        header.Bookmarks.RemoveAll(b => b.SurahId == bookmark.SurahId && b.VerseId == bookmark.VerseId);
         SaveBookmarks(Bookmarks);
     }
 
-    public static void SaveBookmarks(List<Bookmark> bookmarks)
+    public static void SaveBookmarks(List<BookmarkHeader> bookmarks)
     {
         var json = JsonSerializer.Serialize(bookmarks);
         File.WriteAllText(BookmarkFilePath, json);
     }
-    
+
+    public static bool UpdateBookmarkHeaderName(string headerId, string name)
+    {
+        var header = Bookmarks.FirstOrDefault(bookmarkHeader => bookmarkHeader.Id == headerId);
+        if (header == null)
+            return false;
+
+        header.Name = string.IsNullOrWhiteSpace(name) ? "Unnamed Header" : name.Trim();
+        SaveBookmarks(Bookmarks);
+        return true;
+    }
+
+    public static BookmarkHeader AddBookmarkHeader()
+    {
+        const string baseName = "New Header";
+        var name = baseName;
+        var suffix = 2;
+
+        while (Bookmarks.Any(header =>
+                   string.Equals(header.Name, name, StringComparison.OrdinalIgnoreCase)))
+            name = $"{baseName} {suffix++}";
+
+        var header = new BookmarkHeader { Name = name };
+        Bookmarks.Add(header);
+        SaveBookmarks(Bookmarks);
+        return header;
+    }
+
+    public static bool DeleteBookmarkHeader(string headerId)
+    {
+        if (headerId == DefaultHeader)
+            return false;
+
+        var removed = Bookmarks.RemoveAll(bookmarkHeader => bookmarkHeader.Id == headerId) > 0;
+        if (removed)
+            SaveBookmarks(Bookmarks);
+
+        return removed;
+    }
+
     public static List<string?> GetHadithBooks()
     {
         try
@@ -213,14 +275,13 @@ public static class DataManager
             Console.WriteLine(e);
             return new List<string?>();
         }
-
     }
-    
+
     public static List<HadithChapter> GetHadithChaptersByBooks(string bookName)
     {
         try
         {
-            var path = Path.Combine(DataPath, "Hadith", bookName,"chapters.json");
+            var path = Path.Combine(DataPath, "Hadith", bookName, "chapters.json");
             var chapters = JsonConvert.DeserializeObject<List<HadithChapter>>(File.ReadAllText(path));
             return chapters;
         }
@@ -230,7 +291,7 @@ public static class DataManager
             return new List<HadithChapter>();
         }
     }
-    
+
     public static HadithRootObject? GetHadithsByBookAndChapter(string bookName, string chapterName)
     {
         try
@@ -247,9 +308,8 @@ public static class DataManager
             Console.WriteLine(e);
             return null;
         }
-
     }
-    
+
     public static async Task<string> GetTafsirAsync(int surahId, int verseId)
     {
         var path = Path.Combine(

@@ -22,7 +22,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
     protected MenuItem? PlayItemManuMenuItem;
 
-    private MenuItem? _copyVerseMenuItem;
+    private MenuItem? _bookmarkMenuItem;
 
     protected AVerseComponent(Surah surah, Verse verse)
     {
@@ -31,6 +31,8 @@ public abstract class AVerseComponent : UserControl, IDisposable
         ContextMenu = CreateContextMenu();
         ContextMenu.Opening += ContextMenu_OnOpening;
     }
+    
+    public string BookMarkHeaderId { get; set; } = DataManager.DefaultHeader;
 
     public bool IsSelected
     {
@@ -63,7 +65,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
     }
 
     public event Action<Verse>? PlayVerseRequested;
-    public event Action<Verse, Surah>? BookmarkVerseRequested;
+    public event Action<Verse, Surah, string>? BookmarkVerseRequested;
     public event Action<Verse>? CopyVerseRequested;
     public event Action<Verse>? CopyTranslationRequested;
     public event Action<Surah, Verse>? CopyAllRequested;
@@ -149,7 +151,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
             Items = { copyAllItem, copyVerseItem, copyTranslationItem, copyTransliterationItem }
         };
 
-        _copyVerseMenuItem = new MenuItem
+        _bookmarkMenuItem = new MenuItem
         {
             Header = "Bookmark",
             Icon = new SymbolIcon
@@ -185,11 +187,6 @@ public abstract class AVerseComponent : UserControl, IDisposable
         {
             if (Verse != null && Surah != null) CopyAllRequested?.Invoke(Surah, Verse);
         };
-        _copyVerseMenuItem.Click += (_, _) =>
-        {
-            if (Verse != null && Surah != null) BookmarkVerseRequested?.Invoke(Verse, Surah);
-        };
-
         PlayItemManuMenuItem.Click += (_, _) =>
         {
             if (Verse != null) PlayVerseRequested?.Invoke(Verse);
@@ -197,7 +194,7 @@ public abstract class AVerseComponent : UserControl, IDisposable
 
 
         menu.Items.Add(copyItem);
-        menu.Items.Add(_copyVerseMenuItem);
+        menu.Items.Add(_bookmarkMenuItem);
         menu.Items.Add(PlayItemManuMenuItem);
 
         return menu;
@@ -214,18 +211,41 @@ public abstract class AVerseComponent : UserControl, IDisposable
             return;
         }
 
-        if (_copyVerseMenuItem != null)
-        {
-            _copyVerseMenuItem.Icon = new SymbolIcon
-            {
-                Symbol = IsBookMarked ? Symbol.BookmarkOff : Symbol.Bookmark,
-                FontSize = 18
-            };
-            _copyVerseMenuItem.Header = IsBookMarked ? "Remove Bookmark" : "Bookmark";
-        }
+        UpdateBookmarkMenu();
 
 
         VerseContextMenuRequested?.Invoke(Verse);
+    }
+
+    private void UpdateBookmarkMenu()
+    {
+        if (_bookmarkMenuItem == null || Verse == null || Surah == null)
+            return;
+
+        _bookmarkMenuItem.Items.Clear();
+        _bookmarkMenuItem.IsEnabled = DataManager.Bookmarks.Count > 0;
+
+        foreach (var header in DataManager.Bookmarks)
+        {
+            var headerId = header.Id;
+            var isBookmarked = DataManager.IsBookmarked(Surah.Id, Verse.Id, headerId);
+            var headerItem = new MenuItem
+            {
+                Header = header.Name,
+                Icon = new SymbolIcon
+                {
+                    Symbol = isBookmarked ? Symbol.BookmarkOff : Symbol.Bookmark,
+                    FontSize = 18
+                }
+            };
+
+            headerItem.Click += (_, _) =>
+            {
+                if (Verse != null && Surah != null)
+                    BookmarkVerseRequested?.Invoke(Verse, Surah, headerId);
+            };
+            _bookmarkMenuItem.Items.Add(headerItem);
+        }
     }
 
     protected void ShowTafasir()

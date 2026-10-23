@@ -26,6 +26,7 @@ public partial class VerseComponent : AVerseComponent
             TextBlockVerseNumber.Text = $"Verse {verse.Id}";
     }
 
+
     public override void Dispose()
     {
         Verse = null;

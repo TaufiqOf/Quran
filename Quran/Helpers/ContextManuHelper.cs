@@ -59,16 +59,16 @@ public static class ContextMenuHelper
         }
     }
 
-    public static void OnBookmarkVerseRequested(Verse verse, Surah surah)
+    public static void OnBookmarkVerseRequested(Verse verse, Surah surah, string headerId)
     {
         var bookmark = new Bookmark
         {
             SurahId = surah.Id,
             VerseId = verse.Id
         };
-        if (DataManager.IsBookmarked(surah.Id, verse.Id))
-            DataManager.RemoveBookmark(bookmark);
+        if (DataManager.IsBookmarked(surah.Id, verse.Id, headerId))
+            DataManager.RemoveBookmark(bookmark, headerId);
         else
-            DataManager.AddBookmark(bookmark);
+            DataManager.AddBookmark(bookmark, headerId);
     }
 }

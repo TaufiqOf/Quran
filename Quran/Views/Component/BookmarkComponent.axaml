@@ -1,0 +1,283 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="clr-namespace:Quran.Models"
+    xmlns:avalonia="clr-namespace:FluentIcons.Avalonia;assembly=FluentIcons.Avalonia"
+    xmlns:model="clr-namespace:Quran.Helpers.Search.VectorSearch.Model"
+    xmlns:component="clr-namespace:Quran.Views.Component"
+    x:Class="Quran.Views.Component.BookmarkComponent"
+    x:Name="Root">
+
+    <UserControl.Styles>
+
+        <!-- Surah Expander -->
+        <Style Selector="Expander.surah">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <!-- Surah Header -->
+        <Style Selector="Border.surahHeader">
+            <Setter Property="Background" Value="#222222" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="12,10" />
+        </Style>
+
+        <Style Selector="TextBlock.surahId">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#3678D4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBox.surahName">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.surahTranslation">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#AAAAAA" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.surahTransliteration">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Surah Score Badge -->
+        <Style Selector="Border.surahScoreBadge">
+            <Setter Property="Background" Value="#1E3A5F" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="8,3" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.surahScoreText">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#64B5F6" />
+        </Style>
+
+        <!-- Verse Score Badge -->
+        <Style Selector="Border.verseScoreBadge">
+            <Setter Property="Background" Value="#1A2D42" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.verseScoreText">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#4FC3F7" />
+        </Style>
+        <Style Selector="Border.verseWordScoreBadge">
+            <Setter Property="Background" Value="#1A2D42" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBlock.verseWordScoreText">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#4FC3F7" />
+        </Style>
+
+        <Style Selector="TextBlock.verseCount">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Button.headerAction">
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Verse Container & Hover Interaction -->
+        <Style Selector="Border.verse">
+            <Setter Property="Background" Value="#2A2A2A" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="BorderBrush" Value="#333333" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="Margin" Value="4,4" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border.verse:pointerover">
+            <Setter Property="Background" Value="#323232" />
+            <Setter Property="BorderBrush" Value="#3678D4" />
+        </Style>
+
+        <!-- Typography -->
+        <Style Selector="TextBlock.arabic">
+            <Setter Property="FontFamily" Value="avares://Quran/Assets/Fonts/Amiri-Regular.ttf#Amiri" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="Foreground" Value="#F5F5F5" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FlowDirection" Value="RightToLeft" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,4,0,12" />
+        </Style>
+
+        <Style Selector="TextBlock.translation">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="#E0E0E0" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="LineHeight" Value="24" />
+            <Setter Property="Margin" Value="16,0,16,6" />
+        </Style>
+
+        <Style Selector="TextBlock.transliteration">
+            <Setter Property="FontSize" Value="13.5" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="Foreground" Value="#B0B0B0" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="16,0,16,4" />
+        </Style>
+
+        <Style Selector="TextBlock.verseNumber">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#666666" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.copyButton">
+            <Setter Property="Width" Value="38" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+    </UserControl.Styles>
+
+
+    <!-- =============================== -->
+    <!-- Main -->
+    <!-- =============================== -->
+
+    <Expander
+        Classes="surah"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Top">
+
+        <!-- =========================== -->
+        <!-- Surah Header -->
+        <!-- =========================== -->
+
+        <Expander.Header>
+            <Border Classes="surahHeader">
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                    <TextBox
+                        x:Name="HeaderSurahNameTextBox"
+                        Grid.Column="0"
+                        Classes="surahName"
+                        Text="{Binding Header.Name, ElementName=Root}"
+                        IsReadOnly="False"
+                        Background="Transparent"
+                        />
+
+                    <Button
+                        Grid.Column="1"
+                        Classes="headerAction"
+                        Click="SaveHeaderNameButton_OnClick" >
+                        <avalonia:FluentIcon
+                            Icon="Save"
+                            FontSize="18" />
+                    </Button>
+
+                    <Button
+                        Grid.Column="2"
+                        Classes="headerAction"
+                        x:Name="DeleteHeaderButton"
+                        IsEnabled="{Binding CanDeleteHeader, ElementName=Root}"
+                        Click="DeleteHeaderButton_OnClick" >
+                        <avalonia:FluentIcon
+                            Icon="Delete"
+                            FontSize="18" />
+                    </Button>
+
+                    <TextBlock
+                        Grid.Column="3"
+                        Classes="verseCount"
+                        Text="{Binding BookmarkVerses.Count, ElementName=Root, StringFormat='{}{0} verses'}" />
+                </Grid>
+            </Border>
+        </Expander.Header>
+
+        <!-- =========================== -->
+        <!-- Matching Verses -->
+        <!-- =========================== -->
+
+        <ItemsControl
+            x:Name="BookmarkItemsControl"
+            ItemsSource="{Binding BookmarkVerses, ElementName=Root}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="component:BookmarkComponent+BookmarkVerse">
+                    <Border
+                        Classes="verse"
+                        PointerPressed="VerseBorder_OnPointerPressed">
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+                            <TextBlock
+                                Grid.Row="0"
+                                Classes="arabic"
+                                Text="{Binding Verse.Text}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Classes="translation"
+                                Text="{Binding Verse.Translation}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Classes="transliteration"
+                                Text="{Binding Verse.Transliteration}" />
+
+                            <!-- Bottom Bar: Score Badge & Verse Number -->
+                            <Grid Grid.Row="3" ColumnDefinitions="Auto,10,Auto,*,Auto" Margin="0,6,0,0">
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Classes="verseNumber">
+                                    <Run Text="{Binding SurahName}"/>
+                                </TextBlock>
+                                
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Classes="verseNumber"
+                                    Text="{Binding Verse.Id, StringFormat=' Verse: {0}'}" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Expander>
+</UserControl>

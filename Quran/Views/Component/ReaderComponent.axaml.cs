@@ -139,9 +139,9 @@ public partial class ReaderComponent : UserControl, IDisposable
         PlayVerseRequested?.Invoke(verse);
     }
 
-    private void VerseComponentOnBookmarkVerseRequested(Verse verse, Surah surah)
+    private void VerseComponentOnBookmarkVerseRequested(Verse verse, Surah surah, string headerId)
     {
-        ContextMenuHelper.OnBookmarkVerseRequested(verse, surah);
+        ContextMenuHelper.OnBookmarkVerseRequested(verse, surah, headerId);
         var verseComponent = _verseComponents.FirstOrDefault(q => q.Surah?.Id == surah.Id && q.Verse?.Id == verse.Id);
         verseComponent?.VerseBookMark();
     }

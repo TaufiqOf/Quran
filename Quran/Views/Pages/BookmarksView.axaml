@@ -37,6 +37,14 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
+        <Style Selector="Button.addHeaderButton">
+            <Setter Property="Width" Value="38" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="8,5,0,5" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
         <!-- =============================== -->
         <!-- Results -->
         <!-- =============================== -->
@@ -57,13 +65,24 @@
         <Border
             Grid.Row="0"
             Classes="topBar">
-            <Grid>
+            <Grid ColumnDefinitions="*,Auto">
                 <ComboBox
                     x:Name="SurahComboBox"
                     Margin="0,5,0,5"
                     Classes="surahFilter"
                     HorizontalAlignment="Left"
                     SelectionChanged="SurahComboBoxOnSelectionChanged" />
+
+                <Button
+                    Grid.Column="1"
+                    x:Name="AddHeaderButton"
+                    Classes="addHeaderButton"
+                    ToolTip.Tip="Add bookmark header"
+                    Click="AddHeaderButton_OnClick">
+                    <avalonia:FluentIcon
+                        Icon="Add"
+                        FontSize="20" />
+                </Button>
             </Grid>
         </Border>
 
@@ -78,7 +97,6 @@
             ScrollChanged="LinerScrollViewerOnScrollChanged"
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
-
             <ItemsControl
                 x:Name="LinerItemsControl"
                 Classes="bookmarkItems"
